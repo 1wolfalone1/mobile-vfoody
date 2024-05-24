@@ -1,10 +1,16 @@
-import { useState } from 'react';
-import { FlatList, Image, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { useEffect, useState } from 'react';
+import { Dimensions, FlatList, Image, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { TouchableRipple } from 'react-native-paper';
+import { useSelector } from 'react-redux';
+import api from '../../../api/api';
 import ItemBestSellerInHome from '../../../components/user-page/ItemBestSellerInHome';
 import ItemShopRegulerInHome from '../../../components/user-page/ItemShopRegulerInHome';
 import { Colors } from '../../../constant';
+import { userInfoSliceSelector } from '../../../redux/slice/userSlice';
 const Index = () => {
+  const { width, height } = Dimensions.get('window');
+  const widthCategory = parseInt((width * 15) / 100);
+  const userData = useSelector(userInfoSliceSelector);
   const styles = StyleSheet.create({
     shadow: {
       shadowOffset: { width: 5, height: 8 },
@@ -25,13 +31,58 @@ const Index = () => {
     },
   });
 
+  const [dataTopShop, setDataTopShop] = useState({});
+
   const [idCategorySelected, setCategorySelected] = useState(1);
+  const [dataTopProduct, setDataTopProduct] = useState({});
+  const [categories, setCategories] = useState([]);
+  const handleGetCategories = async () => {
+    try {
+      const res = await api.get('/api/v1/category');
+      const data = await res.data;
+      setCategories(data.value);
+      console.log(data.value, ' category');
+    } catch (err) {
+      console.log(err, ' error in DynamicHeader');
+    }
+  };
+
+  const handleGetDataTopProduct = async () => {
+    try {
+      const res = await api.get('/api/v1/customer/product/top');
+      const data = await res.data;
+      console.log(data, ' data ItemBestSellerInHome');
+      setDataTopProduct(data.value.items);
+    } catch (err) {
+      console.log(err, ' error in ItemBestSellerInHome');
+    }
+  };
+
+  const handleGetDataTopShop = async () => {
+    try {
+      const res = await api.get('/api/v1/customer/shop/top');
+      const data = await res.data;
+      console.log(data, ' data in ItemShop');
+      setDataTopShop(data.value.items);
+    } catch (err) {
+      console.log(err, ' error in ItemShopRegulerInHome ');
+    }
+  };
+  useEffect(() => {
+    handleGetDataTopShop();
+    handleGetDataTopProduct();
+    handleGetCategories();
+  }, []);
+  useEffect(() => {
+    console.log(userData, ' teset');
+  }, [userData]);
+
   return (
     <>
       <View className="flex-1">
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           <View className="flex-row  gap-5 p-5  pl-7">
-            {DATA.map((item, index) => (
+            {categories.map((item, index) => (
               <TouchableRipple
                 onPress={() => {
                   setCategorySelected(item.id);
@@ -40,30 +91,38 @@ const Index = () => {
                 key={item.id}
               >
                 <View
-                  style={idCategorySelected == item.id ? styles.shadowSelected : styles.shadow}
-                  className={`flex justify-start items-center rounded-full
-                   ${idCategorySelected == item.id ? 'bg-primary' : 'bg-white'} w-[60] h-full pt-1`}
+                  style={{
+                    ...(idCategorySelected == item.id ? styles.shadowSelected : styles.shadow),
+                  }}
+                  className={`flex justify-start items-center rounded-full 
+                   ${idCategorySelected == item.id ? 'bg-primary' : 'bg-white'} w-[60] h-full`}
                 >
-                  <Image
-                    source={require('../../../assets/images/fastfood.png')}
-                    className="rounded-full  border-solid border-primary"
-                    resizeMode="cover"
-                    style={{
-                      borderColor: 'red',
-                      borderWidth: 1,
-                    }}
-                  />
+                  <View className="">
+                    <Image
+                      source={{
+                        uri: item.imageUrl,
+                      }}
+                      className="rounded-full  border-solid border-primary"
+                      resizeMode="cover"
+                      style={{
+                        borderColor: 'red',
+                        borderWidth: 1,
+                        height: widthCategory,
+                        width: widthCategory,
+                      }}
+                    />
+                  </View>
                   <View className="w-[40] pb-2 mt-2 justify-center items-center">
                     <Text
                       // className="font-hnow64regular flex flex-wrap over"
                       className={`${idCategorySelected == item.id ? 'text-white' : 'text-black'} font-hnow63book justify-center items-center text-center`}
                       style={{
-                        fontSize: 11,
+                        fontSize:8,
                         lineHeight: 15,
                         flexWrap: 'wrap',
                       }}
                     >
-                      {item.title}
+                      {item.name}
                     </Text>
                   </View>
                 </View>
@@ -78,9 +137,9 @@ const Index = () => {
       <View className="flex-1 ">
         <View className="flex-row mt-2  ">
           <FlatList
-            contentContainerStyle={{paddingLeft: 28}}
+            contentContainerStyle={{ paddingLeft: 28 }}
             horizontal
-            data={data3}
+            data={dataTopProduct}
             showsHorizontalScrollIndicator={false}
             renderItem={({ item }) => <ItemBestSellerInHome item={item} />}
           />
@@ -92,10 +151,9 @@ const Index = () => {
       <View className="flex-1 ">
         <View className="flex-row mt-2  ">
           <FlatList
-          
-            contentContainerStyle={{paddingLeft: 28}}
+            contentContainerStyle={{ paddingLeft: 28 }}
             horizontal
-            data={Data2}
+            data={dataTopShop}
             showsHorizontalScrollIndicator={false}
             renderItem={({ item }) => <ItemShopRegulerInHome item={item} />}
           />

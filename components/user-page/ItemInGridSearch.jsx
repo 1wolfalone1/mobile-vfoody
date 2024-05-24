@@ -32,7 +32,7 @@ const ItemInGridSearch = ({ item }) => {
 
         <Image
           source={{
-            uri: item.background_link,
+            uri: item.imageUrl,
           }}
           resizeMode="cover"
           className="w-full h-full z-[0]"
@@ -41,7 +41,7 @@ const ItemInGridSearch = ({ item }) => {
       <View className="pt-1 items-start w-full gap-1">
         <View className="flex  justify-center w-full items-start">
           <Text style className="text-xs text-gray-400 font-hnow64regular">
-            Mì xào, cơm chiên
+            {item.name}
           </Text>
         </View>
         <View className="flex-row">
@@ -49,12 +49,12 @@ const ItemInGridSearch = ({ item }) => {
             className="bg-transparent"
             size={16}
             source={{
-              uri: item.avatar_link,
+              uri: item.shopLogoUrl,
             }}
           />
           <View className="ml-2 flex-wrap">
             <Text style={{ fontSize: 10 }} className=" font-hnow64regular">
-              {item.name}
+              {item.shopName}
             </Text>
           </View>
         </View>

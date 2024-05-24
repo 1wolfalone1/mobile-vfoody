@@ -10,6 +10,7 @@ const userInfoSlice = createSlice({
   initialState: initialState,
   reducers: {
     changeUserInfo: (state, actions) => {
+      console.log(actions.payload , ' changing user info')
       return actions.payload;
     },
     resetState: (state, actions) => initialState,
@@ -32,7 +33,9 @@ const userInfoSlice = createSlice({
 
 export default userInfoSlice;
 
-export const userInfoSliceSelector = (state) => state.userInfoSlice;
+export const userInfoSliceSelector = (state) => {
+  return state.userInfoSlice.info;
+};
 
 export const userRoleSelector = (state) => state.userInfoSlice.role;
 

@@ -12,7 +12,7 @@ export default {
   btnBackground: '#FFFFFF',
   btnText: '#DF4830',
   star: {
-    defaut: "#cad800"
+    defaut: "#FECF0A"
   },
   shadow: {
     DEFAULT: '#df4730ff',

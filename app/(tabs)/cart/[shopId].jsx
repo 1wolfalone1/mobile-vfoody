@@ -12,63 +12,68 @@ const CartItemInShop = () => {
   const widthItem = parseInt((width * 85) / 100);
   console.log(param);
   return (
-    <View className="flex-1 bg-white p-8">
-      <View className="gap-2">
-        <View className="flex-row items-center">
-          <Avatar.Image
-            className="bg-transparent"
-            size={24}
-            source={{
-              uri: 'https://static-00.iconduck.com/assets.00/golang-icon-1594x2048-0xixr8zr.png',
-            }}
-          />
-          <Text className="ml-2 text-lg font-hnow65medium">Tiệm Bánh Mì Đêm</Text>
-        </View>
-        <View className="flex-row items-center">
-          <MapPin color={Colors.greyText} size={20} />
-          <Text className="ml-1 text-gray-600"> tòa S1010 khu Berkely</Text>
-        </View>
-      </View>
-
-      <View className="gap-2 mt-4">
-        <View className="flex-row items-center">
-          <LocateFixed color={Colors.primaryBackgroundColor} size={28} />
-          <Text className="ml-2 text-lg font-hnow65medium">Giao tới</Text>
-        </View>
-        <TouchableRipple
-          className=""
-          onPress={() => {}}
-          rippleColor="rgba(31, 30, 30, 0)"
-          borderless
-        >
+    <View className="flex-1 bg-white overflow-visible">
+      <View className="pl-8 pt-8">
+        <View className="gap-2">
+          <View className="flex-row items-center">
+            <Avatar.Image
+              className="bg-transparent"
+              size={24}
+              source={{
+                uri: 'https://static-00.iconduck.com/assets.00/golang-icon-1594x2048-0xixr8zr.png',
+              }}
+            />
+            <Text className="ml-2 text-lg font-hnow65medium">Tiệm Bánh Mì Đêm</Text>
+          </View>
           <View className="flex-row items-center">
             <MapPin color={Colors.greyText} size={20} />
-            <Text className="ml-1 text-green-700"> tòa S705 khu Origami</Text>
-            <ChevronRight color={Colors.primaryBackgroundColor} size={24} />
+            <Text className="ml-1 text-gray-600"> tòa S1010 khu Berkely</Text>
           </View>
-        </TouchableRipple>
-      </View>
-      <View className="gap-2 my-5">
-        <View className="flex-row items-center">
-          <Truck color={Colors.primaryBackgroundColor} size={28} />
-          <Text className="ml-2 text-lg font-hnow65medium">Phí giao hàng</Text>
         </View>
-        <View className="flex-row items-center">
-          <HandCoins color={Colors.greyText} size={20} />
-          <Text className="ml-1 text-gray-600"> Freeship</Text>
-        </View>
-      </View>
 
-      <ScrollView className="flex-1 bg-white" showsVerticalScrollIndicator={false} bounces={false}>
-        <View className="" style={{ width: widthItem }}>
+        <View className="gap-2 mt-4">
+          <View className="flex-row items-center">
+            <LocateFixed color={Colors.primaryBackgroundColor} size={28} />
+            <Text className="ml-2 text-lg font-hnow65medium">Giao tới</Text>
+          </View>
+          <TouchableRipple
+            className=""
+            onPress={() => {}}
+            rippleColor="rgba(31, 30, 30, 0)"
+            borderless
+          >
+            <View className="flex-row items-center">
+              <MapPin color={Colors.greyText} size={20} />
+              <Text className="ml-1 text-green-700"> tòa S705 khu Origami</Text>
+              <ChevronRight color={Colors.primaryBackgroundColor} size={24} />
+            </View>
+          </TouchableRipple>
+        </View>
+        <View className="gap-2 my-5">
+          <View className="flex-row items-center">
+            <Truck color={Colors.primaryBackgroundColor} size={28} />
+            <Text className="ml-2 text-lg font-hnow65medium">Phí giao hàng</Text>
+          </View>
+          <View className="flex-row items-center">
+            <HandCoins color={Colors.greyText} size={20} />
+            <Text className="ml-1 text-gray-600"> Freeship</Text>
+          </View>
+        </View>
+      </View>
+      <ScrollView
+        className="flex-1 bg-white w-full"
+        showsVerticalScrollIndicator={false}
+        bounces={false}
+      >
+        <View className="p-8" style={{ width: widthItem }}>
           <View className="mb-5">
             <Text className="ml-2 text-lg font-psemibold">Thông tin đơn hàng</Text>
           </View>
           {data.map((item) => (
             <ItemInCart key={item.id} item={item} />
           ))}
-          <Divider className="my-4 bg-black-700 h-0.5" />
-          <View className="">
+          <View className="" style={{ width: widthItem }}>
+            <Divider className="my-4 bg-black-700 h-0.5" />
             <View className="flex-row justify-between">
               <Text className="font-hnow65medium text-lg">Tạm tính</Text>
               <View className="flex-row">
@@ -92,16 +97,17 @@ const CartItemInShop = () => {
                 <Text className="font-hnow63book text-lg text-gray-400"> VNĐ</Text>
               </View>
             </View>
+
+            <Divider className="my-4 bg-black-700 h-0.5 " />
           </View>
-          <Divider className="my-4 bg-black-700 h-0.5" />
-          <View className="flex-row justify-between">
+          <View className="flex-row justify-between" style={{width: widthItem}}>
             <Text className="font-hnow65medium text-lg">Tổng cộng</Text>
             <View className="flex-row">
               <Text className="font-hnow64regular text-2xl text-primary">50.000</Text>
               <Text className="font-hnow63book text-lg text-gray-400"> VNĐ</Text>
             </View>
           </View>
-          <View className="mt-8">
+          <View className="mt-8" style={{width: widthItem}}>
             <Button
               mode="elevated"
               textColor="white"

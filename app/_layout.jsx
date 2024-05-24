@@ -40,7 +40,6 @@ const RootLayout = () => {
     return null;
   }
   return (
-    
     <Provider store={store}>
       <Stack screenOptions={{ animation: 'slide_from_bottom' }}>
         <Stack.Screen name="index" options={{ headerShown: false }} />
@@ -53,7 +52,10 @@ const RootLayout = () => {
           name="oauthredirect"
           options={{ headerShown: false, animation: 'slide_from_bottom' }}
         />
+<<<<<<< thiencn2
+=======
         <Stack.Screen name="(shop)" options={{ headerShown: false }} />
+>>>>>>> main
       </Stack>
     </Provider>
   );

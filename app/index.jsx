@@ -54,7 +54,11 @@ export default function StartPage() {
             fontSize: 24,
             lineHeight: 27,
           }}
+<<<<<<< thiencn2
+          onPress={() => router.push('/oauthredirect')}
+=======
           onPress={() => router.push('/review')}
+>>>>>>> main
         >
           Bắt đầu
         </Button>
