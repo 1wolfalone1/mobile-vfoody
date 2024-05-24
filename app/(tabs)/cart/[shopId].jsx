@@ -100,14 +100,14 @@ const CartItemInShop = () => {
 
             <Divider className="my-4 bg-black-700 h-0.5 " />
           </View>
-          <View className="flex-row justify-between">
+          <View className="flex-row justify-between" style={{width: widthItem}}>
             <Text className="font-hnow65medium text-lg">Tổng cộng</Text>
             <View className="flex-row">
               <Text className="font-hnow64regular text-2xl text-primary">50.000</Text>
               <Text className="font-hnow63book text-lg text-gray-400"> VNĐ</Text>
             </View>
           </View>
-          <View className="mt-8">
+          <View className="mt-8" style={{width: widthItem}}>
             <Button
               mode="elevated"
               textColor="white"

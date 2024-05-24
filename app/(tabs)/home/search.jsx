@@ -1,10 +1,25 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { FlatList, ScrollView, Text, View } from 'react-native';
 import { Chip } from 'react-native-paper';
+import api from '../../../api/api';
 import ItemInGridSearch from '../../../components/user-page/ItemInGridSearch';
 import { Colors } from '../../../constant';
 
 const SearchPage = () => {
+  const [dataPromtProduct, setDataPromtProduct] = useState({});
+  const handleGetDataPromtProduct = async () => {
+    try {
+      const res = await api.get('/api/v1/customer/product/top');
+      const data = await res.data;
+      console.log(data, ' data ItemSearch');
+      setDataPromtProduct(data.value.items);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+  useEffect(() => {
+    handleGetDataPromtProduct();
+  },[])
   return (
     <View className="mt-6">
       <ScrollView className="overflow-visible">
@@ -33,7 +48,7 @@ const SearchPage = () => {
             <View className="flex-row justify-start  ml-7 ">
               {dataRecentSearch.map((item, index) => (
                 <Chip
-                key={item.id}
+                  key={item.id}
                   style={{
                     marginRight: 8,
                     backgroundColor: Colors.primaryBackgroundColor,
@@ -57,10 +72,10 @@ const SearchPage = () => {
         </View>
         <View className="flex-row flex-wrap ml-7 ">
           <FlatList
-            data={dataShop}
+            data={dataPromtProduct}
             scrollEnabled={false}
             numColumns={3}
-            renderItem={({item}) => <ItemInGridSearch item={item} />}
+            renderItem={({ item }) => <ItemInGridSearch item={item} />}
           />
         </View>
       </ScrollView>

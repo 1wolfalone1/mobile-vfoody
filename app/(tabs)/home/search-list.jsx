@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { FlatList, SectionList, StyleSheet, View } from 'react-native';
+import api from '../../../api/api';
 import FilterBarinSearchList from '../../../components/user-page/FilterBarinSearchList';
 import ItemBodyInSearchList from '../../../components/user-page/ItemBodyInSearchList';
 import ItemHeaderInSearchList from '../../../components/user-page/ItemHeaderInSearchList';
@@ -13,6 +14,38 @@ const styles = StyleSheet.create({
   },
 });
 const SearchList = () => {
+  const [dataSearchRender, setDataSearchRender] = useState([]);
+  const handleGetDataSearch = async () => {
+    try {
+      const res = await api.get('/api/v1/customer/shop/search');
+      const data = await res.data;
+      console.log(data, ' data in search list');
+      const newData = handleDataSearch(data.value.items);
+      setDataSearchRender(newData);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+  const handleDataSearch = (data) => {
+    const newData = data.map((item) => {
+      return {
+        title: {
+          id: item.id,
+          shopName: item.name,
+          title: item.description,
+          address: item.buildingName,
+          price: '12k ->15k',
+          banner: item.bannerUrl,
+          avatar: item.logoUrl,
+        },
+        data: item.products,
+      };
+    });
+    return newData;
+  };
+  useEffect(() => {
+    handleGetDataSearch();
+  }, []);
   return (
     <View className="flex-1 mt-3">
       <FilterBarinSearchList />
@@ -36,7 +69,7 @@ const SearchList = () => {
         className="flex-1"
         contentContainerStyle={{ zIndex: 1 }}
         keyExtractor={(item, index) => index}
-        sections={data}
+        sections={dataSearchRender}
         scrollEnabled={false}
         SectionSeparatorComponent={(section, index) => {
           console.log(index, '123123123123');

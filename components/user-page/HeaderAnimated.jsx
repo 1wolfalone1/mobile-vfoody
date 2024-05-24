@@ -3,18 +3,20 @@ import { SlidersHorizontal } from 'lucide-react-native';
 import * as React from 'react';
 import { Animated, StyleSheet, Text, TextInput, View } from 'react-native';
 import { Avatar, Button, IconButton, TouchableRipple } from 'react-native-paper';
+import { useSelector } from 'react-redux';
 import { Colors } from '../../constant';
+import { userInfoSliceSelector } from '../../redux/slice/userSlice';
 
 const Header_Max_Height = 90;
 const Header_Min_Height = 20;
 
 export default function DynamicHeader({ animHeaderValue }) {
+  const userData = useSelector(userInfoSliceSelector);
   const animateHeaderBackgroundColor = animHeaderValue.interpolate({
     inputRange: [0, Header_Max_Height - Header_Min_Height],
     outputRange: [1, 0],
     extrapolate: 'clamp',
   });
-
   const animateHeaderHeight = animHeaderValue.interpolate({
     inputRange: [0, Header_Max_Height - Header_Min_Height],
     outputRange: [Header_Max_Height, Header_Min_Height],
@@ -23,17 +25,17 @@ export default function DynamicHeader({ animHeaderValue }) {
 
   return (
     <Animated.View
-    // style={[
-    //   styles.header,
-    //   {
-    //     height: animateHeaderHeight,
-    //     backgroundColor: animateHeaderBackgroundColor,
-    //     opacity: animateHeaderBackgroundColor,
-    //     overflow: 'hidden'
-    //   }
-    //
-    // ]}
-    className="pb-2"
+      // style={[
+      //   styles.header,
+      //   {
+      //     height: animateHeaderHeight,
+      //     backgroundColor: animateHeaderBackgroundColor,
+      //     opacity: animateHeaderBackgroundColor,
+      //     overflow: 'hidden'
+      //   }
+      //
+      // ]}
+      className="pb-2"
     >
       <Animated.View
         className="gap-3 flex-col"
@@ -73,7 +75,7 @@ export default function DynamicHeader({ animHeaderValue }) {
           <Avatar.Image
             size={40}
             source={{
-              uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQnaCJWqu5yYDXxd_SI-_LMvFCbdN2LweQ-WZ2ayqcTON0hSddHVyoYer-GlJwnJZSl5Mc&usqp=CAU',
+              uri: userData.avatarUrl,
             }}
           />
         </View>
@@ -86,9 +88,13 @@ export default function DynamicHeader({ animHeaderValue }) {
             borderWidth: 1,
           }}
         >
-          <IconButton icon="magnify" iconColor={Colors.primaryBackgroundColor} onPress={() => router.push("/home/search-list")} />
+          <IconButton
+            icon="magnify"
+            iconColor={Colors.primaryBackgroundColor}
+            onPress={() => router.push('/home/search-list')}
+          />
           <TextInput
-            onFocus={()=> router.push("/home/search")}
+            onFocus={() => router.push('/home/search')}
             className="flex-1 font-hnow63book"
             placeholder="Tìm kiếm món ăn hay shop house?"
           />

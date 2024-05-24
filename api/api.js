@@ -1,29 +1,30 @@
-import axios from "axios";
-
+import { BASE_URL } from '@env';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
 const api = axios.create({
-   baseURL: `${process.env.REACT_APP_BASE_URL}`,
-   withCredentials: true,
-   headers: {
-      "Access-Control-Allow-Origin": "*",
-   },
-})
+  baseURL: `${BASE_URL}`,
+  withCredentials: true,
+  headers: {
+    'Access-Control-Allow-Origin': '*',
+  },
+});
 
 // api.defaults.paramsSerializer = (params) =>
 //    qs.stringify(params, { arrayFormat: "repeat" });
 
-// api.interceptors.request.use(
-//    (config) => {
-//       if (!config.headers.Authorization) {
-//          const token = localStorage.getItem("token");
-//          if (token) {
-//             config.headers.Authorization = `Bearer ${token}`;
-//          }
-//       }
-//       console.log(config);
-//       return config;
-//    },
-//    (error) => Promise.reject(error)
-// );
+api.interceptors.request.use(
+  async (config) => {
+    if (!config.headers.Authorization) {
+      const token = await AsyncStorage.getItem("@token"); 
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
+    }
+    console.log(config);
+    return config;
+  },
+  (error) => Promise.reject(error),
+);
 // api.interceptors.response.use(
 //    (response) => {
 //       console.log(response);
@@ -46,6 +47,4 @@ const api = axios.create({
 //    }
 // )
 
-
-export default api
-
+export default api;

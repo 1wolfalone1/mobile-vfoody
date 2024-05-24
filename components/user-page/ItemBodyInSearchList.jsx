@@ -1,6 +1,7 @@
 import React from 'react';
 import { Dimensions, Image, StyleSheet, Text, View } from 'react-native';
 import { Colors } from '../../constant';
+import { formatNumberVND } from '../../utils/MyUtils';
 const styles = StyleSheet.create({
   shadow: {
     shadowOffset: { width: 2, height: 2 },
@@ -28,10 +29,10 @@ const ItemBodyInSearchList = ({ item }) => {
         width: widthItem,
         height: widthItem
       }}>
-        <Image source={{ uri: item.image }} className="w-full h-full rounded-lg" />
+        <Image source={{ uri: item.imageUrl }} className="w-full h-full rounded-lg" />
       </View>
       <View>
-        <Text className="text-lg text-primary">{item.price}</Text>
+        <Text className="text-lg text-primary">{formatNumberVND(item.price)}</Text>
         <Text className="text-black text-xs font-hnow63book">{item.name}</Text>
       </View>
     </View>
