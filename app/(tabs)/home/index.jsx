@@ -95,7 +95,7 @@ const Index = () => {
                     ...(idCategorySelected == item.id ? styles.shadowSelected : styles.shadow),
                   }}
                   className={`flex justify-start items-center rounded-full 
-                   ${idCategorySelected == item.id ? 'bg-primary' : 'bg-white'} w-[60] h-full`}
+                   ${'bg-white'} w-[60] h-full`}
                 >
                   <View className="">
                     <Image
@@ -115,7 +115,7 @@ const Index = () => {
                   <View className="w-[40] pb-2 mt-2 justify-center items-center">
                     <Text
                       // className="font-hnow64regular flex flex-wrap over"
-                      className={`${idCategorySelected == item.id ? 'text-white' : 'text-black'} font-hnow63book justify-center items-center text-center`}
+                      className={`${'text-black'} font-hnow63book justify-center items-center text-center`}
                       style={{
                         fontSize:8,
                         lineHeight: 15,
