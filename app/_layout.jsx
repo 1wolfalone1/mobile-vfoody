@@ -52,10 +52,7 @@ const RootLayout = () => {
           name="oauthredirect"
           options={{ headerShown: false, animation: 'slide_from_bottom' }}
         />
-<<<<<<< thiencn2
-=======
         <Stack.Screen name="(shop)" options={{ headerShown: false }} />
->>>>>>> main
       </Stack>
     </Provider>
   );
