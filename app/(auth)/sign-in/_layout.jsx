@@ -9,11 +9,14 @@ import api from '../../../api/api';
 import HeaderInAuth from '../../../components/common/HeaderInAuth';
 import { Colors, CommonConstants, Images } from '../../../constant';
 import userInfoSlice from '../../../redux/slice/userSlice';
+import { BASE_URL } from '@env';
 
 // const redirectUri = AuthSession.makeRedirectUri({
 //   path: '/sign-in',
 // });
 const AuthenLayout = () => {
+  console.log(`${BASE_URL}`, 'base url');
+  const dispatch = useDispatch();
   const { width, height } = Dimensions.get('window');
   const widthGoogleButton = parseInt((width * 80) / 100);
   const [userInfo, setUserInfo] = React.useState(null);
@@ -25,7 +28,6 @@ const AuthenLayout = () => {
     // redirectUri: "/sign-in"
   });
   async function handleSignInWithGoogle() {
-    const dispatch = useDispatch();
     console.log(response, ' response ne ');
     if (response === undefined || response === null) {
     } else {

@@ -1,6 +1,6 @@
 import { Stack } from 'expo-router';
 
-const ReviewLayout = () => {
+const ShopLayout = () => {
   return (
     <>
       <Stack
@@ -17,9 +17,17 @@ const ReviewLayout = () => {
             headerShown: false,
           }}
         />
+        <Stack.Screen
+          name="product-detail"
+          options={{
+            title: 'product-detail',
+            headerShown: false,
+            animation: 'fade_from_bottom'
+          }}
+        />
       </Stack>
     </>
   );
 };
 
-export default ReviewLayout;
+export default ShopLayout;
