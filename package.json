@@ -11,15 +11,12 @@
     "test": "jest --watchAll",
     "lint": "expo lint",
     "prepare": "husky install",
-    "format": "prettier --semi true --single-quote true --tab-width 2 --trailing-comma all --end-of-line lf --write '**/*.{js,jsx,ts,tsx,json,css,scss}'"
+    "format": "lint-staged"
   },
   "lint-staged": {
-    "**/*.{js,jsx,ts,tsx,css,scss,md,json,html}": "prettier --semi true --single-quote true --tab-width 2 --trailing-comma all --end-of-line lf --write"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
+    "**/*.{js,jsx,ts,tsx,css,scss,md,json,html}": "prettier --semi true --single-quote true --tab-width 2 --trailing-comma all --end-of-line lf --write",
+    "*.js": "eslint --cache --fix",
+    "*.{js,jsx,ts,tsx,json,css,scss}": "prettier --write"
   },
   "jest": {
     "preset": "jest-expo"
