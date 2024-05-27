@@ -19,6 +19,7 @@ const validationSchema = yup.object().shape({
     .max(25, 'Password must be at most 25 characters')
     .required('Password is required'),
 });
+
 const index = () => {
   const [isShowPassword, setIsShownPassword] = useState(false);
 

@@ -24,8 +24,9 @@ const AuthenLayout = () => {
     iosClientId: '378831586584-ocjo4ctv8je4q9d2ungkola7fi81pp1e.apps.googleusercontent.com',
     // redirectUri: "/sign-in"
   });
+
+  const dispatch = useDispatch();
   async function handleSignInWithGoogle() {
-    const dispatch = useDispatch();
     console.log(response, ' response ne ');
     if (response === undefined || response === null) {
     } else {
@@ -38,18 +39,21 @@ const AuthenLayout = () => {
       }
     }
   }
+
   const getUserInfo = async (token) => {
     if (!token) return;
     try {
       const response = await api.post('/api/v1/customer/google/login', { accessToken: token });
       const user = await response.data;
-      console.log(user ,' userrrrrrrrrrr')
+      console.log(user, ' userrrrrrrrrrr');
       if (user.isSuccess) {
         await AsyncStorage.setItem('@token', user.value.accessTokenResponse.accessToken);
-        dispatch(userInfoSlice.actions.changeUserInfo({
-          info: user.value.accountResponse,
-          role: CommonConstants.USER_ROLE.USER,
-        })) 
+        dispatch(
+          userInfoSlice.actions.changeUserInfo({
+            info: user.value.accountResponse,
+            role: CommonConstants.USER_ROLE.USER,
+          }),
+        );
       }
     } catch (e) {
       console.log(e);
@@ -101,6 +105,7 @@ const AuthenLayout = () => {
       </View>
     </ScrollView>
   );
+  
 };
 
 export default AuthenLayout;
