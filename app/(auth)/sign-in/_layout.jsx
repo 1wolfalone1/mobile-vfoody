@@ -1,3 +1,4 @@
+import { BASE_URL } from '@env';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Google from 'expo-auth-session/providers/google';
 import { Slot } from 'expo-router';
@@ -9,7 +10,6 @@ import api from '../../../api/api';
 import HeaderInAuth from '../../../components/common/HeaderInAuth';
 import { Colors, CommonConstants, Images } from '../../../constant';
 import userInfoSlice from '../../../redux/slice/userSlice';
-import { BASE_URL } from '@env';
 
 // const redirectUri = AuthSession.makeRedirectUri({
 //   path: '/sign-in',
@@ -27,6 +27,7 @@ const AuthenLayout = () => {
     iosClientId: '378831586584-ocjo4ctv8je4q9d2ungkola7fi81pp1e.apps.googleusercontent.com',
     // redirectUri: "/sign-in"
   });
+
   async function handleSignInWithGoogle() {
     console.log(response, ' response ne ');
     if (response === undefined || response === null) {
@@ -40,18 +41,21 @@ const AuthenLayout = () => {
       }
     }
   }
+
   const getUserInfo = async (token) => {
     if (!token) return;
     try {
       const response = await api.post('/api/v1/customer/google/login', { accessToken: token });
       const user = await response.data;
-      console.log(user ,' userrrrrrrrrrr')
+      console.log(user, ' userrrrrrrrrrr');
       if (user.isSuccess) {
         await AsyncStorage.setItem('@token', user.value.accessTokenResponse.accessToken);
-        dispatch(userInfoSlice.actions.changeUserInfo({
-          info: user.value.accountResponse,
-          role: CommonConstants.USER_ROLE.USER,
-        })) 
+        dispatch(
+          userInfoSlice.actions.changeUserInfo({
+            info: user.value.accountResponse,
+            role: CommonConstants.USER_ROLE.USER,
+          }),
+        );
       }
     } catch (e) {
       console.log(e);

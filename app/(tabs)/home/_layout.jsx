@@ -29,10 +29,7 @@ const HomePage = () => {
           useNativeDriver: false,
         })}
       >
-      
-        <Slot  screenOptions={{
-          
-        }}/>
+        <Slot screenOptions={{}} />
       </ScrollView>
     </SafeAreaView>
   );

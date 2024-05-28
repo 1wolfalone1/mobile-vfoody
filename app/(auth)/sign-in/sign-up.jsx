@@ -63,6 +63,7 @@ const SignUpLayout = () => {
             </View>
           </View>
           <View className="w-full flex-1 items-center">
+
             <TextInput
               style={{ backgroundColor: 'transparent', width: '80%' }}
               type="flat"
@@ -98,6 +99,7 @@ const SignUpLayout = () => {
               }
               placeholder="Password"
             />
+
             <View className="w-[80%]">
               <HelperText type="error" visible={touched.password && errors.password}>
                 {errors.password}
@@ -140,7 +142,9 @@ const SignUpLayout = () => {
             Đăng ký
           </Button>
         </View>
+
       )}
+
     </Formik>
   );
 };

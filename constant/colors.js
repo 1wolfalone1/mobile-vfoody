@@ -11,8 +11,12 @@ export default {
   commonBtnText: '#FFFFFF',
   btnBackground: '#FFFFFF',
   btnText: '#DF4830',
+  skeleton: {
+    bg: '#adadad',
+    hl: '#cccccc',
+  },
   star: {
-    defaut: "#FECF0A"
+    defaut: '#FECF0A',
   },
   shadow: {
     DEFAULT: '#df4730ff',

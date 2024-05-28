@@ -6,7 +6,7 @@ import ItemInGridSearch from '../../../components/user-page/ItemInGridSearch';
 import { Colors } from '../../../constant';
 
 const SearchPage = () => {
-  const [dataPromtProduct, setDataPromtProduct] = useState({});
+  const [dataPromtProduct, setDataPromtProduct] = useState(null);
   const handleGetDataPromtProduct = async () => {
     try {
       const res = await api.get('/api/v1/customer/product/top');
@@ -19,7 +19,8 @@ const SearchPage = () => {
   };
   useEffect(() => {
     handleGetDataPromtProduct();
-  },[])
+  }, []);
+  const blankList = Array(12).fill(null);
   return (
     <View className="mt-6">
       <ScrollView className="overflow-visible">
@@ -70,9 +71,10 @@ const SearchPage = () => {
         <View className="mb-3 ml-7 mb-8">
           <Text className="font-hnow65medium text-lg">Được đề xuất</Text>
         </View>
-        <View className="flex-row flex-wrap ml-7 ">
+        <View className="flex-row flex-wrap bg-transparent">
           <FlatList
-            data={dataPromtProduct}
+            contentContainerStyle={{ paddingLeft: 28 }}
+            data={dataPromtProduct ? dataPromtProduct : blankList}
             scrollEnabled={false}
             numColumns={3}
             renderItem={({ item }) => <ItemInGridSearch item={item} />}

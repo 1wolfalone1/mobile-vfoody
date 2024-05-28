@@ -7,7 +7,7 @@ const AuthLayout = () => {
       <Stack
         screenOptions={{
           headerShown: false,
-         animation: "fade_from_bottom" 
+          animation: 'fade_from_bottom',
         }}
       >
         <Stack.Screen
@@ -16,15 +16,14 @@ const AuthLayout = () => {
             headerShown: false,
           }}
         />
-      {
-  // <Stack.Screen
-  //         name="sign-in/sign-up"
-  //         options={{
-  //           headerShown: false,
-  //         }}
-  //       />       
-      }  
-       
+        {
+          // <Stack.Screen
+          //         name="sign-in/sign-up"
+          //         options={{
+          //           headerShown: false,
+          //         }}
+          //       />
+        }
       </Stack>
       <StatusBar />
     </>
