@@ -1,3 +1,4 @@
+import { BASE_URL } from '@env';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Google from 'expo-auth-session/providers/google';
 import { Slot } from 'expo-router';
@@ -9,7 +10,6 @@ import api from '../../../api/api';
 import HeaderInAuth from '../../../components/common/HeaderInAuth';
 import { Colors, CommonConstants, Images } from '../../../constant';
 import userInfoSlice from '../../../redux/slice/userSlice';
-import { BASE_URL } from '@env';
 
 // const redirectUri = AuthSession.makeRedirectUri({
 //   path: '/sign-in',
@@ -28,7 +28,6 @@ const AuthenLayout = () => {
     // redirectUri: "/sign-in"
   });
 
-  const dispatch = useDispatch();
   async function handleSignInWithGoogle() {
     console.log(response, ' response ne ');
     if (response === undefined || response === null) {
@@ -108,7 +107,6 @@ const AuthenLayout = () => {
       </View>
     </ScrollView>
   );
-  
 };
 
 export default AuthenLayout;

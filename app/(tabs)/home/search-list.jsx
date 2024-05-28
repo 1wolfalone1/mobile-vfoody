@@ -13,8 +13,23 @@ const styles = StyleSheet.create({
     zIndex: -1,
   },
 });
+
+const blankList = [
+  {
+    title: null,
+    data: Array(5).fill(null),
+  },
+  {
+    title: null,
+    data: Array(5).fill(null),
+  },
+  {
+    title: null,
+    data: Array(5).fill(null),
+  },
+];
 const SearchList = () => {
-  const [dataSearchRender, setDataSearchRender] = useState([]);
+  const [dataSearchRender, setDataSearchRender] = useState(null);
   const handleGetDataSearch = async () => {
     try {
       const res = await api.get('/api/v1/customer/shop/search');
@@ -69,10 +84,9 @@ const SearchList = () => {
         className="flex-1"
         contentContainerStyle={{ zIndex: 1 }}
         keyExtractor={(item, index) => index}
-        sections={dataSearchRender}
+        sections={dataSearchRender ? dataSearchRender : blankList}
         scrollEnabled={false}
         SectionSeparatorComponent={(section, index) => {
-          console.log(index, '123123123123');
           return (
             <View
               style={{
@@ -83,30 +97,27 @@ const SearchList = () => {
             />
           );
         }}
-        stickySectionHeadersEnabled={false}
         renderSectionHeader={({ section: { title, data } }) => (
-          <>
-            <View className="flex-1 my-4" style={{}}>
-              <ItemHeaderInSearchList item={title} />
+          <View className=" my-4 ">
+            <ItemHeaderInSearchList item={title} />
 
-              <FlatList
-                className="px-7 flex-1 w-full"
-                contentContainerStyle={{ paddingRight: 56 }}
-                data={data}
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                ItemSeparatorComponent={() => (
-                  <View
-                    style={{
-                      width: 10,
-                      height: 1,
-                    }}
-                  />
-                )}
-                renderItem={({ item }) => <ItemBodyInSearchList item={item} />}
-              />
-            </View>
-          </>
+            <FlatList
+              className="px-7 w-full"
+              contentContainerStyle={{ paddingRight: 56 }}
+              data={data}
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              ItemSeparatorComponent={() => (
+                <View
+                  style={{
+                    width: 10,
+                    height: 1,
+                  }}
+                />
+              )}
+              renderItem={({ item }) => <ItemBodyInSearchList item={item} />}
+            />
+          </View>
         )}
         renderItem={({ item }) => null}
       />

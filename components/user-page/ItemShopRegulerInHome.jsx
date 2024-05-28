@@ -1,4 +1,5 @@
 import { AntDesign } from '@expo/vector-icons';
+import SkeletonLoading from 'expo-skeleton-loading';
 import React from 'react';
 import { Dimensions, Image, StyleSheet, Text, View } from 'react-native';
 import { Avatar } from 'react-native-paper';
@@ -25,12 +26,13 @@ const styles = StyleSheet.create({
 
 const ItemShopRegulerInHome = ({ item }) => {
   const { width, height } = Dimensions.get('window');
-  console.log(item);
   const widthItem = parseInt((width * 65) / 100);
   const heightImage = parseInt((widthItem * 65) / 100);
-  
+
   console.log(widthItem);
-  return (
+  return item == null ? (
+    <SkeletonItem />
+  ) : (
     <View
       key={item.id}
       className={`flex justify-start items-center bg-white rounded-2xl  mr-5 mb-10`}
@@ -55,6 +57,7 @@ const ItemShopRegulerInHome = ({ item }) => {
         </View>
         <Image
           source={{
+            backgroundColor: 'black',
             uri: item.bannerUrl,
           }}
           resizeMode="cover"
@@ -73,14 +76,14 @@ const ItemShopRegulerInHome = ({ item }) => {
           <View className="ml-2">
             <Text className="text-sm font-hnow65medium">Cơm nhà làm</Text>
             <Text style className="text-xs text-gray-600 font-hnow64regular">
-             {item.description} 
+              {item.description}
             </Text>
           </View>
         </View>
         <View className="flex-row gap-2 justify-between w-full items-center">
           <Text className="text-xs font-hnow65medium text-primary">12k -> 30k</Text>
           <Text style className="text-xs text-gray-400 font-hnow64regular">
-           {item.buildingName} 
+            {item.buildingName}
           </Text>
         </View>
       </View>
@@ -89,3 +92,62 @@ const ItemShopRegulerInHome = ({ item }) => {
 };
 
 export default ItemShopRegulerInHome;
+const SkeletonItem = () => {
+  const { width, height } = Dimensions.get('window');
+  const widthItem = parseInt((width * 65) / 100);
+  const heightImage = parseInt((widthItem * 65) / 100);
+  return (
+    <SkeletonLoading background={Colors.skeleton.bg} highlight={Colors.skeleton.hl}>
+      <View
+        style={{
+          width: widthItem,
+          justifyContent: 'start',
+          borderRadius: 16,
+          marginRight: 20,
+          marginBottom: 40,
+          backgroundColor: 'white',
+          ...styles.shadow,
+        }}
+      >
+        <View
+          style={{
+            height: heightImage,
+            width: widthItem,
+            backgroundColor: Colors.skeleton.bg,
+          }}
+          borderRadius={16}
+        />
+        <View flexDirection="column" padding={12} gap={4} alignItems="start" justifyContent="start">
+          <View style={{ flexDirection: 'row' }}>
+            <View
+              style={{ width: 14, height: 14, backgroundColor: Colors.skeleton.bg }}
+              borderRadius={50}
+            />
+            <View flexDirection="column" flex={1} gap={2} marginBottom={4}>
+              <Text
+                style={{
+                  borderRadius: 20,
+                  fontSize: 14,
+                  lineHeight: 18,
+                  backgroundColor: Colors.skeleton.bg,
+                }}
+              ></Text>
+              <Text
+                style={{
+                  borderRadius: 20,
+                  fontSize: 14,
+                  lineHeight: 18,
+                  backgroundColor: Colors.skeleton.bg,
+                }}
+              ></Text>
+            </View>
+          </View>
+          <Text
+            style={{ borderRadius: 20, fontSize: 14, backgroundColor: Colors.skeleton.bg }}
+            borderRadius={50}
+          ></Text>
+        </View>
+      </View>
+    </SkeletonLoading>
+  );
+};

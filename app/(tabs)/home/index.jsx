@@ -1,16 +1,16 @@
+import { BASE_URL } from '@env';
 import { useEffect, useState } from 'react';
 import { Dimensions, FlatList, Image, ScrollView, StyleSheet, Text, View } from 'react-native';
-import { TouchableRipple } from 'react-native-paper';
 import { useSelector } from 'react-redux';
 import api from '../../../api/api';
+import CategoryItemInHome from '../../../components/user-page/CategoryItemInHome';
 import ItemBestSellerInHome from '../../../components/user-page/ItemBestSellerInHome';
 import ItemShopRegulerInHome from '../../../components/user-page/ItemShopRegulerInHome';
 import { Colors } from '../../../constant';
 import { userInfoSliceSelector } from '../../../redux/slice/userSlice';
-import { BASE_URL } from '@env';
 
 const Index = () => {
-  console.log(BASE_URL, "Base url home");
+  console.log(BASE_URL, 'Base url home');
   const { width, height } = Dimensions.get('window');
   const widthCategory = parseInt((width * 15) / 100);
   const userData = useSelector(userInfoSliceSelector);
@@ -34,11 +34,11 @@ const Index = () => {
     },
   });
 
-  const [dataTopShop, setDataTopShop] = useState({});
+  const [dataTopShop, setDataTopShop] = useState(null);
 
   const [idCategorySelected, setCategorySelected] = useState(1);
-  const [dataTopProduct, setDataTopProduct] = useState({});
-  const [categories, setCategories] = useState([]);
+  const [dataTopProduct, setDataTopProduct] = useState(null);
+  const [categories, setCategories] = useState(null);
   const handleGetCategories = async () => {
     try {
       const res = await api.get('/api/v1/category');
@@ -79,70 +79,35 @@ const Index = () => {
   useEffect(() => {
     console.log(userData, ' teset');
   }, [userData]);
-
+  const blankData = [null, null, null, null, null];
   return (
     <>
       <View className="flex-1">
-        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          <View className="flex-row  gap-5 p-5  pl-7">
-            {categories.map((item, index) => (
-              <TouchableRipple
-                onPress={() => {
-                  setCategorySelected(item.id);
-                }}
-                rippleColor="rgba(252, 91, 91, 0.178)"
-                key={item.id}
-              >
-                <View
-                  style={{
-                    ...(idCategorySelected == item.id ? styles.shadowSelected : styles.shadow),
-                  }}
-                  className={`flex justify-start items-center rounded-full 
-                   ${'bg-white'} w-[60] h-full`}
-                >
-                  <View className="">
-                    <Image
-                      source={{
-                        uri: item.imageUrl,
-                      }}
-                      className="rounded-full  border-solid border-primary"
-                      resizeMode="cover"
-                      style={{
-                        borderColor: 'red',
-                        borderWidth: 1,
-                        height: widthCategory,
-                        width: widthCategory,
-                      }}
-                    />
-                  </View>
-                  <View className="w-[40] pb-2 mt-2 justify-center items-center">
-                    <Text
-                      // className="font-hnow64regular flex flex-wrap over"
-                      className={`${'text-black'} font-hnow63book justify-center items-center text-center`}
-                      style={{
-                        fontSize:8,
-                        lineHeight: 15,
-                        flexWrap: 'wrap',
-                      }}
-                    >
-                      {item.name}
-                    </Text>
-                  </View>
-                </View>
-              </TouchableRipple>
-            ))}
-          </View>
-        </ScrollView>
+        <View className="flex-row mt-2">
+          <FlatList
+            contentContainerStyle={{ paddingLeft: 28, paddingVertical: 8 }}
+            horizontal
+            data={categories ? categories : blankData}
+            showsHorizontalScrollIndicator={false}
+            renderItem={({ item }) => (
+              <CategoryItemInHome
+                item={item}
+                idCategorySelected={idCategorySelected}
+                setCategorySelected={setCategorySelected}
+              />
+            )}
+          />
+        </View>
       </View>
       <View className="pl-7">
         <Text className="font-hnow65medium text-xl text-primary">Bán chạy nhất</Text>
       </View>
       <View className="flex-1 ">
-        <View className="flex-row mt-2  ">
+        <View className="flex-row mt-2">
           <FlatList
             contentContainerStyle={{ paddingLeft: 28 }}
             horizontal
-            data={dataTopProduct}
+            data={dataTopProduct ? dataTopProduct : blankData}
             showsHorizontalScrollIndicator={false}
             renderItem={({ item }) => <ItemBestSellerInHome item={item} />}
           />
@@ -156,7 +121,7 @@ const Index = () => {
           <FlatList
             contentContainerStyle={{ paddingLeft: 28 }}
             horizontal
-            data={dataTopShop}
+            data={dataTopShop ? dataTopShop : blankData}
             showsHorizontalScrollIndicator={false}
             renderItem={({ item }) => <ItemShopRegulerInHome item={item} />}
           />

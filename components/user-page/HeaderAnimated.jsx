@@ -74,9 +74,15 @@ export default function DynamicHeader({ animHeaderValue }) {
           </View>
           <Avatar.Image
             size={40}
-            source={{
-              uri: userData.avatarUrl,
-            }}
+            source={
+              userData.avatarUrl === null
+                ? {
+                    uri: userData.avatarUrl,
+                  }
+                : {
+                    uri: 'https://w7.pngwing.com/pngs/205/731/png-transparent-default-avatar-thumbnail.png',
+                  }
+            }
           />
         </View>
       </Animated.View>
