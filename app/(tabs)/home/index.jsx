@@ -7,7 +7,10 @@ import ItemBestSellerInHome from '../../../components/user-page/ItemBestSellerIn
 import ItemShopRegulerInHome from '../../../components/user-page/ItemShopRegulerInHome';
 import { Colors } from '../../../constant';
 import { userInfoSliceSelector } from '../../../redux/slice/userSlice';
+import { BASE_URL } from '@env';
+
 const Index = () => {
+  console.log(BASE_URL, "Base url home");
   const { width, height } = Dimensions.get('window');
   const widthCategory = parseInt((width * 15) / 100);
   const userData = useSelector(userInfoSliceSelector);
