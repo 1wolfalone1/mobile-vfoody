@@ -8,26 +8,33 @@ import { Colors } from '../../../constant';
 const validationSchema = yup.object().shape({
   email: yup
     .string()
-    .email('Invalid email')
-    .max(50, 'Email must be at most 50 characters')
-    .required('Email is required'),
+    .email('Email không hợp lệ!')
+    .max(50, 'Email tối đa 50 ký tự!')
+    .required('Vui lòng nhập email'),
   phoneNumber: yup
     .string()
-    .min(8, 'Phone number must be at least 8 characters')
-    .max(11, 'Phone number must be at most 11 characters')
-    .required('Phone number is required'),
+    .matches(/^(0)[0-9]{7,10}$/, 'Số điện thoại không hợp lệ')
+    .required('Vui lòng nhập số điện thoại'),
   password: yup
     .string()
-    .min(8, 'Password must be at least 8 characters')
-    .max(25, 'Password must be at most 25 characters')
-    .required('Password is required'),
+    .min(8, 'Mật khẩu phải có ít nhất 8 ký tự')
+    .max(25, 'Mật khẩu chỉ có tối đa 25 ký tự')
+    .matches(/[0-9]/, 'Mật khẩu phải chứa ít nhất một ký tự số (0-9)')
+    .matches(/[a-z]/, 'Mật khẩu phải chứa ít nhất một chữ cái in thường (a-z)')
+    .matches(/[A-Z]/, 'Mật khẩu phải chứa ít nhất một chữ cái in hoa (A-Z)')
+    .matches(
+      /[^\w]/,
+      'Mật khẩu phải chứa ít nhất một ký tự đặc biệt (`, ~, !, @, #, $, %, ^, &, *, ?)',
+    )
+    .required('Vui lòng nhập mật khẩu'),
   confirmPassword: yup
     .string()
-    .oneOf([yup.ref('password'), null], 'Passwords must match')
-    .required('Confirm Password is required'),
+    .oneOf([yup.ref('password'), null], 'Mật khẩu không khớp')
+    .required('Vui lòng nhập lại mật khẩu'),
 });
 const SignUpLayout = () => {
   const [isShowPassword, setIsShownPassword] = useState(false);
+  const [isShowConfirmPassword, setIsShownConfirmPassword] = useState(false);
   return (
     <Formik
       initialValues={{
@@ -48,12 +55,12 @@ const SignUpLayout = () => {
             <TextInput
               style={{ backgroundColor: 'transparent', width: '80%' }}
               type="flat"
-              dense={true}
+              dense
               onBlur={handleBlur('email')}
               value={values.email}
               onChangeText={handleChange('email')}
               keyboardType="email-address"
-              placeholder="Email"
+              placeholder="Nhập email của bạn"
               onSubmitEditing={Keyboard.dismiss}
             />
             <View className="w-[80%]">
@@ -63,16 +70,15 @@ const SignUpLayout = () => {
             </View>
           </View>
           <View className="w-full flex-1 items-center">
-
             <TextInput
               style={{ backgroundColor: 'transparent', width: '80%' }}
               type="flat"
-              dense={true}
+              dense
               onBlur={handleBlur('phoneNumber')}
               value={values.phoneNumber}
               onChangeText={handleChange('phoneNumber')}
               keyboardType="phone-pad"
-              placeholder="Phone Number"
+              placeholder="Nhập số điện thoại của bạn"
               onSubmitEditing={Keyboard.dismiss}
             />
             <View className="w-[80%]">
@@ -85,19 +91,19 @@ const SignUpLayout = () => {
             <TextInput
               style={{ backgroundColor: 'transparent', width: '80%' }}
               type="flat"
-              dense={true}
+              dense
               onChangeText={handleChange('password')}
               onBlur={handleBlur('password')}
               value={values.password}
               secureTextEntry={!isShowPassword}
               right={
                 !isShowPassword ? (
-                  <TextInput.Icon icon="eye" onPress={(state) => setIsShownPassword(true)} />
+                  <TextInput.Icon icon="eye-off" onPress={() => setIsShownPassword(true)} />
                 ) : (
-                  <TextInput.Icon icon="eye-off" onPress={(state) => setIsShownPassword(false)} />
+                  <TextInput.Icon icon="eye" onPress={() => setIsShownPassword(false)} />
                 )
               }
-              placeholder="Password"
+              placeholder="Nhập mật khẩu của bạn"
             />
 
             <View className="w-[80%]">
@@ -110,12 +116,19 @@ const SignUpLayout = () => {
             <TextInput
               style={{ backgroundColor: 'transparent', width: '80%' }}
               type="flat"
-              dense={true}
+              dense
               onChangeText={handleChange('confirmPassword')}
               onBlur={handleBlur('confirmPassword')}
               value={values.confirmPassword}
-              secureTextEntry={!isShowPassword}
-              placeholder="Confirm Password"
+              secureTextEntry={!isShowConfirmPassword}
+              right={
+                !isShowConfirmPassword ? (
+                  <TextInput.Icon icon="eye-off" onPress={() => setIsShownConfirmPassword(true)} />
+                ) : (
+                  <TextInput.Icon icon="eye" onPress={() => setIsShownConfirmPassword(false)} />
+                )
+              }
+              placeholder="Nhập lại mật khẩu"
             />
             <View className="w-[80%]">
               <HelperText type="error" visible={touched.confirmPassword && errors.confirmPassword}>
@@ -142,9 +155,7 @@ const SignUpLayout = () => {
             Đăng ký
           </Button>
         </View>
-
       )}
-
     </Formik>
   );
 };

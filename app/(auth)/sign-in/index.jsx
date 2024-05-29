@@ -6,24 +6,30 @@ import { Button, HelperText, TextInput } from 'react-native-paper';
 import * as yup from 'yup';
 import { Colors } from '../../../constant';
 
-
 const validationSchema = yup.object().shape({
   email: yup
     .string()
-    .email('Invalid email')
-    .max(50, 'Email must be at most 50 characters')
-    .required('Email is required'),
+    .email('Email không hợp lệ!')
+    .max(50, 'Email tối đa 50 ký tự!')
+    .required('Vui lòng nhập email'),
   password: yup
     .string()
-    .min(8, 'Password must be at least 8 characters')
-    .max(25, 'Password must be at most 25 characters')
-    .required('Password is required'),
+    .min(8, 'Mật khẩu phải có ít nhất 8 ký tự')
+    .max(25, 'Mật khẩu chỉ có tối đa 25 ký tự')
+    .matches(/[0-9]/, 'Mật khẩu phải chứa ít nhất một ký tự số (0-9)')
+    .matches(/[a-z]/, 'Mật khẩu phải chứa ít nhất một chữ cái in thường (a-z)')
+    .matches(/[A-Z]/, 'Mật khẩu phải chứa ít nhất một chữ cái in hoa (A-Z)')
+    .matches(
+      /[^\w]/,
+      'Mật khẩu phải chứa ít nhất một ký tự đặc biệt (`, ~, !, @, #, $, %, ^, &, *, ?)',
+    )
+    .required('Vui lòng nhập mật khẩu'),
 });
 
 const index = () => {
   const [isShowPassword, setIsShownPassword] = useState(false);
 
-   return (
+  return (
     <Formik
       initialValues={{ email: '', password: '' }}
       onSubmit={(values) => {
@@ -42,7 +48,7 @@ const index = () => {
               onBlur={handleBlur('email')}
               value={values.email}
               onChangeText={handleChange('email')}
-              placeholder="Email address"
+              placeholder="Nhập email của bạn"
               onSubmitEditing={Keyboard.dismiss}
             />
             <View className="w-[80%]">
@@ -61,12 +67,12 @@ const index = () => {
               secureTextEntry={!isShowPassword}
               right={
                 !isShowPassword ? (
-                  <TextInput.Icon icon="eye" onPress={(state) => setIsShownPassword(true)} />
+                  <TextInput.Icon icon="eye-off" onPress={() => setIsShownPassword(true)} />
                 ) : (
-                  <TextInput.Icon icon="eye-off" onPress={(state) => setIsShownPassword(false)} />
+                  <TextInput.Icon icon="eye" onPress={() => setIsShownPassword(false)} />
                 )
               }
-              placeholder="Password"
+              placeholder="Nhập mật khẩu của bạn"
             />
             <View className="w-[80%]">
               <HelperText type="error" visible={touched.password && errors.password}>
@@ -83,10 +89,12 @@ const index = () => {
             }}
             labelStyle={{
               fontFamily: 'HeadingNow-64Regular',
+              fontWeight: 700,
               fontSize: 16,
-              lineHeight: 19,
             }}
-            onPress={handleSubmit}
+            onPress={() => {
+              router.push('verify/forgot-password');
+            }}
           >
             Quên Mật Khẩu?
           </Button>
