@@ -31,14 +31,12 @@ const AuthenLayout = () => {
   async function handleSignInWithGoogle() {
     console.log(response, ' response ne ');
     if (response === undefined || response === null) {
+    } else if (response.type == 'success') {
+      await AsyncStorage.setItem('@statusLogin', 'ok');
+      await getUserInfo(response.authentication.accessToken);
     } else {
-      if (response.type == 'success') {
-        await AsyncStorage.setItem('@statusLogin', 'ok');
-        await getUserInfo(response.authentication.accessToken);
-      } else {
-        console.log(response.error, ' error');
-        await AsyncStorage.setItem('@statusLogin', 'error');
-      }
+      console.log(response.error, ' error');
+      await AsyncStorage.setItem('@statusLogin', 'error');
     }
   }
 
@@ -73,12 +71,12 @@ const AuthenLayout = () => {
           resizeMode="stretch"
           source={Images.LogoCoverDark}
         />
-        <HeaderInAuth activePage={'signIn'} />
+        <HeaderInAuth activePage="signIn" />
         <Slot screenOptions={{ Animation: 'flip' }} />
         <View className="flex-row justify-center  items-center my-8">
-          <View className="h-[1] w-[100] bg-black-200"></View>
+          <View className="h-[1] w-[100] bg-black-200" />
           <Text className="mx-4">Or</Text>
-          <View className="h-[1] w-[100] bg-black-200"></View>
+          <View className="h-[1] w-[100] bg-black-200" />
         </View>
         <View className="items-center">
           <TouchableRipple
@@ -95,11 +93,11 @@ const AuthenLayout = () => {
               }}
             >
               <Image
-                className="h-[40] w-[40] mr-4"
+                className="h-[30] w-[30] mr-4"
                 resizeMode="contain"
                 source={Images.GoogleIcon}
               />
-              <Text style={{ lineHeight: 24, fontSize: 20 }}>Sign in with google</Text>
+              <Text style={{ fontSize: 16 }}>Đăng nhập bằng google</Text>
             </View>
           </TouchableRipple>
           <Text>{loginErrorGoogleMessage}</Text>
