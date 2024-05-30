@@ -11,6 +11,13 @@ const ShopLayout = () => {
         }}
       >
         <Stack.Screen
+          name="index"
+          options={{
+            title: 'index',
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
           name="review"
           options={{
             title: 'review',
@@ -22,7 +29,7 @@ const ShopLayout = () => {
           options={{
             title: 'product-detail',
             headerShown: false,
-            animation: 'fade_from_bottom'
+            animation: 'fade_from_bottom',
           }}
         />
       </Stack>
