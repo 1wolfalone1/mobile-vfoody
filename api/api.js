@@ -1,8 +1,7 @@
-import { BASE_URL } from '@env';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 const api = axios.create({
-  baseURL: BASE_URL,
+  baseURL: "http://vfoody-backend.1wolfalone1.com",
   withCredentials: true,
   headers: {
     'Access-Control-Allow-Origin': '*',

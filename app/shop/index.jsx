@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Animated, ScrollView, Text } from 'react-native';
+import { Animated, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux';
 import HeaderShopAnimated from '../../components/shop/HeaderShopAnimated';
@@ -77,6 +77,7 @@ const ShopPage = () => {
       >
         <Text className="text-lg font-hnow65medium px-8 mt-4">Giam Gia Cho Ban</Text>
         <ListPromotionInShop listPromotion={listPromotion} />
+        <View className="h-[10000]"/>
       </ScrollView>
     </SafeAreaView>
   );
