@@ -4,12 +4,13 @@ import * as Google from 'expo-auth-session/providers/google';
 import { Slot } from 'expo-router';
 import React from 'react';
 import { Dimensions, Image, ScrollView, Text, View } from 'react-native';
-import { TouchableRipple } from 'react-native-paper';
-import { useDispatch } from 'react-redux';
+import { Snackbar, TouchableRipple } from 'react-native-paper';
+import { useDispatch, useSelector } from 'react-redux';
 import api from '../../../api/api';
 import HeaderInAuth from '../../../components/common/HeaderInAuth';
 import { Colors, CommonConstants, Images } from '../../../constant';
 import userInfoSlice from '../../../redux/slice/userSlice';
+import persistSlice, { persistSliceSelector } from '../../../redux/slice/persistSlice';
 
 // const redirectUri = AuthSession.makeRedirectUri({
 //   path: '/sign-in',
@@ -27,6 +28,7 @@ const AuthenLayout = () => {
     iosClientId: '378831586584-ocjo4ctv8je4q9d2ungkola7fi81pp1e.apps.googleusercontent.com',
     // redirectUri: "/sign-in"
   });
+  const { isReset } = useSelector(persistSliceSelector);
 
   async function handleSignInWithGoogle() {
     console.log(response, ' response ne ');
@@ -102,6 +104,20 @@ const AuthenLayout = () => {
           </TouchableRipple>
           <Text>{loginErrorGoogleMessage}</Text>
         </View>
+        <Snackbar
+          visible={isReset}
+          onDismiss={() => dispatch(persistSlice.actions.saveIsReset(false))}
+          action={{
+            label: 'Ok',
+            onPress: () => {
+              dispatch(persistSlice.actions.saveIsReset(false));
+            },
+            style: { color: 'red' },
+          }}
+          className="mb-4 text-center bg-gray-500 mx-8 rounded-md text-lg text-white bottom-0"
+        >
+          Đổi mật khẩu thành công!
+        </Snackbar>
       </View>
     </ScrollView>
   );
