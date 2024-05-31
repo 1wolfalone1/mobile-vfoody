@@ -195,12 +195,12 @@ const SignUpLayout = () => {
             style={{ width: '80%' }}
             theme={{ roundness: 4 }}
             contentStyle={{
-              paddingVertical: 4,
+              paddingVertical: 8,
             }}
             labelStyle={{
               fontFamily: 'HeadingNow-64Regular',
-              fontSize: 16,
-              lineHeight: 18,
+              fontSize: 18,
+              lineHeight: 20,
             }}
             onPress={handleSubmit}
           >
