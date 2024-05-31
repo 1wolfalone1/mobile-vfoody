@@ -28,7 +28,7 @@ const AuthenLayout = () => {
     iosClientId: '378831586584-ocjo4ctv8je4q9d2ungkola7fi81pp1e.apps.googleusercontent.com',
     // redirectUri: "/sign-in"
   });
-  const { isReset } = useSelector(persistSliceSelector);
+  const { isReset, isSignup } = useSelector(persistSliceSelector);
 
   async function handleSignInWithGoogle() {
     console.log(response, ' response ne ');
@@ -75,48 +75,64 @@ const AuthenLayout = () => {
         />
         <HeaderInAuth activePage="signIn" />
         <Slot screenOptions={{ Animation: 'flip' }} />
-        <View className="flex-row justify-center  items-center my-8">
+        <View className="flex-row justify-center items-center my-6">
           <View className="h-[1] w-[100] bg-black-200" />
           <Text className="mx-4">Or</Text>
           <View className="h-[1] w-[100] bg-black-200" />
         </View>
         <View className="items-center">
           <TouchableRipple
-            className="bg-white rounded-full"
+            className="bg-white rounded-3xl"
             borderless
             onPress={() => promptAsync()}
             rippleColor="rgba(0, 0, 0, .32)"
           >
             <View
-              className=" flex-row p-3   justify-between items-center rounded-full"
+              className="flex-row p-3 w-80 justify-center items-center rounded-3xl"
               style={{
                 borderWidth: 1,
                 borderColor: Colors.primaryBackgroundColor,
               }}
             >
               <Image
-                className="h-[30] w-[30] mr-4"
+                className="h-[30] w-[30] mr-2"
                 resizeMode="contain"
                 source={Images.GoogleIcon}
               />
-              <Text style={{ fontSize: 16 }}>Đăng nhập bằng google</Text>
+              <Text style={{ fontSize: 16, fontWeight: 'bold' }}>Đăng nhập bằng google</Text>
             </View>
           </TouchableRipple>
           <Text>{loginErrorGoogleMessage}</Text>
         </View>
         <Snackbar
-          visible={isReset}
-          onDismiss={() => dispatch(persistSlice.actions.saveIsReset(false))}
+          visible={isReset || isSignup}
+          onDismiss={() => {
+            if (isReset) {
+              dispatch(persistSlice.actions.saveIsReset(false));
+            } else if (isSignup) {
+              dispatch(persistSlice.actions.saveIsSignup(false));
+            }
+          }}
           action={{
             label: 'Ok',
             onPress: () => {
-              dispatch(persistSlice.actions.saveIsReset(false));
+              if (isReset) {
+                dispatch(persistSlice.actions.saveIsReset(false));
+              } else if (isSignup) {
+                dispatch(persistSlice.actions.saveIsSignup(false));
+              }
             },
             style: { color: 'red' },
           }}
-          className="mb-4 text-center bg-gray-500 mx-8 rounded-md text-lg text-white bottom-0"
+          className="mb-4 bg-gray-500 mx-8 rounded-md text-lg bottom-0"
         >
-          Đổi mật khẩu thành công!
+          {isReset ? (
+            <Text className="text-white">Đổi mật khẩu thành công!</Text>
+          ) : isSignup ? (
+            <Text className="text-white">Đăng ký tài khoản thành công!</Text>
+          ) : (
+            ''
+          )}
         </Snackbar>
       </View>
     </ScrollView>

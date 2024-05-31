@@ -24,7 +24,7 @@ export default function VerifyCode() {
 
     const payload = {
       email: emailTemp,
-      verifyType: 2,
+      verifyType: 1,
     };
 
     try {
@@ -42,23 +42,18 @@ export default function VerifyCode() {
     };
 
     try {
-      const responseData = await api.post('/api/v1/customer/forgot-password/verify', payload);
+      const responseData = await api.post('/api/v1/customer/register/verify', payload);
       const data = await responseData.data;
-      handleVerifyCodeResponseData(
-        payload.code,
-        data.isSuccess,
-        data.error.code,
-        data.error.message,
-      );
+      handleVerifyCodeResponseData(data.isSuccess, data.error.code, data.error.message);
     } catch (error) {
       console.log('error ne', error);
     }
   };
 
-  const handleVerifyCodeResponseData = async (code, isSuccess, errorCode, errorMessage) => {
+  const handleVerifyCodeResponseData = async (isSuccess, errorCode, errorMessage) => {
     if (isSuccess) {
-      dispatch(persistSlice.actions.saveCode(code));
-      router.push('verify/reset-password');
+      dispatch(persistSlice.actions.saveIsSignup(true));
+      router.push('sign-in');
     } else if (errorCode === '400') {
       setMessage(errorMessage);
     }
@@ -91,14 +86,14 @@ export default function VerifyCode() {
       }
       handleVerifyCode(verificationCode.join(''));
     } catch (error) {
-      console.log(error);
+      console.log('sahdosa', error);
     }
   };
 
   return (
     <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
       <HeaderInForgot
-        back="verify/forgot-password"
+        back="sign-in/sign-up"
         title="Nhập mã xác thực"
         des="Vui lòng kiểm tra email để lấy mã xác thực"
       />

@@ -13,8 +13,7 @@ import userInfoSlice from '../../../redux/slice/userSlice';
 const validationSchema = yup.object().shape({
   email: yup
     .string()
-    .email('Email không hợp lệ!')
-    .max(50, 'Email tối đa 50 ký tự!')
+    .matches(/^((?!\.)[\w\-_.]*[^.])(@\w+)(\.\w+(\.\w+)?[^.\W])$/, 'Email không hợp lệ!')
     .required('Vui lòng nhập email'),
   password: yup
     .string()
@@ -39,7 +38,7 @@ const index = () => {
     try {
       const responseData = await api.post('/api/v1/customer/login', payload);
       const data = await responseData.data;
-      console.log(data, 'dadaass');
+      console.log('data ne', data);
       handleLoginResponseData(data.value, data.isSuccess, data.error.code, data.error.message);
     } catch (error) {
       console.log('error ne', error);

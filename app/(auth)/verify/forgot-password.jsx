@@ -14,8 +14,7 @@ import persistSlice from '../../../redux/slice/persistSlice';
 const validationSchema = yup.object().shape({
   email: yup
     .string()
-    .email('Email không hợp lệ!')
-    .max(50, 'Email tối đa 50 ký tự!')
+    .matches(/^((?!\.)[\w\-_.]*[^.])(@\w+)(\.\w+(\.\w+)?[^.\W])$/, 'Email không hợp lệ!')
     .required('Vui lòng nhập email'),
 });
 
@@ -88,13 +87,13 @@ export default function ForgotPassword() {
                     {errors.email}{' '}
                   </HelperText>
                 </View>
-              </View>
-              <View className="w-[80%]">
-                {message && (
-                  <HelperText type="error" className="text-center text-base">
-                    {message}
-                  </HelperText>
-                )}
+                <View className="w-[80%]">
+                  {message && (
+                    <HelperText type="error" className="text-center text-base">
+                      {message}
+                    </HelperText>
+                  )}
+                </View>
               </View>
               <Button
                 buttonColor={Colors.primaryBackgroundColor}

@@ -9,16 +9,16 @@ import * as yup from 'yup';
 import api from '../../../api/api';
 import { Colors, CommonConstants } from '../../../constant';
 import userInfoSlice from '../../../redux/slice/userSlice';
+import persistSlice from '../../../redux/slice/persistSlice';
 
 const validationSchema = yup.object().shape({
   email: yup
     .string()
-    .email('Email không hợp lệ!')
-    .max(50, 'Email tối đa 50 ký tự!')
+    .matches(/^((?!\.)[\w\-_.]*[^.])(@\w+)(\.\w+(\.\w+)?[^.\W])$/, 'Email không hợp lệ!')
     .required('Vui lòng nhập email'),
   phoneNumber: yup
     .string()
-    .matches(/^(0)[0-9]{7,10}$/, 'Số điện thoại không hợp lệ')
+    .matches(/((^(\\+84|84|0|0084){1})(3|5|7|8|9))+([0-9]{8})$/, 'Số điện thoại không hợp lệ!')
     .required('Vui lòng nhập số điện thoại'),
   password: yup
     .string()
@@ -52,31 +52,18 @@ const SignUpLayout = () => {
     };
     try {
       const responseData = await api.post('/api/v1/customer/register', payload);
-      console.log('payload', payload);
-      console.log('responseData', responseData);
       const data = await responseData.data;
-      console.log('dataaaaaa', data);
       handleSignUpResponseData(data.value, data.isSuccess, data.error.code, data.error.message);
     } catch (error) {
       console.log('error ne', error);
     }
   };
 
-  const handleSignUpResponseData = async (data, isSuccess, errorCode, errorMessage) => {
+  const handleSignUpResponseData = async (value, isSuccess, errorCode, errorMessage) => {
     if (isSuccess) {
-      // await AsyncStorage.setItem('@token', data.accessTokenResponse.accessToken);
-      // dispatch(
-      //   userInfoSlice.actions.changeUserInfo({
-      //     info: data.accountResponse,
-      //     role: CommonConstants.USER_ROLE.USER,
-      //   }),
-      // );
-      // router.push('/verify-verify-code');
-      console.log('data ne', data);
-      console.log('isSuccess ne', isSuccess);
-      console.log('errorCode ne', errorCode);
-      console.log('errorMessage ne', errorMessage);
-    } else if (errorCode === '404') {
+      dispatch(persistSlice.actions.saveEmailTemp(value.email));
+      router.push('verify/verify-sign-up');
+    } else if (errorCode === '400') {
       setMessage(errorMessage);
     }
   };
@@ -180,13 +167,13 @@ const SignUpLayout = () => {
                 {errors.confirmPassword}
               </HelperText>
             </View>
-          </View>
-          <View className="w-[80%]">
-            {message && (
-              <HelperText type="error" className="text-center text-base">
-                {message}
-              </HelperText>
-            )}
+            <View className="w-[80%]">
+              {message && (
+                <HelperText type="error" className="text-center text-base">
+                  {message}
+                </HelperText>
+              )}
+            </View>
           </View>
           <Button
             buttonColor={Colors.primaryBackgroundColor}

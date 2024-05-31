@@ -7,6 +7,7 @@ const persistSlice = createSlice({
     emailTemp: '',
     verifyId: 0,
     isReset: false,
+    isSignup: false,
     code: '',
   },
   reducers: {
@@ -30,6 +31,9 @@ const persistSlice = createSlice({
     },
     saveIsReset: (state, action) => {
       state.isReset = action.payload;
+    },
+    saveIsSignup: (state, action) => {
+      state.isSignup = action.payload;
     },
   },
 });
