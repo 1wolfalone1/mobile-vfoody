@@ -1,10 +1,14 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { router } from 'expo-router';
 import { Formik } from 'formik';
 import React, { useState } from 'react';
 import { Keyboard, View } from 'react-native';
 import { Button, HelperText, TextInput } from 'react-native-paper';
+import { useDispatch } from 'react-redux';
 import * as yup from 'yup';
-import { Colors } from '../../../constant';
+import api from '../../../api/api';
+import { Colors, CommonConstants } from '../../../constant';
+import userInfoSlice from '../../../redux/slice/userSlice';
 
 const validationSchema = yup.object().shape({
   email: yup
@@ -28,19 +32,45 @@ const validationSchema = yup.object().shape({
 
 const index = () => {
   const [isShowPassword, setIsShownPassword] = useState(false);
+  const [message, setMessage] = useState();
+  const dispatch = useDispatch();
+
+  const handleLogin = async (payload) => {
+    try {
+      const responseData = await api.post('/api/v1/customer/login', payload);
+      const data = await responseData.data;
+      console.log(data, 'dadaass');
+      handleLoginResponseData(data.value, data.isSuccess, data.error.code, data.error.message);
+    } catch (error) {
+      console.log('error ne', error);
+    }
+  };
+
+  const handleLoginResponseData = async (data, isSuccess, errorCode, errorMessage) => {
+    if (isSuccess) {
+      await AsyncStorage.setItem('@token', data.accessTokenResponse.accessToken);
+      dispatch(
+        userInfoSlice.actions.changeUserInfo({
+          info: data.accountResponse,
+          role: CommonConstants.USER_ROLE.USER,
+        }),
+      );
+      router.push('/home');
+    } else if (errorCode === '401') {
+      setMessage(errorMessage);
+    }
+  };
 
   return (
     <Formik
       initialValues={{ email: '', password: '' }}
       onSubmit={(values) => {
-        // Handle login logic here
-        router.push('/home');
-        console.log(values);
+        handleLogin(values);
       }}
       validationSchema={validationSchema}
     >
       {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
-        <View className="flex gap-4 mt-5 items-center">
+        <View className="flex gap-2 mt-5 items-center">
           <View className="w-full flex-1 items-center">
             <TextInput
               style={{ backgroundColor: 'transparent', width: '80%' }}
@@ -79,6 +109,13 @@ const index = () => {
                 {errors.password}
               </HelperText>
             </View>
+          </View>
+          <View className="w-[80%]">
+            {message && (
+              <HelperText type="error" className="text-center text-base">
+                {message}
+              </HelperText>
+            )}
           </View>
           <Button
             textColor={Colors.primaryBackgroundColor}

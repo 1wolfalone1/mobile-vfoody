@@ -1,9 +1,14 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { router } from 'expo-router';
 import { Formik } from 'formik';
 import React, { useState } from 'react';
 import { Keyboard, View } from 'react-native';
 import { Button, HelperText, TextInput } from 'react-native-paper';
+import { useDispatch } from 'react-redux';
 import * as yup from 'yup';
-import { Colors } from '../../../constant';
+import api from '../../../api/api';
+import { Colors, CommonConstants } from '../../../constant';
+import userInfoSlice from '../../../redux/slice/userSlice';
 
 const validationSchema = yup.object().shape({
   email: yup
@@ -32,9 +37,50 @@ const validationSchema = yup.object().shape({
     .oneOf([yup.ref('password'), null], 'Mật khẩu không khớp')
     .required('Vui lòng nhập lại mật khẩu'),
 });
+
 const SignUpLayout = () => {
   const [isShowPassword, setIsShownPassword] = useState(false);
   const [isShowConfirmPassword, setIsShownConfirmPassword] = useState(false);
+  const [message, setMessage] = useState();
+  const dispatch = useDispatch();
+
+  const handleSignUp = async (values) => {
+    const payload = {
+      email: values.email,
+      phoneNumber: values.phoneNumber,
+      password: values.password,
+    };
+    try {
+      const responseData = await api.post('/api/v1/customer/register', payload);
+      console.log('payload', payload);
+      console.log('responseData', responseData);
+      const data = await responseData.data;
+      console.log('dataaaaaa', data);
+      handleSignUpResponseData(data.value, data.isSuccess, data.error.code, data.error.message);
+    } catch (error) {
+      console.log('error ne', error);
+    }
+  };
+
+  const handleSignUpResponseData = async (data, isSuccess, errorCode, errorMessage) => {
+    if (isSuccess) {
+      // await AsyncStorage.setItem('@token', data.accessTokenResponse.accessToken);
+      // dispatch(
+      //   userInfoSlice.actions.changeUserInfo({
+      //     info: data.accountResponse,
+      //     role: CommonConstants.USER_ROLE.USER,
+      //   }),
+      // );
+      // router.push('/verify-verify-code');
+      console.log('data ne', data);
+      console.log('isSuccess ne', isSuccess);
+      console.log('errorCode ne', errorCode);
+      console.log('errorMessage ne', errorMessage);
+    } else if (errorCode === '404') {
+      setMessage(errorMessage);
+    }
+  };
+  
   return (
     <Formik
       initialValues={{
@@ -44,8 +90,7 @@ const SignUpLayout = () => {
         confirmPassword: '',
       }}
       onSubmit={(values) => {
-        // Handle signup logic here
-        console.log(values);
+        handleSignUp(values);
       }}
       validationSchema={validationSchema}
     >
@@ -135,6 +180,13 @@ const SignUpLayout = () => {
                 {errors.confirmPassword}
               </HelperText>
             </View>
+          </View>
+          <View className="w-[80%]">
+            {message && (
+              <HelperText type="error" className="text-center text-base">
+                {message}
+              </HelperText>
+            )}
           </View>
           <Button
             buttonColor={Colors.primaryBackgroundColor}
