@@ -11,9 +11,11 @@ export default {
   commonBtnText: '#FFFFFF',
   btnBackground: '#FFFFFF',
   btnText: '#DF4830',
+  glassShopHeader: "#e2e2e2b7",
+  
   skeleton: {
     bg: '#adadad',
-    hl: '#cccccc',
+    hl:'#cccccc' 
   },
   star: {
     defaut: '#FECF0A',
@@ -23,5 +25,6 @@ export default {
     100: '#df473071',
     200: '#df473044',
     300: '#ff0000ff',
+    400: '#ff5050ff',
   },
 };
