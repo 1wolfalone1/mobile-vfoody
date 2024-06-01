@@ -1,6 +1,7 @@
+import { router } from 'expo-router';
 import SkeletonLoading from 'expo-skeleton-loading';
 import React from 'react';
-import { Dimensions, Image, StyleSheet, Text, View } from 'react-native';
+import { Dimensions, Image, StyleSheet, Text, TouchableHighlight, View } from 'react-native';
 import { Avatar } from 'react-native-paper';
 import { Colors } from '../../constant';
 import { formatNumberVND } from '../../utils/MyUtils';
@@ -38,32 +39,34 @@ const ItemBestSellerInHome = ({ item }) => {
         width: widthItem,
       }}
     >
-      <View
-        className="w-full bg-black-100  rounded-2xl "
-        style={{
-          ...styles.shadow,
-          height: widthItem,
-        }}
-      >
-        <View className="absolute top-2 left-2 bg-white flex-row rounded-full p-1.5 z-[1]">
-          <Text className="font-hnow64regular text-xs text-gray-500" style={{ fontSize: 10 }}>
-            {item.totalOrder} đã bán
-          </Text>
-        </View>
-        <Text
-          style
-          className="text-xs text-black font-hnow64regular absolute bottom-0 left-0 p-1 bg-glass z-[1]"
-        >
-          {formatNumberVND(item.price)}
-        </Text>
-        <Image
-          source={{
-            uri: item.imageUrl,
+      <TouchableHighlight onPress={() => router.push('/shop')} className="flex-1 w-full">
+        <View
+          className="w-full bg-black-100  rounded-2xl "
+          style={{
+            ...styles.shadow,
+            height: widthItem,
           }}
-          resizeMode="cover"
-          className="w-full h-full z-[0] rounded-lg"
-        />
-      </View>
+        >
+          <View className="absolute top-2 left-2 bg-white flex-row rounded-full p-1.5 z-[1]">
+            <Text className="font-hnow64regular text-xs text-gray-500" style={{ fontSize: 10 }}>
+              {item.totalOrder} đã bán
+            </Text>
+          </View>
+          <Text
+            style
+            className="text-xs text-black font-hnow64regular absolute bottom-0 left-0 p-1 bg-glass z-[1]"
+          >
+            {formatNumberVND(item.price)}
+          </Text>
+          <Image
+            source={{
+              uri: item.imageUrl,
+            }}
+            resizeMode="cover"
+            className="w-full h-full z-[0] rounded-lg"
+          />
+        </View>
+      </TouchableHighlight>
       <View className="pt-1 items-start w-full gap-1">
         <View className="flex  justify-center w-full items-start">
           <Text style className="text-xs text-gray-400 font-hnow64regular">
