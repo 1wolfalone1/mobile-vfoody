@@ -10,7 +10,7 @@
     "web": "expo start --web",
     "test": "jest --watchAll",
     "lint": "expo lint",
-    "format": "prettier --semi true --single-quote true --tab-width 2 --trailing-comma all --end-of-line lf --write */.{js,jsx,ts,tsx,css,scss,md,json,html}"
+    "format": "prettier --semi true --single-quote true --tab-width 2 --trailing-comma all --end-of-line lf --write **/*.{js,jsx,ts,tsx,css,scss,md,json,html}"
   },
   "jest": {
     "preset": "jest-expo"

@@ -3,9 +3,12 @@ import { Formik } from 'formik';
 import React, { useState } from 'react';
 import { ScrollView, View } from 'react-native';
 import { Button, HelperText, TextInput } from 'react-native-paper';
+import { useDispatch, useSelector } from 'react-redux';
 import * as yup from 'yup';
+import api from '../../../api/api';
 import HeaderInForgot from '../../../components/common/HeaderInForgot';
 import { Colors } from '../../../constant';
+import persistSlice, { persistSliceSelector } from '../../../redux/slice/persistSlice';
 
 const validationSchema = yup.object().shape({
   password: yup
@@ -29,10 +32,43 @@ const validationSchema = yup.object().shape({
 export default function ResetPassword() {
   const [isShowPassword, setIsShownPassword] = useState(false);
   const [isShowConfirmPassword, setIsShownConfirmPassword] = useState(false);
+  const { code, emailTemp } = useSelector(persistSliceSelector);
+  const [message, setMessage] = useState();
+  const dispatch = useDispatch();
+
+  const handleResetPassword = async (values) => {
+    const payload = {
+      code,
+      email: emailTemp,
+      newPassword: values.password,
+    };
+
+    try {
+      const responseData = await api.post('/api/v1/customer/forgot-password', payload);
+      const data = await responseData.data;
+      handleResetPasswordResponseData(
+        data.isSuccess,
+        data.error.code,
+        data.error.message,
+      );
+    } catch (error) {
+      console.log('error ne', error);
+    }
+  };
+
+  const handleResetPasswordResponseData = async (isSuccess, errorCode, errorMessage) => {
+    if (isSuccess) {
+      dispatch(persistSlice.actions.saveIsReset(true));
+      router.push('sign-in');
+    } else if (errorCode === '400') {
+      setMessage(errorMessage);
+    }
+  };
+
   return (
     <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
       <HeaderInForgot
-        back="verify/forgot-password"
+        back="verify/verify-code"
         title="Đặt mật khẩu mới"
         des="Nhập mật khẩu mới mà bạn muốn đặt"
       />
@@ -40,9 +76,7 @@ export default function ResetPassword() {
       <Formik
         initialValues={{ password: '', confirmPassword: '' }}
         onSubmit={(values) => {
-          router.push('sign-in');
-          // handle logic here to sent email to reset password
-          console.log(values);
+          handleResetPassword(values);
         }}
         validationSchema={validationSchema}
       >
@@ -100,6 +134,13 @@ export default function ResetPassword() {
                   {errors.confirmPassword}{' '}
                 </HelperText>
               </View>
+            </View>
+            <View className="w-[80%] mt-4">
+              {message && (
+                <HelperText type="error" className="text-center text-base">
+                  {message}
+                </HelperText>
+              )}
             </View>
             <Button
               buttonColor={Colors.primaryBackgroundColor}

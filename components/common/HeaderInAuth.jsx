@@ -18,9 +18,7 @@ const HeaderInAuth = ({ }) => {
           <Button
             mode="text"
             textColor={Colors.commonBtnText}
-            theme={{ roundness: 
-              
-              0 }}
+            theme={{ roundness: 0 }}
             contentStyle={{
               paddingVertical: 8,
               width: '90%',
@@ -34,11 +32,11 @@ const HeaderInAuth = ({ }) => {
               if (activePage === 'signIn') {
                 return;
               }
-              setActivePage("signIn");
-              router.push("/sign-in");
+              setActivePage('signIn');
+              router.push('/sign-in');
             }}
           >
-            <Text>Đăng nhập</Text>
+            Đăng nhập
           </Button>
         </View>
         <View className={`${activePage === 'signUp' ? 'border-b-2 border-b-white' : ''} w-[40%]`}>
@@ -59,8 +57,8 @@ const HeaderInAuth = ({ }) => {
               if (activePage === 'signUp') {
                 return;
               }
-              setActivePage("signUp")
-              router.push("/sign-in/sign-up");
+              setActivePage('signUp');
+              router.push('/sign-in/sign-up');
             }}
           >
             <Text>Đăng ký</Text>

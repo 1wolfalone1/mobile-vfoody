@@ -1,19 +1,24 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { router } from 'expo-router';
 import { Formik } from 'formik';
 import React, { useState } from 'react';
 import { Keyboard, View } from 'react-native';
 import { Button, HelperText, TextInput } from 'react-native-paper';
+import { useDispatch } from 'react-redux';
 import * as yup from 'yup';
-import { Colors } from '../../../constant';
+import api from '../../../api/api';
+import { Colors, CommonConstants } from '../../../constant';
+import userInfoSlice from '../../../redux/slice/userSlice';
+import persistSlice from '../../../redux/slice/persistSlice';
 
 const validationSchema = yup.object().shape({
   email: yup
     .string()
-    .email('Email không hợp lệ!')
-    .max(50, 'Email tối đa 50 ký tự!')
+    .matches(/^((?!\.)[\w\-_.]*[^.])(@\w+)(\.\w+(\.\w+)?[^.\W])$/, 'Email không hợp lệ!')
     .required('Vui lòng nhập email'),
   phoneNumber: yup
     .string()
-    .matches(/^(0)[0-9]{7,10}$/, 'Số điện thoại không hợp lệ')
+    .matches(/((^(\\+84|84|0|0084){1})(3|5|7|8|9))+([0-9]{8})$/, 'Số điện thoại không hợp lệ!')
     .required('Vui lòng nhập số điện thoại'),
   password: yup
     .string()
@@ -32,9 +37,37 @@ const validationSchema = yup.object().shape({
     .oneOf([yup.ref('password'), null], 'Mật khẩu không khớp')
     .required('Vui lòng nhập lại mật khẩu'),
 });
+
 const SignUpLayout = () => {
   const [isShowPassword, setIsShownPassword] = useState(false);
   const [isShowConfirmPassword, setIsShownConfirmPassword] = useState(false);
+  const [message, setMessage] = useState();
+  const dispatch = useDispatch();
+
+  const handleSignUp = async (values) => {
+    const payload = {
+      email: values.email,
+      phoneNumber: values.phoneNumber,
+      password: values.password,
+    };
+    try {
+      const responseData = await api.post('/api/v1/customer/register', payload);
+      const data = await responseData.data;
+      handleSignUpResponseData(data.value, data.isSuccess, data.error.code, data.error.message);
+    } catch (error) {
+      console.log('error ne', error);
+    }
+  };
+
+  const handleSignUpResponseData = async (value, isSuccess, errorCode, errorMessage) => {
+    if (isSuccess) {
+      dispatch(persistSlice.actions.saveEmailTemp(value.email));
+      router.push('verify/verify-sign-up');
+    } else if (errorCode === '400') {
+      setMessage(errorMessage);
+    }
+  };
+  
   return (
     <Formik
       initialValues={{
@@ -44,8 +77,7 @@ const SignUpLayout = () => {
         confirmPassword: '',
       }}
       onSubmit={(values) => {
-        // Handle signup logic here
-        console.log(values);
+        handleSignUp(values);
       }}
       validationSchema={validationSchema}
     >
@@ -135,6 +167,13 @@ const SignUpLayout = () => {
                 {errors.confirmPassword}
               </HelperText>
             </View>
+            <View className="w-[80%]">
+              {message && (
+                <HelperText type="error" className="text-center text-base">
+                  {message}
+                </HelperText>
+              )}
+            </View>
           </View>
           <Button
             buttonColor={Colors.primaryBackgroundColor}
@@ -143,12 +182,12 @@ const SignUpLayout = () => {
             style={{ width: '80%' }}
             theme={{ roundness: 4 }}
             contentStyle={{
-              paddingVertical: 4,
+              paddingVertical: 8,
             }}
             labelStyle={{
               fontFamily: 'HeadingNow-64Regular',
-              fontSize: 16,
-              lineHeight: 18,
+              fontSize: 18,
+              lineHeight: 20,
             }}
             onPress={handleSubmit}
           >

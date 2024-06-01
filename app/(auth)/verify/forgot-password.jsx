@@ -1,22 +1,56 @@
 import { router } from 'expo-router';
 import { Formik } from 'formik';
 import { Image } from 'lucide-react-native';
-import React from 'react';
+import React, { useState } from 'react';
 import { ScrollView, View } from 'react-native';
 import { Button, HelperText, TextInput } from 'react-native-paper';
 import * as yup from 'yup';
+import api from '../../../api/api';
 import HeaderInForgot from '../../../components/common/HeaderInForgot';
 import { Colors, Images } from '../../../constant';
+import { useDispatch } from 'react-redux';
+import persistSlice from '../../../redux/slice/persistSlice';
 
 const validationSchema = yup.object().shape({
   email: yup
     .string()
-    .email('Email không hợp lệ!')
-    .max(50, 'Email tối đa 50 ký tự!')
+    .matches(/^((?!\.)[\w\-_.]*[^.])(@\w+)(\.\w+(\.\w+)?[^.\W])$/, 'Email không hợp lệ!')
     .required('Vui lòng nhập email'),
 });
 
 export default function ForgotPassword() {
+  const [message, setMessage] = useState();
+  const dispatch = useDispatch();
+
+  const handleForgotPassword = async (values) => {
+    const payload = {
+      email: values.email,
+      verifyType: 2,
+    };
+
+    try {
+      const responseData = await api.post('/api/v1/customer/send-code', payload);
+      const data = await responseData.data;
+      handleForgotPasswordResponseData(
+        data.value,
+        data.isSuccess,
+        data.error.code,
+        data.error.message,
+      );
+    } catch (error) {
+      console.log('error ne', error);
+    }
+  };
+
+  const handleForgotPasswordResponseData = async (value, isSuccess, errorCode, errorMessage) => {
+    if (isSuccess) {
+      dispatch(persistSlice.actions.saveEmailTemp(value.email));
+      router.push('verify/verify-code');
+    } else if (errorCode === '400') {
+      setMessage(errorMessage);
+    }
+  };
+
   return (
     <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
       <View className="bg-bg-100 flex-1 h-full">
@@ -33,9 +67,7 @@ export default function ForgotPassword() {
         <Formik
           initialValues={{ email: '' }}
           onSubmit={(values) => {
-            router.push('verify/verify-code');
-            // handle logic here to sent email to reset password
-            console.log(values);
+            handleForgotPassword(values);
           }}
           validationSchema={validationSchema}
         >
@@ -54,6 +86,13 @@ export default function ForgotPassword() {
                   <HelperText type="error" visible={touched.email && errors.email}>
                     {errors.email}{' '}
                   </HelperText>
+                </View>
+                <View className="w-[80%]">
+                  {message && (
+                    <HelperText type="error" className="text-center text-base">
+                      {message}
+                    </HelperText>
+                  )}
                 </View>
               </View>
               <Button
