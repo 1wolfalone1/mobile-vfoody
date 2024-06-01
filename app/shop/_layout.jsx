@@ -1,38 +1,41 @@
-import { Stack } from 'expo-router';
+import { TransitionPresets } from '@react-navigation/stack';
+import { JsStack } from '../../components/custom-stack/JsStack';
 
 const ShopLayout = () => {
   return (
     <>
-      <Stack
+      <JsStack
         screenOptions={{
           tabBarStyle: {
             height: '0',
           },
         }}
       >
-        <Stack.Screen
+        <JsStack.Screen
           name="index"
           options={{
             title: 'index',
             headerShown: false,
           }}
         />
-        <Stack.Screen
+        <JsStack.Screen
           name="review"
           options={{
             title: 'review',
             headerShown: false,
           }}
         />
-        <Stack.Screen
-          name="product-detail"
+        <JsStack.Screen
+          name="[productId]"
           options={{
             title: 'product-detail',
             headerShown: false,
-            animation: 'fade_from_bottom',
+            mode: 'model',
+            gestureEnabled: true,
+            ...TransitionPresets.ModalPresentationIOS,
           }}
         />
-      </Stack>
+      </JsStack>
     </>
   );
 };

@@ -1,4 +1,4 @@
-import { AntDesign } from '@expo/vector-icons';
+import { AntDesign, FontAwesome5, Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { MapPin } from 'lucide-react-native';
 import React from 'react';
 import { Animated, Image, ScrollView, Text, View } from 'react-native';
@@ -53,8 +53,11 @@ const HeaderShopAnimated = ({
           style={{ height: 240 }}
         />
         <Avatar.Image
+          className="rounded-xl absolute bottom-0 bg-transparent left-8"
+          size={80}
           source={{
             uri: shopInfo.logoUrl,
+            zIndex: 10,
           }}
         />
       </Animated.View>
@@ -87,18 +90,49 @@ const HeaderShopAnimated = ({
               placeholder="Search"
               onChangeText={setSearchQuery}
               value={searchQuery}
+              style={{ height: 55 }}
             />
           </ScrollView>
         ) : (
-          <View className="flex-row gap-10">
-            <View className="flex-row items-center gap-1">
-              <Text className="text-xs font-hnow64regular items-center ">4.0</Text>
-              <AntDesign name="star" size={16} color={Colors.star.defaut} />
-              <Text className="font-hnow63book text-gray-600 text-xs">(30+)</Text>
+          <View className="flex h-[55]">
+            <View className="flex-row gap-10">
+              <View className="flex-row items-center gap-1">
+                <Text className="text-xs font-hnow64regular items-center ">{shopInfo.rating}</Text>
+                <AntDesign name="star" size={16} color={Colors.star.defaut} />
+                <Text className="font-hnow63book text-gray-600 text-xs">
+                  ({shopInfo.totalProduct}+)
+                </Text>
+              </View>
+              <View className="flex-row gap-1 items-center">
+                <MapPin color={'blue'} size={16} />
+                <Text className="font-hnow64regular text-gray-700 text-xs">
+                  {shopInfo.building.name}
+                </Text>
+              </View>
             </View>
-            <View className="flex-row gap-1 items-center">
-              <MapPin color={Colors.greyText} size={16}/>
-              <Text className="font-hnow64regular text-gray-700 text-xs">{shopInfo.building.name}</Text>
+            <View className="flex-row mt-4 justify-between">
+              <View className="flex-row gap-1 items-center">
+                <FontAwesome5
+                  name="shipping-fast"
+                  size={16}
+                  color={Colors.primaryBackgroundColor}
+                />
+                <Text className="text-xs text-gray-700 font-hnow63book">
+                  Shipping Fee {shopInfo.shippingFee}k
+                </Text>
+              </View>
+              <View className="flex-row gap-1 items-center">
+                <MaterialIcons name="schedule" size={16} color="green" />
+                <Text className="font-hnow63book text-gray-700 text-xs">
+                  {shopInfo.activeFrom}h
+                </Text>
+                <AntDesign name="arrowright" size={16} color={Colors.greyText} />
+                <Text className="font-hnow63book text-gray-700 text-xs">{shopInfo.activeTo}h</Text>
+              </View>
+              <View className="flex-row gap-1">
+                <Ionicons name="receipt" size={16} color="#660155" />
+                <Text className="font-hnow63book text-gray-700 text-xs">150 đơn đã bán</Text>
+              </View>
             </View>
           </View>
         )}
@@ -109,7 +143,5 @@ const HeaderShopAnimated = ({
 export default HeaderShopAnimated;
 
 const SkeletonItem = () => {
-  return (
-    <View></View>
-  );
+  return <View></View>;
 };

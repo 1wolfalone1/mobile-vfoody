@@ -1,11 +1,22 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Animated, ScrollView, Text, View } from 'react-native';
+import { Animated, ScrollView, Text } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux';
 import HeaderShopAnimated from '../../components/shop/HeaderShopAnimated';
 import HeaderStickyShop from '../../components/shop/HeaderStickyShop';
+import ListAllProductsInShop from '../../components/shop/ListAllProductsInShop';
+import ListBestProductInShop from '../../components/shop/ListBestProductInShop';
 import ListPromotionInShop from '../../components/shop/ListPromotionInShop';
-import { getListPromotionInShop, getShopInfo, listPromotionShopSelector, shopInfoSelector } from '../../redux/slice/shopDetailsSlice';
+import {
+  getListAllProductsInShop,
+  getListBestProduct,
+  getListPromotionInShop,
+  getShopInfo,
+  listAllProductSelector,
+  listBestProductSelector,
+  listPromotionShopSelector,
+  shopInfoSelector,
+} from '../../redux/slice/shopDetailsSlice';
 
 const ShopPage = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -15,7 +26,9 @@ const ShopPage = () => {
   const heightHeaderSticky = 80;
   const shopInfo = useSelector(shopInfoSelector);
   const listPromotion = useSelector(listPromotionShopSelector);
-  const dispatch = useDispatch();;
+  const listBestProduct = useSelector(listBestProductSelector);
+  const listAllProduct = useSelector(listAllProductSelector);
+  const dispatch = useDispatch();
   const product = {
     id: 'banhmi01',
     name: 'Bánh mì',
@@ -28,8 +41,10 @@ const ShopPage = () => {
     shop_id: 'shop01',
   };
   useEffect(() => {
-    dispatch(getListPromotionInShop())
-    dispatch(getShopInfo());
+    dispatch(getListPromotionInShop(1));
+    dispatch(getShopInfo(1));
+    dispatch(getListBestProduct(1));
+    dispatch(getListAllProductsInShop(1));
     const listener = scrollOffsetY.addListener(({ value }) => {
       console.log(value, ' scroll value');
       if (value > 252) {
@@ -46,7 +61,7 @@ const ShopPage = () => {
     };
   }, []);
   return (
-    <SafeAreaView className="flex-1" style={{ zIndex: -1, backgroundColor: '#ffffffea' }}>
+    <SafeAreaView className="flex-1" style={{ zIndex: -1, backgroundColor: '#ffffffff' }}>
       <HeaderStickyShop
         shopInfo={shopInfo}
         isHeaderTop={isHeaderTop}
@@ -75,9 +90,12 @@ const ShopPage = () => {
           useNativeDriver: false,
         })}
       >
-        <Text className="text-lg font-hnow65medium px-8 mt-4">Giam Gia Cho Ban</Text>
+        <Text className="text-lg font-hnow65medium px-8 mt-4">Giảm giá cho bạn</Text>
         <ListPromotionInShop listPromotion={listPromotion} />
-        <View className="h-[10000]"/>
+        <Text className="text-lg font-hnow65medium px-8 mt-1">Sản phẩm nổi bật</Text>
+        <ListBestProductInShop data={listBestProduct} />
+        <Text className="text-lg font-hnow65medium px-8 mt-1">Tất cả sản phẩm</Text>
+        <ListAllProductsInShop data={listAllProduct} />
       </ScrollView>
     </SafeAreaView>
   );

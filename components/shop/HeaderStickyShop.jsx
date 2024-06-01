@@ -4,7 +4,7 @@ import { Dimensions, Text, View } from 'react-native';
 import { IconButton } from 'react-native-paper';
 import { Colors } from '../../constant';
 
-const HeaderStickyShop = ({ isHeaderTop, shopName, heightHeaderSticky }) => {
+const HeaderStickyShop = ({shopInfo, isHeaderTop, shopName, heightHeaderSticky }) => {
   const { width, height } = Dimensions.get('window');
   return (
     <View
@@ -26,7 +26,7 @@ const HeaderStickyShop = ({ isHeaderTop, shopName, heightHeaderSticky }) => {
         <View>
           {isHeaderTop && (
             <Text numberOfLines={2} className="font-hnow65medium text-2xl text-ellipsis">
-              {shopName}
+              {shopInfo?.name}
             </Text>
           )}
         </View>
