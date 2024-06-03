@@ -81,7 +81,7 @@ const SkeletonItem = () => {
   const { width, height } = Dimensions.get('window');
   const widthCategory = parseInt((width * 15) / 100);
   return (
-    <SkeletonLoading background={'#adadad'} highlight={'#ffffff'}>
+    <SkeletonLoading background={Colors.skeleton.bg} highlight={Colors.skeleton.hl}>
       <View style={{ marginRight: 20, flexDirection: 'column' }}>
         <View
           style={{

@@ -39,7 +39,12 @@ const ItemBestSellerInHome = ({ item }) => {
         width: widthItem,
       }}
     >
-      <TouchableHighlight onPress={() => router.push('/shop')} className="flex-1 w-full">
+      <TouchableHighlight
+        onPress={() => router.push({pathname: '/shop' , params: {
+          shopId: item.shopId
+        }})}
+        className="flex-1 w-full"
+      >
         <View
           className="w-full bg-black-100  rounded-2xl "
           style={{
@@ -96,7 +101,7 @@ const SkeletonItem = () => {
   const { width, height } = Dimensions.get('window');
   const widthItem = parseInt((width * 30) / 100);
   return (
-    <SkeletonLoading background={'#adadad'} highlight={'#ffffff'}>
+    <SkeletonLoading background={Colors.skeleton.bg} highlight={Colors.skeleton.hl}>
       <View style={{ marginBottom: 40, marginRight: 20, flexDirection: 'column', gap: 2 }}>
         <View
           style={{

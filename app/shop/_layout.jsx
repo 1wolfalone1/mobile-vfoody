@@ -15,7 +15,9 @@ const ShopLayout = () => {
           name="index"
           options={{
             title: 'index',
+
             headerShown: false,
+            
           }}
         />
         <JsStack.Screen

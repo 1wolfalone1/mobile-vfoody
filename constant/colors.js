@@ -15,7 +15,7 @@ export default {
   
   skeleton: {
     bg: '#adadad',
-    hl:'#cccccc' 
+    hl:'#ccc6c6ce' 
   },
   star: {
     defaut: '#FECF0A',

@@ -68,7 +68,7 @@ const ItemAllProductInShop = ({ item }) => {
           }}
           className="absolute bottom-2 right-2"
           onPress={() => router.push("/shop/" + item.id, {
-
+            
           })}
         >
           <Plus color="white" size={30} />
