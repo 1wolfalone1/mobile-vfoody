@@ -9,7 +9,7 @@ const FadeInView = (props) => {
   useEffect(() => {
     Animated.timing(fadeAnim, {
       toValue: 1,
-      duration: 1500,
+      duration: 1000,
       useNativeDriver: true,
     }).start();
   }, [fadeAnim]);
@@ -30,27 +30,24 @@ export default function StartPage() {
   return (
     <View style={styles.container}>
       <Image
-        className="absolute top-0 left-0 right-0 bottom-0 h-screen"
-        style={styles.backgroundImage}
+        className="absolute top-20 left-0 right-0 bottom-0 h-5/6 object-cover"
         resizeMode="stretch"
         source={Images.LogoCover}
       />
-      <FadeInView style={styles.animation}>
-        <View style={styles.main}>
-          <Image style={styles.logo} resizeMode="contain" source={Icons.IconLight} />
-          <Text style={styles.title}>VFoody</Text>
+      <FadeInView className="w-full justify-center items-center">
+        <View className="justify-center items-center mb-20">
+          <Image className="w-52 h-52" resizeMode="contain" source={Icons.IconLight} />
+          <Text className="text-3xl font-bold text-white">VFoody</Text>
         </View>
         <Button
-          mode="elevated"
-          textColor="red"
-          buttonColor="white"
-          theme={{ roundness: 4 }}
+          mode="contained-tonal"
+          textColor={Colors.btnText}
           contentStyle={{
             paddingVertical: 8,
             width: '100%',
+            backgroundColor: 'white'
           }}
           labelStyle={{
-            fontFamily: 'HeadingNow-64Regular',
             fontSize: 24,
             lineHeight: 27,
           }}
@@ -58,7 +55,6 @@ export default function StartPage() {
         >
           Bắt đầu
         </Button>
-        <Text></Text>
       </FadeInView>
     </View>
   );
@@ -72,42 +68,5 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.primaryBackgroundColor,
     paddingHorizontal: 1,
     gap: 60,
-  },
-  main: {
-    alignItems: 'center',
-    marginBottom: 120,
-  },
-  title: {
-    fontSize: 30,
-    fontWeight: '900',
-    color: Colors.primaryTextColor,
-  },
-  button: {
-    paddingVertical: 20,
-    backgroundColor: Colors.secondaryBackgroundColor,
-    borderRadius: 30,
-    width: '100%',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  logo: {
-    width: 200,
-    height: 200,
-  },
-  backgroundImage: {
-    position: 'absolute',
-    top: 20,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    height: '95%',
-  },
-  animation: {
-    width: '100%',
-    height: 60,
-    flex: 1,
-    gap: 80,
-    alignItems: 'center',
-    justifyContent: 'flex-end',
   },
 });
