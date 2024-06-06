@@ -1,3 +1,4 @@
+import { router } from 'expo-router';
 import React from 'react';
 import { Text } from 'react-native';
 import { StyleSheet, View } from 'react-native';
@@ -5,10 +6,14 @@ import { Avatar, Button, Drawer } from 'react-native-paper';
 
 const DashboardDrawerContent = () => {
   const [active, setActive] = React.useState('');
+  const handleLogout = () => {
+    router.push('/sign-in')
+  }
+
   return (
     <>
       <View className="flex-1 bg-white flex-col">
-        <View className="py-5 px-5">
+        <View className="p-5">
           <Avatar.Image
             size={90}
             source={{
@@ -16,8 +21,8 @@ const DashboardDrawerContent = () => {
             }}
           />
           <View className="flex-col mt-3">
-            <Text className="text-[18px] font-semibold">Tiệm ăn tháng năm</Text>
-            <Text className="text-[12px] text-slate-500">Tòa S1.01 VinHome</Text>
+            <Text className="text-xl font-semibold">Tiệm ăn tháng năm</Text>
+            <Text className="text-sm text-slate-500">Tòa S1.01 VinHome</Text>
           </View>
         </View>
 
@@ -30,27 +35,33 @@ const DashboardDrawerContent = () => {
           />
           <Drawer.Item
             active={active === 'second'}
-            icon="mail"
-            label="Hộp thư"
+            icon="history"
+            label="Lịch sử đơn hàng"
             onPress={() => setActive('second')}
           />
           <Drawer.Item
             active={active === 'third'}
-            icon="wallet"
-            label="Thanh toán"
+            icon="comment-edit-outline"
+            label="Đánh giá"
             onPress={() => setActive('third')}
           />
           <Drawer.Item
             active={active === 'fourth'}
-            icon="cog"
-            label="Cài đặt"
+            icon="cash-check"
+            label="Thanh toán"
             onPress={() => setActive('fourth')}
           />
           <Drawer.Item
             active={active === 'fifth'}
+            icon="cog"
+            label="Cài đặt"
+            onPress={() => setActive('fifth')}
+          />
+          <Drawer.Item
+            active={active === 'sixth'}
             icon="chat-question"
             label="Trợ giúp"
-            onPress={() => setActive('fifth')}
+            onPress={() => setActive('sixth')}
           />
         </Drawer.Section>
       </View>
@@ -58,10 +69,14 @@ const DashboardDrawerContent = () => {
       <View className="pl-3 pb-5">
         <Button
           type="contained"
-          icon="logout-variant"
+          icon="logout"
           mode="contained"
           buttonColor="#DF4830"
-          className="w-[30vw] rounded-xl"
+          className="w-36 rounded-xl"
+          labelStyle={{
+            fontSize: 16,
+          }}
+          onPress={() => handleLogout()}
         >
           Đăng xuất
         </Button>

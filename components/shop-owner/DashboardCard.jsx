@@ -1,14 +1,13 @@
-import { ArrowUp, HandCoins, TrendingUp } from 'lucide-react-native';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import { Avatar, Card, IconButton } from 'react-native-paper';
+import { Text, View } from 'react-native';
+import { Card } from 'react-native-paper';
 
 const DashboardCard = ({ mainIcon, title, subTitle, leftIcon, leftText }) => {
   return (
     <View className="items-center mt-5 px-3">
       <Card.Title
-        titleStyle={{ fontSize: 22, fontWeight: 'bold' }}
-        subtitleStyle={{ fontSize: 12 }}
+        titleStyle={{ fontSize: 18, fontWeight: 'bold' }}
+        subtitleStyle={{ fontSize: 16 }}
         title={title}
         subtitle={subTitle}
         left={(props) => (
@@ -28,7 +27,5 @@ const DashboardCard = ({ mainIcon, title, subTitle, leftIcon, leftText }) => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({});
 
 export default DashboardCard;

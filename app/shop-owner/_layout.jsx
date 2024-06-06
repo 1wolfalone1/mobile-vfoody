@@ -43,7 +43,11 @@ const ShopOwnerLayout = () => {
               <TabIcon
                 name="shop-owner/dashboard"
                 iconName={
-                  <MaterialCommunityIcons name="view-dashboard-outline" size={24} color={focused ? Colors.activeTabColor : Colors.commonBtnText} />
+                  <MaterialCommunityIcons
+                    name="view-dashboard-outline"
+                    size={24}
+                    color={focused ? Colors.activeTabColor : Colors.commonBtnText}
+                  />
                 }
               />
             ),
@@ -58,7 +62,11 @@ const ShopOwnerLayout = () => {
               <TabIcon
                 name="shop-owner/menu"
                 iconName={
-                  <MaterialIcons name="restaurant-menu" size={24} color={focused ? Colors.activeTabColor : Colors.commonBtnText} />
+                  <MaterialIcons
+                    name="restaurant-menu"
+                    size={24}
+                    color={focused ? Colors.activeTabColor : Colors.commonBtnText}
+                  />
                 }
                 focused={focused}
               />
@@ -75,7 +83,11 @@ const ShopOwnerLayout = () => {
                 color={color}
                 name="shop-owner/promotion"
                 iconName={
-                  <Ionicons name="ticket-outline" size={24} color={focused ? Colors.activeTabColor : Colors.commonBtnText} />
+                  <Ionicons
+                    name="ticket-outline"
+                    size={24}
+                    color={focused ? Colors.activeTabColor : Colors.commonBtnText}
+                  />
                 }
                 focused={focused}
               />
@@ -91,7 +103,11 @@ const ShopOwnerLayout = () => {
                 color={color}
                 name="shop-owner/order"
                 iconName={
-                  <Octicons name="list-ordered" size={24} color={focused ? Colors.activeTabColor : Colors.commonBtnText} />
+                  <Octicons
+                    name="list-ordered"
+                    size={24}
+                    color={focused ? Colors.activeTabColor : Colors.commonBtnText}
+                  />
                 }
                 focused={focused}
               />
@@ -107,7 +123,11 @@ const ShopOwnerLayout = () => {
                 color={color}
                 name="shop-owner/notification"
                 iconName={
-                  <Ionicons name="notifications" size={24} color={focused ? Colors.activeTabColor : Colors.commonBtnText} />
+                  <Ionicons
+                    name="notifications"
+                    size={24}
+                    color={focused ? Colors.activeTabColor : Colors.commonBtnText}
+                  />
                 }
                 focused={focused}
               />
