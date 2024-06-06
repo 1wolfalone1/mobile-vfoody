@@ -81,7 +81,7 @@ const ItemShopRegulerInHome = ({ item }) => {
           </View>
         </View>
         <View className="flex-row gap-2 justify-between w-full items-center">
-          <Text className="text-xs font-hnow65medium text-primary">12k -> 30k</Text>
+          <Text className="text-xs font-hnow65medium text-primary">12k - 30k</Text>
           <Text style className="text-xs text-gray-400 font-hnow64regular">
             {item.buildingName}
           </Text>

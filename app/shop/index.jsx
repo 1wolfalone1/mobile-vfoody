@@ -79,7 +79,6 @@ const ShopPage = () => {
         setSearchQuery={setSearchQuery}
         searchQuery={searchQuery}
         image_url={product.image_url}
-        shopName={'Tiem Banh Mi Dem'}
         animHeaderValue={scrollOffsetY}
       />
       <ScrollView
