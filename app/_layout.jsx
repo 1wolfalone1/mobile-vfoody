@@ -53,6 +53,7 @@ const RootLayout = () => {
           options={{ headerShown: false, animation: 'slide_from_bottom' }}
         />
         <Stack.Screen name="shop" options={{ headerShown: false, animation: "slide_from_bottom" }} />
+        <Stack.Screen name="shop-owner" options={{ headerShown: false, animation: "slide_from_bottom" }} />
       </Stack>
     </Provider>
   );
