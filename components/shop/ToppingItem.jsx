@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Image, Text, View } from 'react-native';
 import { Checkbox, RadioButton } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
+import { Images } from '../../constant';
 import colors from '../../constant/colors';
 import shopDetailsSlice, { dataShopDetailsSelector } from '../../redux/slice/shopDetailsSlice';
 import { formatNumberVND } from '../../utils/MyUtils';
@@ -55,9 +56,12 @@ const ToppingRadio = ({ topping }) => {
       <Text className="text-lg font-bold">Topping nhân</Text>
       <View className="gap-4 mt-0 mb-4">
         {topping.options.map((item, index) => (
-          <View className="flex flex-row justify-between items-center" key={index}>
+          <View className="flex flex-row justify-between items-center" key={item.id}>
             <View className="flex flex-row items-center">
-              <Image source={{ uri: `${item.imageUrl}` }} className="w-8 h-8 rounded-lg" />
+              <Image
+                source={item.imageUrl ? { uri: item.imageUrl } : Images.ToppingDefault}
+                className="w-8 h-8 rounded-lg"
+              />
               <Text className="ml-2">{item.description}</Text>
             </View>
             <View className="flex-row items-center">
@@ -104,9 +108,12 @@ const ToppingCheckBox = ({ topping }) => {
       <Text className="text-lg font-bold">{topping.description}</Text>
       <View className="gap-4 mt-0 mb-4">
         {topping.options.map((item, index) => (
-          <View className="flex flex-row justify-between items-center" key={index}>
+          <View className="flex flex-row justify-between items-center" key={item.id}>
             <View className="flex flex-row items-center">
-              <Image source={{ uri: `${item.imageUrl}` }} className="w-8 h-8 rounded-lg mr-2" />
+              <Image
+                source={item.imageUrl ? { uri: item.imageUrl } : Images.ToppingDefault}
+                className="w-8 h-8 rounded-lg mr-2"
+              />
               <Text className="ml-2 font-hnow64regular">{item.description}</Text>
             </View>
             <View className="flex-row items-center">

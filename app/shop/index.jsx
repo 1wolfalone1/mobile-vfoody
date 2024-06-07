@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux';
+import FloatCartButton from '../../components/shop/FloatCartButton';
 import HeaderShopAnimated from '../../components/shop/HeaderShopAnimated';
 import HeaderStickyShop from '../../components/shop/HeaderStickyShop';
 import ItemAllProductInShop from '../../components/shop/ItemAllProductInShop';
@@ -82,7 +83,7 @@ const ShopPage = () => {
   useEffect(() => {
     const subscription = Dimensions.addEventListener('change', ({ window, screen }) => {
       console.log(window, 'window');
-      console.log(screen,'screen');
+      console.log(screen, 'screen');
     });
     return () => subscription?.remove();
   });
@@ -120,8 +121,10 @@ const ShopPage = () => {
       scrollOffsetY.removeListener(listener);
     };
   }, []);
+  const listEmpty = new Array(2).fill(null);
   return (
     <SafeAreaView className="flex-1" style={{ zIndex: -1, backgroundColor: '#ffffffff' }}>
+      <FloatCartButton />
       <HeaderStickyShop
         shopInfo={shopInfo}
         isHeaderTop={isHeaderTop}
@@ -143,7 +146,7 @@ const ShopPage = () => {
         animHeaderValue={scrollOffsetY}
       />
       <FlatList
-        style={{ zIndex: -1 , height: '100%' }}
+        style={{ zIndex: -1, height: '100%' }}
         scrollEventThrottle={1}
         nestedScrollEnabled={true}
         showsVerticalScrollIndicator={true}
@@ -151,12 +154,11 @@ const ShopPage = () => {
           useNativeDriver: false,
         })}
         ListHeaderComponentStyle={{}}
-        data={listAllProduct}
+        data={listAllProduct ? listAllProduct : listEmpty}
         contentContainerStyle={{
           justifyContent: 'center',
           backfaceVisibility: 'black',
         }}
-        
         ListHeaderComponent={() => {
           return (
             <View>
@@ -171,11 +173,13 @@ const ShopPage = () => {
         columnWrapperStyle={{ justifyContent: 'space-between', paddingHorizontal: 28 }}
         numColumns={2}
         keyExtractor={(item) => {
-          return item.id;
+          return item?.id;
         }}
         onEndReached={handleEndReached}
         onEndReachedThreshold={0.01}
-        onMomentumScrollBegin={() => { this.onEndReachedCalledDuringMomentum = false; }}
+        onMomentumScrollBegin={() => {
+          this.onEndReachedCalledDuringMomentum = false;
+        }}
         renderItem={({ item }) => <ItemAllProductInShop item={item} />}
         ListFooterComponent={isLoading ? <ActivityIndicator size="large" /> : null}
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefreshHandler} />}

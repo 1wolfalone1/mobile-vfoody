@@ -2,6 +2,7 @@ import { useFonts } from 'expo-font';
 import { SplashScreen, Stack } from 'expo-router';
 import { useEffect } from 'react';
 import { Provider } from 'react-redux';
+import SnackBarCustom from '../components/common/SnackBarCustom';
 import { store } from '../redux/store';
 const RootLayout = () => {
   const [fontsLoaded, error] = useFonts({
@@ -52,8 +53,16 @@ const RootLayout = () => {
           name="oauthredirect"
           options={{ headerShown: false, animation: 'slide_from_bottom' }}
         />
-        <Stack.Screen name="shop" options={{ headerShown: false, animation: "slide_from_bottom" }} />
+        <Stack.Screen
+          name="shop"
+          options={{ headerShown: false, animation: 'slide_from_bottom' }}
+        />
+        <Stack.Screen
+          name="(drawer)"
+          options={{ headerShown: false, animation: 'slide_from_bottom' }}
+        />
       </Stack>
+      <SnackBarCustom />
     </Provider>
   );
 };

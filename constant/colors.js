@@ -12,7 +12,11 @@ export default {
   btnBackground: '#FFFFFF',
   btnText: '#DF4830',
   glassShopHeader: "#e2e2e2b7",
-  
+  glass: {
+    100: '#000000a8',
+    red: '#e40000da',
+    green: '#376100c0'
+  }, 
   skeleton: {
     bg: '#adadad',
     hl:'#ccc6c6ce' 

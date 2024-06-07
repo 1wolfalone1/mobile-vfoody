@@ -20,6 +20,8 @@ const HeaderStickyShop = ({shopInfo, isHeaderTop, shopName, heightHeaderSticky }
           size={40}
           theme={{ padding: 5 }}
           onPress={() => router.back()}
+          
+          
           className="p-0"
           style={{ borderRadius: 16 }}
         />

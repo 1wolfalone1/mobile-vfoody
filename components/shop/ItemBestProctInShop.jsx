@@ -1,3 +1,4 @@
+import SkeletonLoading from 'expo-skeleton-loading';
 import React from 'react';
 import { Dimensions, Image, StyleSheet, Text, View } from 'react-native';
 import { IconButton } from 'react-native-paper';
@@ -27,12 +28,13 @@ const ItemBestProctInShop = ({ item }) => {
   const { width, height } = Dimensions.get('window');
   const widthItem = parseInt((width * 30) / 100);
 
+  const widthCard = parseInt((width * 75) / 100);
   return item == null ? (
     <SkeletonItem />
   ) : (
     <View
       className="flex-row my-4 p-2"
-      style={{ borderRadius: 20, backgroundColor: 'white', ...styles.shadow }}
+      style={{ borderRadius: 20, backgroundColor: 'white', ...styles.shadow, width: widthCard }}
     >
       <Image
         style={{ height: widthItem, width: widthItem, borderRadius: 20 }}
@@ -40,12 +42,19 @@ const ItemBestProctInShop = ({ item }) => {
           uri: item.imageUrl,
         }}
       />
-      <View className="pl-2">
+      <View className="pl-2 flex-1">
         <View>
-          <Text className="font-hnow65medium text-lg">{item.name}</Text>
+          <Text
+            className="font-hnow64regular"
+            style={{
+              fontSize: 16,
+            }}
+          >
+            {item.name}
+          </Text>
         </View>
-        <View>
-          <Text className="font-hnow64regular text-gray-500">{item.description}</Text>
+        <View className="">
+          <Text className="font-hnow63book text-gray-500 text-xs">{item.description}</Text>
         </View>
         <View className="flex-1 justify-between items-end flex-row">
           <Text className="text-primary text-lg">{formatNumberVND(item.price)}</Text>
@@ -53,10 +62,10 @@ const ItemBestProctInShop = ({ item }) => {
             icon={'plus'}
             size={20}
             onPress={() => {}}
-            iconColor='red'
-            mode='contained'
+            iconColor="red"
+            mode="contained"
             style={{
-              margin: 0, 
+              margin: 0,
               shadowColor: 'rgba(1, 0, 0, 1)',
               shadowOpacity: 0.8,
               elevation: 6,
@@ -71,3 +80,22 @@ const ItemBestProctInShop = ({ item }) => {
 };
 
 export default ItemBestProctInShop;
+
+const SkeletonItem = () => {
+  const { width, height } = Dimensions.get('window');
+  const widthItem = parseInt((width * 30) / 100);
+  const widthCard = parseInt((width * 75) / 100);
+  return (
+    <SkeletonLoading background={Colors.skeleton.bg} highlight={Colors.skeleton.hl}>
+      <View
+        style={{
+          height: widthItem + 8,
+          width: widthCard,
+          marginVertical: 16,
+          backgroundColor: Colors.skeleton.bg,
+        }}
+        borderRadius={20}
+      />
+    </SkeletonLoading>
+  );
+};

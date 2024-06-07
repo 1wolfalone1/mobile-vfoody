@@ -31,6 +31,9 @@ const shopDetailsSlice = createSlice({
       return actions.payload;
     },
     resetState: (state, actions) => initialState,
+    resetProductDetails: (state, actions) => {
+      state.product = initialState.product;
+    },
     addToppingRadio: (state, actions) => {
       if (actions.payload.optionId) {
         if (
