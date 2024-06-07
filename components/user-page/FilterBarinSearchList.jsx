@@ -41,17 +41,15 @@ const FilterBarinSearchList = () => {
             minHeight: 20,
             width: 120,
             borderTopRightRadius: 0,
-            borderBottomRightRadius: 0
+            borderBottomRightRadius: 0,
           }}
-          containerStyle={{
-          }}
+          containerStyle={{}}
           labelStyle={{
             fontSize: 10,
           }}
           className="w-[160] border-primary"
           categorySelectable={true}
-          placeholderStyle={{ color: 'grey'}}
-      
+          placeholderStyle={{ color: 'grey' }}
           dropDownContainerStyle={{
             backgroundColor: 'white',
             zIndex: 1001,
@@ -62,7 +60,6 @@ const FilterBarinSearchList = () => {
             fontSize: 10,
             borderColor: Colors.primaryBackgroundColor,
           }}
-          
           textStyle={{
             fontSize: 10,
           }}
@@ -83,9 +80,8 @@ const FilterBarinSearchList = () => {
           style={{
             borderColor: Colors.primaryBackgroundColor,
             minHeight: 25,
-              borderTopLeftRadius: 0,
-            borderBottomLeftRadius: 0
-
+            borderTopLeftRadius: 0,
+            borderBottomLeftRadius: 0,
           }}
           textStyle={{
             fontSize: 10,
