@@ -17,9 +17,11 @@ export default {
     red: '#e40000da',
     green: '#376100c0'
   }, 
+  success: '#15803d',
+  loss: '#dc2626',
   skeleton: {
     bg: '#adadad',
-    hl:'#ccc6c6ce' 
+    hl: '#cccccc',
   },
   star: {
     defaut: '#FECF0A',
