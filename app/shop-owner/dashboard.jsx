@@ -18,8 +18,8 @@ import { Button } from 'react-native-paper';
 import { Colors } from '../../constant';
 
 const Dashboard = () => {
-  const [fromDate, setFromDate] = useState(dayjs(dayjs('2024-02-01')));
-  const [toDate, setToDate] = useState(dayjs());
+  const [fromDate, setFromDate] = useState(dayjs(dayjs('2024-01-01')));
+  const [toDate, setToDate] = useState(dayjs(Date.now()));
   const [dateRange, setDateRange] = useState([fromDate, toDate]);
   const [isFromDatePickerVisible, setFromDatePickerVisibility] = useState(false);
   const [isToDatePickerVisible, setToDatePickerVisibility] = useState(false);

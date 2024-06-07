@@ -1,23 +1,22 @@
+import { MaterialIcons } from '@expo/vector-icons';
 import React, { useState } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
-import DropDownPicker from 'react-native-dropdown-picker';
-import { Appbar, Button, TextInput } from 'react-native-paper';
-import { categoryList } from '../../data/Menu';
 import { launchImageLibrary as _launchImageLibrary } from 'react-native-image-picker';
+import { Appbar, Button, TextInput } from 'react-native-paper';
 import { Colors } from '../../constant';
-import { MaterialIcons } from '@expo/vector-icons';
 
 let launchImageLibrary = _launchImageLibrary;
 
-const MenuCreate = ({ handleCloseCreate, showSnackbarCreate }) => {
+const VoucherCreate = ({ handleCloseCreate, showSnackbarCreate }) => {
   const [name, setName] = useState('');
+  const [quantity, setQuantity] = useState(0);
   const [description, setDescription] = useState('');
-  const [price, setPrice] = useState('');
-  const [category, setCategory] = useState(null);
+  const [dueDate, setDueDate] = useState('');
   const [imageUri, setImageUri] = useState(null);
-  const isEmpty = !name || !description || !price || !category;
+  const isEmpty = !name || !quantity || !description || !dueDate;
   const [open, setOpen] = useState(false);
   const handleSubmit = () => {
+    console.log('Form submitted:', { name, quantity, price, category });
     showSnackbarCreate();
     handleCloseCreate();
   };
@@ -53,7 +52,7 @@ const MenuCreate = ({ handleCloseCreate, showSnackbarCreate }) => {
             color={Colors.primaryBackgroundColor}
             onPress={handleCloseCreate}
           />
-          <Text className="font-bold text-xl pl-16">Tạo mới sản phẩm</Text>
+          <Text className="font-bold text-xl pl-16">Tạo mới khuyến mãi</Text>
         </Appbar.Header>
         <TouchableOpacity
           //     onPress={openImagePicker}
@@ -67,7 +66,7 @@ const MenuCreate = ({ handleCloseCreate, showSnackbarCreate }) => {
         </TouchableOpacity>
 
         <TextInput
-          label="Tên sản phẩm"
+          label="Tên mã khuyến mãi"
           value={name}
           onChangeText={(text) => setName(text)}
           mode="outlined"
@@ -77,7 +76,7 @@ const MenuCreate = ({ handleCloseCreate, showSnackbarCreate }) => {
           outlineColor="#DF4830"
         />
         <TextInput
-          label="Mô tả sản phẩm"
+          label="Mô tả khuyến mãi"
           value={description}
           onChangeText={(text) => setDescription(text)}
           mode="outlined"
@@ -87,22 +86,31 @@ const MenuCreate = ({ handleCloseCreate, showSnackbarCreate }) => {
           outlineColor="#DF4830"
         />
         <TextInput
-          label="Giá bán"
-          value={price}
-          onChangeText={(number) => setPrice(number)}
+          label="Số lượng"
+          value={quantity}
+          onChangeText={(number) => setQuantity(number)}
           mode="outlined"
           keyboardType="numeric"
           className="mb-3"
           outlineStyle={{ borderRadius: 12 }}
           outlineColor="#DF4830"
           activeOutlineColor="#DF4830"
-          right={<TextInput.Affix text="VND" />}
         />
-        <DropDownPicker
+        <TextInput
+          label="Hạn sử dụng"
+          value={dueDate}
+          onChangeText={(date) => setDueDate(date)}
+          mode="outlined"
+          className="mb-3"
+          outlineStyle={{ borderRadius: 12 }}
+          outlineColor="#DF4830"
+          activeOutlineColor="#DF4830"
+        />
+        {/* <DropDownPicker
           open={open}
           setOpen={setOpen}
           items={categoryList.map((item) => ({ label: item.name, value: item.name }))}
-          placeholder="Phân loại sản phẩm"
+          placeholder="Chọn danh mục"
           value={category}
           setValue={setCategory}
           className="w-full border-primary py-3 mb-3"
@@ -120,7 +128,7 @@ const MenuCreate = ({ handleCloseCreate, showSnackbarCreate }) => {
             borderColor: Colors.primaryBackgroundColor,
           }}
           onChangeItem={(item) => setCategory(item.value)}
-        />
+        /> */}
       </View>
 
       <View className="mt-9">
@@ -145,4 +153,4 @@ const MenuCreate = ({ handleCloseCreate, showSnackbarCreate }) => {
   );
 };
 
-export default MenuCreate;
+export default VoucherCreate;

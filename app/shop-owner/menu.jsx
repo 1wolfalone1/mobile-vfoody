@@ -1,9 +1,8 @@
-import { StyleSheet, Text, View } from 'react-native';
 import React, { useState } from 'react';
-import MenuTable from '../../components/shop-owner/MenuTable';
+import { Modal, Text, View } from 'react-native';
 import { Button, Dialog, Searchbar, Snackbar } from 'react-native-paper';
 import MenuCreate from '../../components/shop-owner/MenuCreate';
-import { Modal } from 'react-native';
+import MenuTable from '../../components/shop-owner/MenuTable';
 import { Colors } from '../../constant';
 
 const Menu = () => {
@@ -22,17 +21,17 @@ const Menu = () => {
   const hideSnackbarCreate = () => setSnackbarCreateVisible(false);
   const showSnackbarDelete = () => setSnackbarDeleteVisible(true);
   const hideSnackbarDelete = () => setSnackbarDeleteVisible(false);
-  const showDeleteDiaglog = () => setDeleteDialogVisible(true);
-  const hideDeleteDiaglog = () => setDeleteDialogVisible(false);
+  const showDeleteDialog = () => setDeleteDialogVisible(true);
+  const hideDeleteDialog = () => setDeleteDialogVisible(false);
   const confirmDelete = () => {
-    hideDeleteDiaglog();
+    hideDeleteDialog();
     showSnackbarDelete();
   };
 
   return (
     <View className="flex-1">
       <Text className="text-2xl font-bold m-4 text-center tracking-wider text-primary">
-        Quản lý Menu
+        Quản lý thực đơn
       </Text>
 
       {/* Search + Create */}
@@ -44,19 +43,20 @@ const Menu = () => {
           className="w-[50vw] my-3 bg-slate-300"
         />
         <Button
-          icon="plus"
+          icon="plus-box-multiple-outline"
           mode="contained"
-          className="bg-primary py-2"
+          className="bg-primary"
           theme={{ roundness: 8 }}
           labelStyle={{
             fontSize: 16,
+            paddingVertical: 8,
           }}
           onPress={() => handleOpenCreate()}
         >
-          Tạo menu
+          Tạo mới
         </Button>
       </View>
-      <MenuTable showDeleteDiaglog={showDeleteDiaglog} />
+      <MenuTable showDeleteDialog={showDeleteDialog} />
 
       {/* Create Modal */}
       <Modal visible={openCreate} onRequestClose={handleCloseCreate} animationType="slide">
@@ -75,7 +75,7 @@ const Menu = () => {
       </Snackbar>
 
       {/* Dialog: Delete */}
-      <Dialog className="bg-slate-100" visible={deleteDialogVisible} onDismiss={hideDeleteDiaglog}>
+      <Dialog className="bg-slate-100" visible={deleteDialogVisible} onDismiss={hideDeleteDialog}>
         <Dialog.Title>Cảnh báo</Dialog.Title>
         <Dialog.Content>
           <Text variant="bodyMedium">Bạn có chắc chắn muốn xóa món ăn này không?</Text>
@@ -85,7 +85,7 @@ const Menu = () => {
             className="px-5"
             mode="elevated"
             textColor={Colors.primaryBackgroundColor}
-            onPress={hideDeleteDiaglog}
+            onPress={hideDeleteDialog}
           >
             Hủy
           </Button>
@@ -104,5 +104,3 @@ const Menu = () => {
 };
 
 export default Menu;
-
-const styles = StyleSheet.create({});
