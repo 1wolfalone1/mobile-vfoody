@@ -141,26 +141,23 @@ const Item = ({
           Từ chối
         </Button>
         <Portal>
-          <Dialog visible={visible} onDismiss={() => {
-            setVisible(false);
-            setReason('');
-          }}>
-            <Dialog.Content>
-              <Text className="text-lg font-pregular">Vui lòng cung cấp lý do từ chối đơn hàng</Text>
-            </Dialog.Content>
+          <Dialog
+            className="bg-slate-100"
+            visible={visible}
+            onDismiss={() => {
+              setVisible(false);
+              setReason('');
+            }}
+          >
+            <Dialog.Title>Lý do từ chối</Dialog.Title>
             <Dialog.Content>
               <TextInput label="Nhập lý do" value={reason} onChangeText={setReason} />
             </Dialog.Content>
             <Dialog.Actions>
               <Button
-                type="contained"
-                mode="text"
-                buttonColor={Colors.primaryBackgroundColor}
-                textColor="white"
-                className="w-16 rounded-lg"
-                labelStyle={{
-                  fontSize: 14,
-                }}
+                className="px-5"
+                mode="elevated"
+                textColor={Colors.primaryBackgroundColor}
                 onPress={() => {
                   setVisible(false);
                   setReason('');
@@ -170,12 +167,10 @@ const Item = ({
               </Button>
 
               <Button
-                type="contained"
-                mode="text"
-                buttonColor={Colors.success}
+                className="px-5"
+                mode="contained"
+                buttonColor={Colors.primaryBackgroundColor}
                 disabled={reason === ''}
-                textColor="white"
-                className="w-24 rounded-lg"
                 labelStyle={{
                   fontSize: 14,
                 }}
@@ -195,7 +190,6 @@ const Item = ({
 );
 
 export default function Notification() {
-
   const [visible, setVisible] = useState(false);
   const [reason, setReason] = useState('');
 

@@ -5,7 +5,9 @@ import NotificationList from '../../components/shop-owner/Notification'
 const Notification = () => {
   return (
     <View className="flex-1">
-      <Text className='text-center text-2xl my-4 font-semibold'>Notification</Text>
+      <Text className="text-2xl font-bold m-4 text-center tracking-wider text-primary">
+        Thông báo đơn hàng mới
+      </Text>
       <NotificationList />
     </View>
   );

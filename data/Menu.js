@@ -19,6 +19,11 @@ const menu = [
   { id: 18, name: 'Bún mắm', price: 40000, category: 'Ăn trưa', quantity: 5 },
   { id: 19, name: 'Bánh flan', price: 35000, category: 'Ăn vặt', quantity: 8 },
   { id: 20, name: 'Bánh tét', price: 30000, category: 'Ăn sáng', quantity: 7 },
+  { id: 21, name: 'Trà sữa', price: 30000, category: 'Ăn sáng', quantity: 7 },
+  { id: 22, name: 'Bún thịt nướng', price: 30000, category: 'Ăn sáng', quantity: 7 },
+  { id: 23, name: 'Cơm sườn', price: 30000, category: 'Ăn sáng', quantity: 7 },
+  { id: 24, name: 'Bánh căng', price: 30000, category: 'Ăn sáng', quantity: 7 },
+  { id: 25, name: 'Bún đậu', price: 30000, category: 'Ăn sáng', quantity: 7 },
 ];
 const categories = menu.map((item) => item.category);
 const categoryList = [

@@ -31,25 +31,29 @@ const Menu = () => {
 
   return (
     <View className="flex-1">
-      <Text className="text-xl font-bold m-4 text-center uppercase tracking-wider text-primary">
-        Quản lí Menu
+      <Text className="text-2xl font-bold m-4 text-center tracking-wider text-primary">
+        Quản lý Menu
       </Text>
 
       {/* Search + Create */}
       <View className="flex-row items-center justify-between px-5">
         <Searchbar
-          placeholder="Search"
+          placeholder="Tìm kiếm"
           onChangeText={setSearchQuery}
           value={searchQuery}
-          className="w-[50vw] my-3 bg-white"
+          className="w-[50vw] my-3 bg-slate-300"
         />
         <Button
           icon="plus"
           mode="contained"
-          className="bg-primary"
+          className="bg-primary py-2"
+          theme={{ roundness: 8 }}
+          labelStyle={{
+            fontSize: 16,
+          }}
           onPress={() => handleOpenCreate()}
         >
-          Tạo Menu
+          Tạo menu
         </Button>
       </View>
       <MenuTable showDeleteDiaglog={showDeleteDiaglog} />
