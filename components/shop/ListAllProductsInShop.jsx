@@ -21,7 +21,7 @@ const ListAllProductsInShop = ({ data, shopId }) => {
   const { currentPage, handleEndReached, setCurrentPage} = usePagination({
     fetchFunction: () => {
       dispatch(addMoreProductInShopDetails(currentPage + 1));
-
+      
     },
     setLoading:setLoading,
     totalPages: totalPage,

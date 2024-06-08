@@ -5,7 +5,7 @@ import { Button, IconButton } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 import ItemInCart from '../../components/cart-page/ItemInCart';
 import { Colors } from '../../constant';
-import { cartSelector, getCartInfo } from '../../redux/slice/cartSlice';
+import cartSlice, { cartSelector, getCartInfo } from '../../redux/slice/cartSlice';
 import { dataShopDetailsSelector } from '../../redux/slice/shopDetailsSlice';
 
 const TempCartPage = () => {
@@ -17,6 +17,9 @@ const TempCartPage = () => {
     if (info?.id) {
       console.log(' is herrrrrrrrrrrrrrrrrrrrr', info.id);
       dispatch(getCartInfo(info?.id));
+    }
+    return () => {
+      dispatch(cartSlice.actions.resetStateListItemInfo())
     }
   }, [items]);
   return (
@@ -56,11 +59,11 @@ const TempCartPage = () => {
         style={{}}
         contentContainerStyle={{
           paddingHorizontal: 28,
-          paddingBottom: 20
+          paddingBottom: 20,
         }}
       >
         {listItemInfo?.map((item) => (
-          <ItemInCart key={item.id} item={item} />
+          <ItemInCart key={item.id} item={item} shopId={info.id} />
         ))}
       </ScrollView>
     </View>

@@ -9,7 +9,7 @@ const HeaderStickyShop = ({shopInfo, isHeaderTop, shopName, heightHeaderSticky }
   return (
     <View
       className="flex-row items-center justify-between absolute top-0  z-1000 mt-8"
-      style={{ width: width, height: heightHeaderSticky }}
+      style={{ width: width, height: heightHeaderSticky , zIndex: 1000}}
     >
       <View className="flex-row items-center" style={{ width: (width * 70) / 100 }}>
         <IconButton
@@ -20,8 +20,6 @@ const HeaderStickyShop = ({shopInfo, isHeaderTop, shopName, heightHeaderSticky }
           size={40}
           theme={{ padding: 5 }}
           onPress={() => router.back()}
-          
-          
           className="p-0"
           style={{ borderRadius: 16 }}
         />

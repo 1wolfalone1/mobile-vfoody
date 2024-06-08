@@ -1,8 +1,10 @@
 import { NotebookPen } from 'lucide-react-native';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Dimensions, Image, StyleSheet, Text, TextInput, View } from 'react-native';
 import { IconButton } from 'react-native-paper';
+import { useSelector } from 'react-redux';
 import { Colors } from '../../constant';
+import { cartSelector } from '../../redux/slice/cartSlice';
 import { formatNumberVND } from '../../utils/MyUtils';
 const styles = StyleSheet.create({
   shadow: {
@@ -23,10 +25,33 @@ const styles = StyleSheet.create({
     // background color must be set
   },
 });
-const ItemInCart = ({ item }) => {
+const ItemInCart = ({ item, shopId }) => {
   const { width, height } = Dimensions.get('window');
   const heightItem = parseInt((width * 30) / 100);
   const widthItem = parseInt((width * 85) / 100);
+  const { items } = useSelector(cartSelector);
+  const [toppingString, setToppingString] = useState('');
+  const [note, setNote] = useState('');
+
+  useEffect(() => {
+    if (items) {
+      console.log(items, ' itemsInfo');
+      const itemsInfo = items[shopId]?.find((e) => e.productId === item.id);
+      console.log(itemsInfo, ' itemsInfo neeee',
+         shopId, item);
+      let toppingString = '';
+      console.log(itemsInfo);
+      // for (const [key, value] of itemsInfo.topping.radio) {
+      //   toppingString += key + ': ' + value;
+      // }
+      // for (const [key, value] of itemsInfo.topping.checkbox) {
+      //   toppingString += key + ': ' + value;
+      // }
+      console.log(toppingString, ' toppping String');
+      setToppingString(toppingString);
+      setNote(itemsInfo?.note);
+    }
+  }, []);
   console.log(item, ' item ne');
   return (
     <View
@@ -60,7 +85,9 @@ const ItemInCart = ({ item }) => {
             />
           </View>
           <View>
-            <Text numberOfLines={2} className="text-gray-600 text-ellipsis font-hnow63book text-xs">Cay - Khasdf as afskfka sjafs kldas asdfasfaasd fasd fas fasdf sdfasfas song hanh</Text>
+            <Text numberOfLines={2} className="text-gray-600 text-ellipsis font-hnow63book text-xs">
+              {toppingString}
+            </Text>
           </View>
         </View>
         <View className="">

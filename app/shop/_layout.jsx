@@ -15,7 +15,7 @@ const ShopLayout = () => {
           name="index"
           options={{
             title: 'index',
-
+            presentation: '',
             headerShown: false,
           }}
         />
@@ -24,6 +24,7 @@ const ShopLayout = () => {
           options={{
             title: 'review',
             headerShown: false,
+            
           }}
         />
         <JsStack.Screen

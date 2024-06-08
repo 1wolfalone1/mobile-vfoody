@@ -35,7 +35,7 @@ const FloatCartButton = () => {
   useEffect(() => {
     setCartQuantity(items[info?.id]?.length);
     console.log(items, ' cart info');
-  }, [items]);
+  }, [items, info]);
   const handleOpenTempCart = () => {
     if (items[info?.id]) {
       router.push('/shop/temp-cart');

@@ -1,4 +1,3 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { router } from 'expo-router';
 import { Formik } from 'formik';
 import React, { useState } from 'react';
@@ -7,8 +6,7 @@ import { Button, HelperText, TextInput } from 'react-native-paper';
 import { useDispatch } from 'react-redux';
 import * as yup from 'yup';
 import api from '../../../api/api';
-import { Colors, CommonConstants } from '../../../constant';
-import userInfoSlice from '../../../redux/slice/userSlice';
+import { Colors } from '../../../constant';
 import persistSlice from '../../../redux/slice/persistSlice';
 
 const validationSchema = yup.object().shape({

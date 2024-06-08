@@ -3,7 +3,9 @@ import { ShoppingBasket } from 'lucide-react-native';
 import React from 'react';
 import { Dimensions, Image, StyleSheet, Text, View } from 'react-native';
 import { Badge, Divider, TouchableRipple } from 'react-native-paper';
+import { useSelector } from 'react-redux';
 import { Colors } from '../../constant';
+import { cartSelector } from '../../redux/slice/cartSlice';
 
 const styles = StyleSheet.create({
   shadow: {
@@ -27,8 +29,12 @@ const styles = StyleSheet.create({
 const ShopItem = ({ item }) => {
   const { width, height } = Dimensions.get('window');
   const widthImage = parseInt((width * 30) / 100);
+  const { items } = useSelector(cartSelector);
   return (
-    <TouchableRipple onPress={() => router.push('/cart/shipId')} rippleColor="rgba(255, 255, 255, 0)" >
+    <TouchableRipple
+      onPress={() => router.push('/cart/' + item.id)}
+      rippleColor="rgba(255, 255, 255, 0)"
+    >
       <View
         className="flex-row rounded-3xl bg-white m-2"
         style={{ height: widthImage, ...styles.shadow }}
@@ -37,7 +43,7 @@ const ShopItem = ({ item }) => {
           <Image
             className="w-full h-full rounded-3xl"
             source={{
-              uri: item.background_link,
+              uri: item.bannerUrl,
             }}
           />
         </View>
@@ -46,7 +52,7 @@ const ShopItem = ({ item }) => {
             <Text className="font-hnow65medium text-sm">{item.name}</Text>
           </View>
           <View className="mt-1 flex-row items-center justify-between">
-            <Text>Toa s705 (0.2km)</Text>
+            <Text>{item.buildingName} (0.2km)</Text> 
             <Divider horizontalInset style={{ width: 1, height: '100%' }} />
             <Text className="text-primary">Freeship</Text>
           </View>
@@ -57,7 +63,7 @@ const ShopItem = ({ item }) => {
             </View>
             <View>
               <Badge className="absolute right-[-5] top-[-4] z-1000 bg-primary" size={16}>
-                2
+                {items[item.id]?.length}
               </Badge>
               <ShoppingBasket color={'black'} size={23} className="z-1" style={{ zIndex: -1 }} />
             </View>

@@ -6,6 +6,7 @@ const initialState = {
   total: 0,
   listItemInfo: [],
   vouchers: [],
+  listShopInfo: [],
   status: {
     code: 200,
     message: '',
@@ -19,6 +20,12 @@ const cartSlice = createSlice({
       return actions.payload;
     },
     resetState: (state, actions) => initialState,
+    resetStateListShop: (state, actions) => {
+      state.listShopInfo = initialState.listShopInfo;
+    },
+    resetStateListItemInfo: (state, actions) => {
+      state.listItemInfo = initialState.listItemInfo;
+    },
     addToCart: (state, actions) => {
       console.log(actions.payload, ' add to cart');
       const { productId, shopId, quantity, topping } = actions.payload;
@@ -56,9 +63,42 @@ const cartSlice = createSlice({
       })
       .addCase(getCartInfo.rejected, (state, action) => {
         console.log(action.payload);
+      })
+      .addCase(getListShopInfo.fulfilled, (state, action) => {
+        state.listShopInfo = action.payload;
+      })
+      .addCase(getListShopInfo.rejected, (state, action) => {
+        console.log(action.payload);
       }),
 });
-
+export const getListShopInfo = createAsyncThunk(
+  'cartSlice/getListShopInfo',
+  async (id, { getState }) => {
+    try {
+      const state = getState().cartSlice;
+      const keysArray = Object.keys(state.items).map(Number);
+      console.log(keysArray, 'keys', state.items);
+      const res = await api.get('/api/v1/customer/shop', {
+        params: {
+          ids: keysArray,
+        },
+        paramsSerializer: (params) => {
+          return qs.stringify(params, { arrayFormat: 'repeat' });
+        },
+      });
+      const data = await res.data;
+      console.log(data, 'Data cart shop info invoke');
+      if (data.isSuccess) {
+        return data.value;
+      } else {
+        return [];
+      }
+    } catch (err) {
+      console.log(err, ' error in getShopInfo in cartslice');
+      throw err;
+    }
+  },
+);
 export const getCartInfo = createAsyncThunk('cartSlice/getCartInfo', async (id, { getState }) => {
   try {
     const state = getState().cartSlice;
