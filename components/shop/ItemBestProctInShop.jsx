@@ -29,6 +29,7 @@ const ItemBestProctInShop = ({ item }) => {
   const widthItem = parseInt((width * 30) / 100);
 
   const widthCard = parseInt((width * 75) / 100);
+  const itemImageUrl = { uri: item?.imageUrl };
   return item == null ? (
     <SkeletonItem />
   ) : (
@@ -38,9 +39,7 @@ const ItemBestProctInShop = ({ item }) => {
     >
       <Image
         style={{ height: widthItem, width: widthItem, borderRadius: 20 }}
-        source={{
-          uri: item.imageUrl,
-        }}
+        source={itemImageUrl}
       />
       <View className="pl-2 flex-1">
         <View>

@@ -88,6 +88,7 @@ const ShopPage = () => {
     return () => subscription?.remove();
   });
   useEffect(() => {
+   
     dispatch(getListPromotionInShop(shopId));
     dispatch(getShopInfo(shopId));
     dispatch(getListBestProduct(shopId));
@@ -121,6 +122,7 @@ const ShopPage = () => {
       scrollOffsetY.removeListener(listener);
     };
   }, []);
+
   const listEmpty = new Array(2).fill(null);
   return (
     <SafeAreaView className="flex-1" style={{ zIndex: -1, backgroundColor: '#ffffffff' }}>

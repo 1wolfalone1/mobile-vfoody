@@ -1,7 +1,7 @@
 import { AntDesign, FontAwesome5, Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { MapPin } from 'lucide-react-native';
-import React from 'react';
-import { Animated, Image, ScrollView, StyleSheet, Text, View } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { Animated, Dimensions, Image, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { Avatar, IconButton, Searchbar } from 'react-native-paper';
 import { Colors } from '../../constant';
 
@@ -57,7 +57,11 @@ const HeaderShopAnimated = ({
   searchQuery,
   setSearchQuery,
 }) => {
+  const { width, height } = Dimensions.get('window');
   console.log(isNotScroll, ' is scroll');
+  const [banner, setBanner] = useState(
+    'https://img.freepik.com/free-photo/abstract-surface-textures-white-concrete-stone-wall_74190-8189.jpg',
+  );
   const animateHeaderBackgroundColor = animHeaderValue.interpolate({
     inputRange: [0, Header_Max_Height - Header_Min_Height],
     outputRange: [1, 0],
@@ -68,6 +72,14 @@ const HeaderShopAnimated = ({
     outputRange: [Header_Max_Height, Header_Min_Height],
     extrapolate: 'clamp',
   });
+  useEffect(() => {
+    console.log(shopInfo, ' asdfasdfasdfaaaaaaaaaaaaaaaaaaaaaa');
+    if (shopInfo) {
+      console.log(shopInfo.bannerUrl, ' bannnnnnnnnnnnnnnnnnnnnnnn');
+      setBanner(shopInfo.bannerUrl);
+    }
+  }, [shopInfo]);
+  const avatar = { uri: shopInfo?.logoUrl };
   return shopInfo == null ? (
     <SkeletonItem />
   ) : (
@@ -86,19 +98,22 @@ const HeaderShopAnimated = ({
           },
         ]}
       >
-        <Image
-          className=" rounded-xl"
-          resizeMode="cover"
-          source={{ uri: shopInfo.bannerUrl }}
-          style={{ height: 240 }}
-        />
+        <View className="flex-1">
+          <Image
+            className="rounded-xl"
+            resizeMethod="resize"
+            source={{ uri: banner }}
+            onError={(e) => {
+              console.log(e.nativeEvent);
+            }}
+            style={{ height: 240, width: width - 2 * 8 * 4 }}
+          />
+        </View>
         <Avatar.Image
-          className="rounded-xl absolute bottom-0 bg-transparent left-8"
+          className="rounded-xl absolute bottom-0 bg-transparent left-8 bg-black-200 rounded-full"
           size={80}
-          source={{
-            uri: shopInfo.logoUrl,
-            zIndex: 10,
-          }}
+          resizeMethod="resize"
+          source={avatar ? avatar : 'asdf'}
         />
       </Animated.View>
       <View>

@@ -16,6 +16,21 @@ const cartSlice = createSlice({
   name: 'cartSlice',
   initialState: initialState,
   reducers: {
+    setQuantity: (state, action) => {
+      const { shopId, itemId, quantity } = action.payload;
+      console.log(shopId, itemId, quantity, ' set quantity reducer');
+      if (state.items[shopId]) {
+       
+        state.items[shopId] = state.items[shopId].map((item) => {
+          if (item.productId === itemId) {
+            item.quantity = quantity;
+            return item;
+          } else {
+            return item;
+          }
+        });
+      }
+    },
     changeUserInfo: (state, actions) => {
       return actions.payload;
     },
@@ -24,6 +39,36 @@ const cartSlice = createSlice({
       state.listShopInfo = initialState.listShopInfo;
     },
     resetStateListItemInfo: (state, actions) => {
+      state.listItemInfo = initialState.listItemInfo;
+    },
+    removeItemInCart: (state, actions) => {
+      const { shopId, itemId } = actions.payload;
+      console.log(shopId, itemId, ' remove item form cart');
+      if (Array.isArray(state.items[shopId])) {
+        console.log(shopId, itemId, ' remove item form cart');
+        state.items[shopId] = state.items[shopId].filter((item) => item.productId != itemId);
+        state.listItemInfo = state.listItemInfo.filter((item) => item.id != itemId);
+      }
+    },
+    setNote: (state, action) => {
+      const { shopId, itemId, note } = action.payload;
+      console.log(shopId, itemId, note, ' add note reducer');
+      if (state.items[shopId]) {
+        state.items[shopId].map((item) => {
+          if (item.productId === itemId) {
+            item.note = note;
+            return item;
+          } else {
+            return item;
+          }
+        });
+      }
+    },
+    clearCart: (state, actions) => {
+      const shopId = actions.payload;
+
+      console.log(shopId);
+      state.items[shopId] = null;
       state.listItemInfo = initialState.listItemInfo;
     },
     addToCart: (state, actions) => {
@@ -37,9 +82,11 @@ const cartSlice = createSlice({
       };
       if (Array.isArray(carts[shopId])) {
         let isExists = false;
-        state.items[shopId].map((item) => {
+        state.items[shopId] = state.items[shopId].map((item) => {
           if (item.productId === productId) {
             isExists = true;
+
+            console.log(' is exitttttttttttttttttttt', cartItem, item);
             return cartItem;
           } else {
             return item;
@@ -59,6 +106,7 @@ const cartSlice = createSlice({
     builder
       .addCase(getCartInfo.fulfilled, (state, action) => {
         console.log(action.payload, ' payloiadddd');
+        console.log(action.payload, ' tessssssssssssssssssssssssssssssssssss');
         state.listItemInfo = action.payload;
       })
       .addCase(getCartInfo.rejected, (state, action) => {
@@ -104,6 +152,7 @@ export const getCartInfo = createAsyncThunk('cartSlice/getCartInfo', async (id, 
     const state = getState().cartSlice;
     const listItem = state.items[id];
     let listIds = [];
+    console.log(listItem, 'listItemasdfasdfasdfasfasfasdfsadf');
     if (Array.isArray(listItem)) {
       listIds = listItem.map((item) => item.productId);
     } else {
@@ -118,6 +167,7 @@ export const getCartInfo = createAsyncThunk('cartSlice/getCartInfo', async (id, 
       },
     });
     const data = await res.data;
+
     console.log(data, 'Data cart invoke');
     if (data.isSuccess) {
       return data.value;

@@ -29,6 +29,12 @@ const styles = StyleSheet.create({
 const ItemBestSellerInHome = ({ item }) => {
   const { width, height } = Dimensions.get('window');
   const widthItem = parseInt((width * 30) / 100);
+  const itemImage = {
+    uri: item?.imageUrl,
+  };
+  const avatar = {
+    uri: item?.shopLogoUrl,
+  };
   return item == null ? (
     <SkeletonItem />
   ) : (
@@ -40,9 +46,14 @@ const ItemBestSellerInHome = ({ item }) => {
       }}
     >
       <TouchableHighlight
-        onPress={() => router.push({pathname: '/shop' , params: {
-          shopId: item.shopId
-        }})}
+        onPress={() =>
+          router.push({
+            pathname: '/shop',
+            params: {
+              shopId: item.shopId,
+            },
+          })
+        }
         className="flex-1 w-full"
       >
         <View
@@ -63,13 +74,7 @@ const ItemBestSellerInHome = ({ item }) => {
           >
             {formatNumberVND(item.price)}
           </Text>
-          <Image
-            source={{
-              uri: item.imageUrl,
-            }}
-            resizeMode="cover"
-            className="w-full h-full z-[0] rounded-lg"
-          />
+          <Image source={itemImage} resizeMode="cover" className="w-full h-full z-[0] rounded-lg" />
         </View>
       </TouchableHighlight>
       <View className="pt-1 items-start w-full gap-1">
@@ -82,9 +87,8 @@ const ItemBestSellerInHome = ({ item }) => {
           <Avatar.Image
             className="bg-transparent"
             size={16}
-            source={{
-              uri: item.shopLogoUrl,
-            }}
+            resizeMethod="resize"
+            source={avatar}
           />
           <View className="ml-2">
             <Text className="text-xs font-hnow64regular">{item.shopName}</Text>

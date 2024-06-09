@@ -14,8 +14,8 @@ const initialState = {
     info: null,
     topping: [],
     toppingSelected: {
-      radio: new Map(),
-      checkbox: new Map(),
+      radio: {},
+      checkbox: {},
     },
   },
   page: 1,
@@ -34,28 +34,49 @@ const shopDetailsSlice = createSlice({
     resetProductDetails: (state, actions) => {
       state.product = initialState.product;
     },
+
     addToppingRadio: (state, actions) => {
-      if (actions.payload.optionId) {
-        if (
-          state.product.toppingSelected.radio.get(actions.payload.toppingId) ===
-          actions.payload.optionId
-        ) {
-          state.product.toppingSelected.radio.delete(actions.payload.toppingId);
-        } else {
-          state.product.toppingSelected.radio.set(
-            actions.payload.toppingId,
-            actions.payload.optionId,
-          );
-        }
-      } else {
-        state.product.toppingSelected.radio.delete(actions.payload.toppingId);
+      const { toppingId, optionId } = actions.payload;
+      if(optionId == -1) {
+        state.product.toppingSelected.radio[toppingId] = undefined;
+        return
+      }
+      const item = state.product.topping.find((item) => item.id === toppingId);
+      console.log(optionId, ' optinnnnnnnnnnnnnnnnnnn');
+      if (item) {
+        toppingInCart = state.product.toppingSelected.radio[toppingId];
+        console.log('22222222222222222222222222222');
+        const newOption = item.options.find((option) => option.id === optionId);
+        state.product.toppingSelected.radio[toppingId] = {
+          optionId: optionId,
+          topping: item,
+          option: newOption,
+        };
       }
     },
     addToppingCheckbox: (state, actions) => {
       console.log(actions.payload);
       const toppingId = actions.payload.toppingId;
       const checks = actions.payload.checks;
-      state.product.toppingSelected.checkbox.set(toppingId, checks);
+      if (checks.length == 0) {
+        if (state.product.toppingSelected.checkbox[toppingId]) {
+          state.product.toppingSelected.checkbox[toppingId] = undefined;
+          return;
+        }
+      }
+      const topping = state.product.topping.find((item) => item.id === toppingId);
+      const listOption = topping.options.filter((item) => {
+        if (checks.find((optionId) => optionId === item.id)) {
+          return true;
+        } else {
+          return false;
+        }
+      });
+      state.product.toppingSelected.checkbox[toppingId] = {
+        toppingId: toppingId,
+        topping: topping,
+        options: listOption,
+      };
     },
   },
   extraReducers: (builder) =>

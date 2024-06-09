@@ -1,10 +1,18 @@
 import { NotebookPen } from 'lucide-react-native';
 import React, { useEffect, useState } from 'react';
 import { Dimensions, Image, StyleSheet, Text, TextInput, View } from 'react-native';
-import { IconButton } from 'react-native-paper';
-import { useSelector } from 'react-redux';
+import {
+  Button,
+  Dialog,
+  Divider,
+  IconButton,
+  Modal,
+  Portal,
+  TouchableRipple,
+} from 'react-native-paper';
+import { useDispatch, useSelector } from 'react-redux';
 import { Colors } from '../../constant';
-import { cartSelector } from '../../redux/slice/cartSlice';
+import cartSlice, { cartSelector } from '../../redux/slice/cartSlice';
 import { formatNumberVND } from '../../utils/MyUtils';
 const styles = StyleSheet.create({
   shadow: {
@@ -30,34 +38,200 @@ const ItemInCart = ({ item, shopId }) => {
   const heightItem = parseInt((width * 30) / 100);
   const widthItem = parseInt((width * 85) / 100);
   const { items } = useSelector(cartSelector);
+  const [itemInCart, setItemInCart] = useState({});
   const [toppingString, setToppingString] = useState('');
   const [note, setNote] = useState('');
-
+  const [quantity, setQuantity] = useState(1);
+  const [topping, setTopping] = useState('');
+  const [openNote, setOpenNote] = useState(false);
+  const [noteTemp, setNoteTemp] = useState('');
+  const dispatch = useDispatch();
+  const [visible, setVisible] = useState(false);
+  const [heightNote, setHeightNote] = useState(200);
   useEffect(() => {
     if (items) {
       console.log(items, ' itemsInfo');
       const itemsInfo = items[shopId]?.find((e) => e.productId === item.id);
-      console.log(itemsInfo, ' itemsInfo neeee',
-         shopId, item);
+
+      if (!itemsInfo) {
+        return;
+      }
+      setItemInCart(itemsInfo);
       let toppingString = '';
-      console.log(itemsInfo);
-      // for (const [key, value] of itemsInfo.topping.radio) {
-      //   toppingString += key + ': ' + value;
-      // }
-      // for (const [key, value] of itemsInfo.topping.checkbox) {
-      //   toppingString += key + ': ' + value;
-      // }
-      console.log(toppingString, ' toppping String');
+      let isHasRadio = false;
+      Object.values(itemsInfo.topping.radio).forEach((item, index) => {
+        if (item) {
+          if (index === 0) {
+            toppingString += item.topping.description + ' : ' + item.option.description;
+          } else {
+            toppingString += ' - ' + item.topping.description + ' : ' + item.option.description;
+          }
+          isHasRadio = true;
+        }
+      });
+      Object.values(itemsInfo.topping.checkbox).forEach((item, index) => {
+        console.log(item, ' tessssssssssssssssssssssss');
+        if (item) {
+          const checkBoxToppingString = item.options.reduce((a, option, index) => {
+            console.log(option);
+            if (index == 0) {
+              return option.description;
+            } else {
+              return a + ', ' + option.description;
+            }
+          }, '');
+          if (index == 0) {
+            if (isHasRadio) {
+              toppingString += ' --- ' + item.topping.description + ': ' + checkBoxToppingString;
+
+            } else {
+              toppingString += item.topping.description + ': ' + checkBoxToppingString;
+            }
+          } else {
+            toppingString += ' - ' + item.topping.description + ': ' + checkBoxToppingString;
+          }
+        }
+      });
+      console.log(toppingString, ' toppingggggggggggggggggg');
       setToppingString(toppingString);
-      setNote(itemsInfo?.note);
+      setQuantity(itemsInfo.quantity);
+      setNoteTemp(itemsInfo.note);
     }
-  }, []);
+  }, [items]);
   console.log(item, ' item ne');
+  const handleRemoveItem = () =>
+    dispatch(
+      cartSlice.actions.removeItemInCart({
+        shopId: shopId,
+        itemId: item.id,
+      }),
+    );
+  const handleOpenNote = () => {
+    setOpenNote(true);
+  };
+  const handleHideNote = () => {
+    setOpenNote(false);
+  };
+  const handleSaveNote = () => {
+    setOpenNote(false);
+    dispatch(
+      cartSlice.actions.setNote({
+        shopId: shopId,
+        itemId: item.id,
+        note: noteTemp,
+      }),
+    );
+  };
+  const hideDialog = () => setVisible(false);
+  const handleChangeQuantity = (value) => {
+    if (!Number.isNaN(value)) {
+      let valueNum = parseInt(value);
+      console.log(value);
+      if (valueNum < 0 || Number.isNaN(valueNum)) {
+        valueNum = 0;
+      }
+      console.log(valueNum, ' asdfasfasfasdffffffffffffffffffff');
+      setQuantity(valueNum);
+      dispatch(
+        cartSlice.actions.setQuantity({
+          shopId: shopId,
+          itemId: item.id,
+          quantity: valueNum,
+        }),
+      );
+    }
+  };
+  const handleBlurInputQuantity = () => {
+    if (quantity == 0) {
+      dispatch(
+        cartSlice.actions.removeItemInCart({
+          shopId: shopId,
+          itemId: item.id,
+        }),
+      );
+    }
+  };
+  const handleDecreaseQuantity = () => {
+    if (quantity == 1) {
+      dispatch(
+        cartSlice.actions.removeItemInCart({
+          shopId: shopId,
+          itemId: item.id,
+        }),
+      );
+    } else {
+      let valueNum = quantity - 1;
+      setQuantity(valueNum);
+      dispatch(
+        cartSlice.actions.setQuantity({
+          shopId: shopId,
+          itemId: item.id,
+          quantity: valueNum,
+        }),
+      );
+    }
+  };
   return (
     <View
       className="flex-row bg-white mb-4"
       style={{ height: heightItem, width: widthItem, zIndex: 1, overflow: 'visible' }}
     >
+      <Portal>
+        <Dialog visible={visible} onDismiss={hideDialog} style={{ backgroundColor: '#ffffffe4' }}>
+          <Dialog.Title>
+            <Text className="font-hnow65medium text-xl">Topping nè</Text>
+          </Dialog.Title>
+          <Dialog.Content>
+            <Text className="font-hnow64regular text-sm">{toppingString}</Text>
+          </Dialog.Content>
+          <Dialog.Actions>
+            <Button onPress={hideDialog}>Hủy</Button>
+          </Dialog.Actions>
+        </Dialog>
+      </Portal>
+      <Portal>
+        <Modal
+          visible={openNote}
+          onDismiss={handleHideNote}
+          contentContainerStyle={{
+            backgroundColor: 'white',
+            padding: 10,
+            marginHorizontal: 20,
+            borderRadius: 20,
+          }}
+        >
+          <View className="items-center ">
+            <Text className="text-center text-lg font-hnow64regular">Ghi chú cho quán nào</Text>
+            <Divider style={{ width: '100%', marginVertical: 20 }} />
+          </View>
+          <View style={{ minHeight: 200 }}>
+            <TextInput
+              multiline
+              placeholder="Ghi chú tại đây ..."
+              onContentSizeChange={(event) => {
+                setHeightNote(event.nativeEvent.contentSize.height);
+              }}
+              defaultValue={itemInCart?.note}
+              value={noteTemp}
+              onChangeText={(e) => setNoteTemp(e)}
+              style={{
+                height: heightNote, // <- set the max height here
+              }}
+            />
+          </View>
+          <View className="flex-row justify-end items-center">
+            <Button
+              onPress={() => {
+                setOpenNote(false);
+              }}
+              textColor="red"
+            >
+              Hủy
+            </Button>
+            <Button onPress={handleSaveNote}>Lưu</Button>
+          </View>
+        </Modal>
+      </Portal>
       <View className="bg-white rounded-2xl" style={styles.shadow}>
         <Image
           source={{
@@ -78,25 +252,32 @@ const ItemInCart = ({ item, shopId }) => {
             </Text>
             <IconButton
               className="m-0"
-              onPress={() => {}}
+              onPress={handleRemoveItem}
               icon="close"
               size={20}
               iconColor={Colors.primaryBackgroundColor}
             />
           </View>
-          <View>
-            <Text numberOfLines={2} className="text-gray-600 text-ellipsis font-hnow63book text-xs">
-              {toppingString}
-            </Text>
-          </View>
+          <TouchableRipple onPress={() => setVisible(true)} borderless>
+            <View>
+              <Text
+                numberOfLines={2}
+                className="text-gray-600 text-ellipsis font-hnow63book text-xs"
+              >
+                {toppingString}
+              </Text>
+            </View>
+          </TouchableRipple>
         </View>
         <View className="">
-          <View className="flex-row gap-2">
-            <NotebookPen color={'#000000'} size={16} />
-            <Text className="text-gray-600 text-ellipsis text-xs" numberOfLines={1}>
-              {item.note ? item.note : 'Thêm ghi chú...'}
-            </Text>
-          </View>
+          <TouchableRipple borderless onPress={handleOpenNote}>
+            <View className="flex-row gap-2">
+              <NotebookPen color={'#000000'} size={16} />
+              <Text className="text-gray-600 text-ellipsis text-xs" numberOfLines={1}>
+                {itemInCart.note ? itemInCart.note : 'Thêm ghi chú...'}
+              </Text>
+            </View>
+          </TouchableRipple>
           <View className=" justify-between items-end flex-row">
             <Text className="text-sm text-primary font-hnow63book">
               {formatNumberVND(item.price)}
@@ -107,13 +288,15 @@ const ItemInCart = ({ item, shopId }) => {
                 className="m-0 p-0 "
                 mode="outlined"
                 size={8}
-                onPress={() => {}}
+                onPress={handleDecreaseQuantity}
                 style={{ borderColor: 'red' }}
                 iconColor={Colors.primaryBackgroundColor}
               />
               <TextInput
-                value={'1'}
+                value={`${quantity}`}
                 multiline={true}
+                onBlur={handleBlurInputQuantity}
+                onChangeText={handleChangeQuantity}
                 style={{ fontSize: 14, width: 30 }}
                 textAlign="center"
                 textAlignVertical="center"
@@ -121,7 +304,7 @@ const ItemInCart = ({ item, shopId }) => {
               <IconButton
                 icon={'plus'}
                 size={8}
-                onPress={() => {}}
+                onPress={() => handleChangeQuantity(quantity + 1)}
                 style={{ borderColor: 'red' }}
                 className="m-0 p-0 bg-primary"
                 mode="outlined"

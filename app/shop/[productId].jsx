@@ -1,5 +1,5 @@
 import { AntDesign, Ionicons } from '@expo/vector-icons';
-import { useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import SkeletonLoading from 'expo-skeleton-loading';
 import { Feather } from 'lucide-react-native';
 import { useEffect, useState } from 'react';
@@ -24,7 +24,14 @@ const ProductDetail = () => {
   const { product } = useSelector(dataShopDetailsSelector);
   const { info } = useSelector(dataShopDetailsSelector);
   const dispatch = useDispatch();
+  
   useEffect(() => {
+    if (!info) {
+      router.push('/home');
+      return () => {
+        dispatch(shopDetailsSlice.actions.resetProductDetails());
+      };
+    }
     dispatch(getProductDetailsById(productId));
     return () => {
       dispatch(shopDetailsSlice.actions.resetProductDetails());
@@ -46,6 +53,7 @@ const ProductDetail = () => {
       setTotalOrder((prevTotalOrder) => Math.max(prevTotalOrder - 1, 0));
     }
   };
+  console.log(product, ' product detials in page');
   const handleAddToCart = () => {
     if (totalOrder != 0) {
       dispatch(
@@ -61,6 +69,7 @@ const ProductDetail = () => {
           },
         }),
       );
+
       dispatch(globalSlice.actions.openSnackBar({ message: 'Add to Cart successfully' }));
       dispatch(
         cartSlice.actions.addToCart({
@@ -102,7 +111,7 @@ const ProductDetail = () => {
               <Image
                 className="h-48 rounded-lg"
                 resizeMode="cover"
-                source={{ uri: `${product.info.imageUrl}` }}
+                source={{ uri: product.info.imageUrl }}
               />
               <View className="flex-row justify-between items-center flex-shrink: 0">
                 <Text className="text-3xl font-bold mt-4">{product.info.name}</Text>
@@ -143,11 +152,15 @@ const ProductDetail = () => {
                 </Text>
                 <View className="flex-row items-center">
                   <TouchableOpacity onPress={handleDecrease}>
-                    <Feather name="minus-circle" size={30} color={colors.primaryBackgroundColor} />
+                    <AntDesign
+                      name="minuscircleo"
+                      size={24}
+                      color={colors.primaryBackgroundColor}
+                    />
                   </TouchableOpacity>
                   <Text className="font-bold mx-2 text-lg">{totalOrder}</Text>
                   <TouchableOpacity onPress={handleIncrease}>
-                    <Ionicons name="add-circle" size={32} color={colors.primaryBackgroundColor} />
+                    <AntDesign name="pluscircle" size={24} color={colors.primaryBackgroundColor} />
                   </TouchableOpacity>
                 </View>
               </View>
