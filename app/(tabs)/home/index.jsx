@@ -107,6 +107,7 @@ const Index = () => {
           <FlatList
             contentContainerStyle={{ paddingLeft: 28 }}
             horizontal
+            removeClippedSubviews={true}
             data={dataTopProduct ? dataTopProduct : blankData}
             showsHorizontalScrollIndicator={false}
             renderItem={({ item }) => <ItemBestSellerInHome item={item} />}

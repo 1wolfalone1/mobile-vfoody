@@ -1,18 +1,54 @@
 import { AntDesign, FontAwesome5, Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { MapPin } from 'lucide-react-native';
-import React from 'react';
-import { Animated, Image, ScrollView, Text, View } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { Animated, Dimensions, Image, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { Avatar, IconButton, Searchbar } from 'react-native-paper';
 import { Colors } from '../../constant';
 
+import SkeletonLoading from 'expo-skeleton-loading';
 const Header_Max_Height = 252;
 const Header_Min_Height = 0;
+const styles = StyleSheet.create({
+  shadow: {
+    shadowOffset: { width: 5, height: 8 },
+    shadowColor: Colors.shadow[400],
+
+    shadowOpacity: 0.1,
+    elevation: 4,
+    // background color must be set
+  },
+  shadowSelected: {
+    shadowOffset: { width: 8, height: 8 },
+    shadowColor: Colors.shadow.DEFAULT,
+
+    shadowOpacity: 0.6,
+
+    elevation: 20,
+    // background color must be set
+  },
+  headerNotScroll: {
+    zIndex: -1,
+  },
+  headerScroll: {
+    zIndex: -1,
+    backgroundColor: 'white',
+    shadowOffset: { width: 5, height: 8 },
+    shadowColor: Colors.shadow[400],
+
+    shadowOpacity: 0.1,
+    elevation: 4,
+    borderBottomEndRadius: 21,
+    borderBottomLeftRadius: 21,
+  },
+});
 
 const HeaderShopAnimated = ({
+  isNotScroll,
   shopInfo,
   heightHeaderSticky,
   image_url,
   shopName,
+
   animHeaderValue,
   setIsHeaderTop,
   isHeaderTop,
@@ -21,20 +57,36 @@ const HeaderShopAnimated = ({
   searchQuery,
   setSearchQuery,
 }) => {
+  const { width, height } = Dimensions.get('window');
+  console.log(isNotScroll, ' is scroll');
+  const [banner, setBanner] = useState(
+    'https://img.freepik.com/free-photo/abstract-surface-textures-white-concrete-stone-wall_74190-8189.jpg',
+  );
   const animateHeaderBackgroundColor = animHeaderValue.interpolate({
     inputRange: [0, Header_Max_Height - Header_Min_Height],
     outputRange: [1, 0],
-    extrapolate: 'extend',
+    extrapolate: 'clamp',
   });
   const animateHeaderHeight = animHeaderValue.interpolate({
-    inputRange: [0, Header_Max_Height - Header_Min_Height],
+    inputRange: [0, Header_Max_Height - Header_Min_Height + 200],
     outputRange: [Header_Max_Height, Header_Min_Height],
     extrapolate: 'clamp',
   });
+  useEffect(() => {
+    console.log(shopInfo, ' asdfasdfasdfaaaaaaaaaaaaaaaaaaaaaa');
+    if (shopInfo) {
+      console.log(shopInfo.bannerUrl, ' bannnnnnnnnnnnnnnnnnnnnnnn');
+      setBanner(shopInfo.bannerUrl);
+    }
+  }, [shopInfo]);
+  const avatar = { uri: shopInfo?.logoUrl };
   return shopInfo == null ? (
     <SkeletonItem />
   ) : (
-    <Animated.View className="px-8" style={{ zIndex: -1 }}>
+    <Animated.View
+      className="px-8"
+      style={isNotScroll ? styles.headerNotScroll : styles.headerScroll}
+    >
       <Animated.View
         style={[
           {
@@ -42,23 +94,26 @@ const HeaderShopAnimated = ({
             backgroundColor: animateHeaderBackgroundColor,
             opacity: animateHeaderBackgroundColor,
             overflow: 'hidden',
-            marginTop: 12,
+            marginTop: 0,
           },
         ]}
       >
-        <Image
-          className=" rounded-xl"
-          resizeMode="cover"
-          source={{ uri: shopInfo.bannerUrl }}
-          style={{ height: 240 }}
-        />
+        <View className="flex-1">
+          <Image
+            className="rounded-xl"
+            resizeMethod="resize"
+            source={{ uri: banner }}
+            onError={(e) => {
+              console.log(e.nativeEvent);
+            }}
+            style={{ height: 240, width: width - 2 * 8 * 4 }}
+          />
+        </View>
         <Avatar.Image
-          className="rounded-xl absolute bottom-0 bg-transparent left-8"
+          className="rounded-xl absolute bottom-0 bg-transparent left-8 bg-black-200 rounded-full"
           size={80}
-          source={{
-            uri: shopInfo.logoUrl,
-            zIndex: 10,
-          }}
+          resizeMethod="resize"
+          source={avatar ? avatar : 'asdf'}
         />
       </Animated.View>
       <View>
@@ -84,17 +139,17 @@ const HeaderShopAnimated = ({
         )}
         {isSearchOpen ? (
           <ScrollView>
-            {isHeaderTop && <View style={{ height: heightHeaderSticky }} />}
+            {isHeaderTop && <View style={{ height: (heightHeaderSticky * 90) / 100 }} />}
             <Searchbar
               onIconPress={() => {}}
               placeholder="Search"
               onChangeText={setSearchQuery}
               value={searchQuery}
-              style={{ height: 55 }}
+              style={{ height: 55, marginBottom: 8 }}
             />
           </ScrollView>
         ) : (
-          <View className="flex h-[55]">
+          <View className="flex h-[55] mb-2">
             <View className="flex-row gap-10">
               <View className="flex-row items-center gap-1">
                 <Text className="text-xs font-hnow64regular items-center ">{shopInfo.rating}</Text>
@@ -143,5 +198,70 @@ const HeaderShopAnimated = ({
 export default HeaderShopAnimated;
 
 const SkeletonItem = () => {
-  return <View></View>;
+  return (
+    <SkeletonLoading background={Colors.skeleton.bg} highlight={Colors.skeleton.hl}>
+      <View
+        style={{
+          paddingHorizontal: 28,
+        }}
+      >
+        <View
+          style={{
+            borderRadius: 12,
+            height: 240,
+            backgroundColor: Colors.skeleton.bg,
+          }}
+        />
+        <View>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              paddingVertical: 10,
+            }}
+          >
+            <View
+              style={{
+                height: 30,
+                width: 150,
+                backgroundColor: Colors.skeleton.bg,
+                borderRadius: 8,
+              }}
+            />
+            <IconButton
+              icon="magnify"
+              iconColor={Colors.primaryBackgroundColor}
+              size={24}
+              onPress={() => setIsSearchOpen(true)}
+            />
+          </View>
+          <View
+            style={{
+              height: 55,
+              justifyContent: 'space-between',
+              paddingVertical: 4,
+            }}
+          >
+            <View
+              style={{
+                height: 14,
+                width: '80%',
+                backgroundColor: Colors.skeleton.bg,
+                borderRadius: 8,
+              }}
+            />
+            <View
+              style={{
+                height: 14,
+                width: '80%',
+                backgroundColor: Colors.skeleton.bg,
+                borderRadius: 8,
+              }}
+            />
+          </View>
+        </View>
+      </View>
+    </SkeletonLoading>
+  );
 };

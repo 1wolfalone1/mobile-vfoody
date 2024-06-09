@@ -1,10 +1,12 @@
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { FlatList, StyleSheet, Text, View } from 'react-native';
 import { IconButton } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useDispatch, useSelector } from 'react-redux';
 import ShopItem from '../../../components/cart-page/ShopItem';
 import { Colors } from '../../../constant';
+import cartSlice, { cartSelector, getListShopInfo } from '../../../redux/slice/cartSlice';
 const styles = StyleSheet.create({
   shadow: {
     shadowOffset: { width: 2, height: 4 },
@@ -26,6 +28,16 @@ const styles = StyleSheet.create({
 });
 
 const CartPage = () => {
+  const { listShopInfo } = useSelector(cartSelector);
+  const dispatch = useDispatch();
+  console.log(' asdfasfasdfadsfasdfasdfasdfafsd');
+  useEffect(() => {
+    console.log(listShopInfo);
+    dispatch(getListShopInfo());
+    return () => {
+      dispatch(cartSlice.actions.resetStateListShop())
+    }
+  }, []);
   return (
     <View className="bg-white flex-1 ">
       <SafeAreaView className="bg-white pb-4 rounded-b-3xl" style={styles.shadow} edges={['top']}>
@@ -56,7 +68,7 @@ const CartPage = () => {
               }}
             />
           )}
-          data={dataShop}
+          data={listShopInfo}
           renderItem={({ item }) => <ShopItem item={item} />}
         />
       </View>

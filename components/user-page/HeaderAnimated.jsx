@@ -1,4 +1,5 @@
-import { router } from 'expo-router';
+import { DrawerActions } from '@react-navigation/native';
+import { router, useNavigation } from 'expo-router';
 import { SlidersHorizontal } from 'lucide-react-native';
 import * as React from 'react';
 import { Animated, StyleSheet, Text, TextInput, View } from 'react-native';
@@ -12,6 +13,7 @@ const Header_Min_Height = 20;
 
 export default function DynamicHeader({ animHeaderValue }) {
   const userData = useSelector(userInfoSliceSelector);
+  const navigation = useNavigation();
   const animateHeaderBackgroundColor = animHeaderValue.interpolate({
     inputRange: [0, Header_Max_Height - Header_Min_Height],
     outputRange: [1, 0],
@@ -53,7 +55,9 @@ export default function DynamicHeader({ animHeaderValue }) {
             icon="menu"
             iconColor={Colors.primaryBackgroundColor}
             size={40}
-            onPress={() => console.log('Pressed')}
+            onPress={() => {
+              navigation.dispatch(DrawerActions.openDrawer());
+            }}
           />
           <View className="justify-center items-center">
             <Button
@@ -72,18 +76,23 @@ export default function DynamicHeader({ animHeaderValue }) {
             </Button>
             <Text className="text-primary font-hnow64regular">Tòa S1.01 VinHome Grand Park</Text>
           </View>
-          <Avatar.Image
-            size={40}
-            source={
-              userData.avatarUrl === null
-                ? {
-                    uri: userData.avatarUrl,
-                  }
-                : {
-                    uri: 'https://w7.pngwing.com/pngs/205/731/png-transparent-default-avatar-thumbnail.png',
-                  }
-            }
-          />
+          <TouchableRipple
+          borderless
+          onPress={() => router.push('/user')}
+          >
+            <Avatar.Image
+              size={40}
+              source={
+                userData.avatarUrl === null
+                  ? {
+                      uri: userData.avatarUrl,
+                    }
+                  : {
+                      uri: 'https://w7.pngwing.com/pngs/205/731/png-transparent-default-avatar-thumbnail.png',
+                    }
+              }
+            />
+          </TouchableRipple>
         </View>
       </Animated.View>
 

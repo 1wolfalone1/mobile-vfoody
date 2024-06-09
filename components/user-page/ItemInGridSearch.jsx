@@ -24,6 +24,7 @@ const styles = StyleSheet.create({
   },
 });
 const ItemInGridSearch = ({ item }) => {
+
   const { width, height } = Dimensions.get('window');
   const widthItem = parseInt((width * 26) / 100);
   return item == null ? (

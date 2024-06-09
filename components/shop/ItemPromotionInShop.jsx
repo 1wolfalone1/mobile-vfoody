@@ -1,3 +1,4 @@
+import SkeletonLoading from 'expo-skeleton-loading';
 import React from 'react';
 import { Dimensions, Image, StyleSheet, Text, View } from 'react-native';
 import { Button, Divider } from 'react-native-paper';
@@ -37,16 +38,14 @@ const ItemPromotionInShop = ({ item }) => {
   ) : (
     <View
       className="flex-row my-4"
-      style={{ height: widthItem, borderRadius: 16, backgroundColor: 'white' ,
-        ...styles.shadow
-      }}
+      style={{ height: widthItem, borderRadius: 16, backgroundColor: 'white', ...styles.shadow }}
     >
       <Image
         style={{ height: widthItem, width: widthItem, borderRadius: 16 }}
         source={Images.PromotionShopLogo}
       />
       <View className="flex-row items-center ml-2">
-        <View className="" >
+        <View className="">
           <Text className="font-hnow65medium">{genPromotionTitle(item)}</Text>
         </View>
         <Divider className="h-full w-[0.8] ml-4" />
@@ -60,4 +59,22 @@ const ItemPromotionInShop = ({ item }) => {
 
 export default ItemPromotionInShop;
 
-const SkeletonItem = () => {};
+const SkeletonItem = () => {
+  const { width, height } = Dimensions.get('window');
+  const widthItem = parseInt((width * 12) / 100);
+
+  return (
+    <SkeletonLoading background={Colors.skeleton.bg} highlight={Colors.skeleton.hl}>
+      <View
+        style={{
+          height: widthItem,
+          borderRadius: 16,
+          marginVertical: 16,
+          width: widthItem * 5,
+          backgroundColor: Colors.skeleton.bg,
+          ...styles.shadow,
+        }}
+      />
+    </SkeletonLoading>
+  );
+};

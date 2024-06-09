@@ -15,6 +15,7 @@ const ShopLayout = () => {
           name="index"
           options={{
             title: 'index',
+            presentation: '',
             headerShown: false,
           }}
         />
@@ -23,6 +24,16 @@ const ShopLayout = () => {
           options={{
             title: 'review',
             headerShown: false,
+            
+          }}
+        />
+        <JsStack.Screen
+          name="temp-cart"
+          options={{
+            headerShown: false,
+            mode: 'model',
+            gestureEnabled: true,
+            ...TransitionPresets.ModalPresentationIOS,
           }}
         />
         <JsStack.Screen

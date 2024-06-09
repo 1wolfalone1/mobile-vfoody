@@ -39,4 +39,5 @@ export const userInfoSliceSelector = (state) => {
 
 export const userRoleSelector = (state) => state.userInfoSlice.role;
 
-export const authenticate = createAsyncThunk('userInfo/authenticate', async () => {});
+export const authenticate = createAsyncThunk('userInfo/authenticate', 
+  async () => {});

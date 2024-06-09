@@ -1,16 +1,31 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import { ChevronRight, HandCoins, LocateFixed, MapPin, Truck } from 'lucide-react-native';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Dimensions, ScrollView, Text, View } from 'react-native';
 import { Avatar, Button, Divider, TouchableRipple } from 'react-native-paper';
+import { useDispatch, useSelector } from 'react-redux';
 import ItemInCart from '../../../components/cart-page/ItemInCart';
 import { Colors } from '../../../constant';
+import cartSlice, { cartSelector, getCartInfo } from '../../../redux/slice/cartSlice';
+import { dataShopDetailsSelector } from '../../../redux/slice/shopDetailsSlice';
 
 const CartItemInShop = () => {
-  const param = useLocalSearchParams();
+  const {shopId}= useLocalSearchParams();
   const { width, height } = Dimensions.get('window');
   const widthItem = parseInt((width * 85) / 100);
-  console.log(param);
+  const { listItemInfo, items } = useSelector(cartSelector);
+  const { info } = useSelector(dataShopDetailsSelector);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    console.log(listItemInfo);
+    if (shopId) {
+      console.log(' is herrrrrrrrrrrrrrrrrrrrr', shopId);
+      dispatch(getCartInfo(shopId));
+    }
+    return () => {
+      dispatch(cartSlice.actions.resetStateListItemInfo())
+    }
+  }, [items]);
   return (
     <View className="flex-1 bg-white overflow-visible">
       <View className="pl-8 pt-8">
@@ -69,8 +84,8 @@ const CartItemInShop = () => {
           <View className="mb-5">
             <Text className="ml-2 text-lg font-psemibold">Thông tin đơn hàng</Text>
           </View>
-          {data.map((item) => (
-            <ItemInCart key={item.id} item={item} />
+          {listItemInfo.map((item) => (
+            <ItemInCart key={item.id} item={item} shopId={shopId} />
           ))}
           <View className="" style={{ width: widthItem }}>
             <Divider className="my-4 bg-black-700 h-0.5" />
@@ -100,14 +115,14 @@ const CartItemInShop = () => {
 
             <Divider className="my-4 bg-black-700 h-0.5 " />
           </View>
-          <View className="flex-row justify-between" style={{width: widthItem}}>
+          <View className="flex-row justify-between" style={{ width: widthItem }}>
             <Text className="font-hnow65medium text-lg">Tổng cộng</Text>
             <View className="flex-row">
               <Text className="font-hnow64regular text-2xl text-primary">50.000</Text>
               <Text className="font-hnow63book text-lg text-gray-400"> VNĐ</Text>
             </View>
           </View>
-          <View className="mt-8" style={{width: widthItem}}>
+          <View className="mt-8" style={{ width: widthItem }}>
             <Button
               mode="elevated"
               textColor="white"

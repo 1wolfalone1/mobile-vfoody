@@ -12,10 +12,14 @@ export default {
   commonBtnText: '#FFFFFF',
   btnBackground: '#FFFFFF',
   btnText: '#DF4830',
-  glassShopHeader: '#e2e2e2b7',
+  glassShopHeader: "#e2e2e2b7",
+  glass: {
+    100: '#000000a8',
+    red: '#e40000da',
+    green: '#376100c0'
+  }, 
   success: '#15803d',
   loss: '#dc2626',
-
   skeleton: {
     bg: '#adadad',
     hl: '#cccccc',
