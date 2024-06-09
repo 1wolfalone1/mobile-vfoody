@@ -6,6 +6,7 @@ export default {
   tertiaryTextColor: '#9EA1B1',
   activeTabColor: '#ffee00ff',
   greyText: '#7e7e7e',
+  cyan500: '#0ea5e9',
   // button color:
   commonBtnBackground: '#df4730c4',
   commonBtnText: '#FFFFFF',

@@ -1,4 +1,4 @@
-import { DrawerLayoutAndroid, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { DrawerLayoutAndroid, Modal, StyleSheet, Text, TouchableHighlight, TouchableOpacity, View } from 'react-native';
 import React, { useRef, useState } from 'react';
 import {
   ArrowDown,
@@ -14,16 +14,22 @@ import DashboardCard from '../../components/shop-owner/DashboardCard';
 import DateTimePicker from 'react-native-ui-datepicker';
 import dayjs from 'dayjs';
 import { BlurView } from 'expo-blur';
-import { Button } from 'react-native-paper';
+import { Button, TouchableRipple } from 'react-native-paper';
 import { Colors } from '../../constant';
 
 const Dashboard = () => {
-  const [fromDate, setFromDate] = useState(dayjs(dayjs('2024-02-01')));
-  const [toDate, setToDate] = useState(dayjs());
+  const [fromDate, setFromDate] = useState(dayjs(dayjs('2024-01-01')));
+  const [toDate, setToDate] = useState(dayjs(Date.now()));
   const [dateRange, setDateRange] = useState([fromDate, toDate]);
   const [isFromDatePickerVisible, setFromDatePickerVisibility] = useState(false);
   const [isToDatePickerVisible, setToDatePickerVisibility] = useState(false);
   const [isActive, setIsActive] = useState(true);
+  
+  const calculateDays = (start, end) => {
+    return end.diff(start, 'day');
+  };
+  const numberOfDays = calculateDays(fromDate, toDate);
+  const [date, setDate] = useState(numberOfDays);
 
   const drawerRef = useRef(null);
   const openDrawer = () => {
@@ -35,13 +41,13 @@ const Dashboard = () => {
   const toggleToDatePicker = () => {
     setToDatePickerVisibility(!isToDatePickerVisible);
   };
-  const calculateDays = (start, end) => {
-    return end.diff(start, 'day');
-  };
-  const numberOfDays = calculateDays(fromDate, toDate);
 
   const handleActive = () => {
     setIsActive(!isActive);
+  };
+
+  const handleSubmit = () => {
+    setDate(calculateDays(fromDate, toDate));
   }
 
   return (
@@ -67,7 +73,7 @@ const Dashboard = () => {
               buttonColor={isActive ? Colors.success : Colors.primaryBackgroundColor}
               className="w-20 rounded-xl"
               labelStyle={{
-                fontSize: 16,
+                fontSize: 18,
               }}
               onPress={() => handleActive()}
             >
@@ -76,14 +82,38 @@ const Dashboard = () => {
           </View>
         </View>
 
+        <Text className="text-2xl font-bold my-12 text-center tracking-wider text-primary">
+          Thống kê tổng quan về shop
+        </Text>
+
+        <View className="flex-row">
+          <Text className="text-gray-500 ml-3 text-sm">Từ ngày</Text>
+          <Text className="text-gray-500 ml-20 text-sm">Đến ngày</Text>
+        </View>
+
         {/* Filter Date */}
-        <View className="flex-row justify-around my-8">
-          <TouchableOpacity onPress={toggleFromDatePicker} className="bg-slate-300 p-2 rounded-xl">
-            <Text className="text-black text-lg">Từ ngày: {fromDate.format('DD/MM/YYYY')}</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={toggleToDatePicker} className="bg-slate-300 p-2 rounded-xl">
-            <Text className="text-black text-lg">Đến ngày: {toDate.format('DD/MM/YYYY')}</Text>
-          </TouchableOpacity>
+        <View className="flex-row justify-around mb-4 mx-2">
+          <TouchableRipple onPress={toggleFromDatePicker} className="bg-slate-300 p-2 rounded-md">
+            <Text className="text-black mx-2 text-lg">{fromDate.format('DD/MM/YYYY')}</Text>
+          </TouchableRipple>
+          <TouchableRipple onPress={toggleToDatePicker} className="bg-slate-300 p-2 rounded-md">
+            <Text className="text-black mx-2 text-lg">{toDate.format('DD/MM/YYYY')}</Text>
+          </TouchableRipple>
+          <Button
+            buttonColor={Colors.primaryBackgroundColor}
+            textColor={Colors.commonBtnText}
+            mode="elevated"
+            contentStyle={{
+              paddingVertical: 4,
+            }}
+            className="w-32 rounded-md"
+            labelStyle={{
+              fontSize: 16,
+            }}
+            onPress={handleSubmit}
+          >
+            Thống kê
+          </Button>
         </View>
 
         {/* From Date Picker Modal */}
@@ -145,28 +175,28 @@ const Dashboard = () => {
           title="Tổng doanh thu"
           subTitle="89,972,872.85 VNĐ"
           leftIcon={<ArrowDown size={30} color={Colors.loss} />}
-          leftText={`12% (${numberOfDays} ngày)`}
+          leftText={`12% (${date} ngày)`}
         />
         <DashboardCard
           mainIcon={<DollarSign size={30} color={Colors.success} />}
           title="Tổng lợi nhuận"
           subTitle="53,827,912.96 VNĐ"
           leftIcon={<ArrowUp size={30} color={Colors.success} />}
-          leftText={`53% (${numberOfDays} ngày)`}
+          leftText={`53% (${date} ngày)`}
         />
         <DashboardCard
           mainIcon={<NotepadText size={30} color={Colors.success} />}
           title="Tổng đơn hàng"
           subTitle="18,917"
           leftIcon={<ArrowDown size={30} color={Colors.loss} />}
-          leftText={`32% (${numberOfDays} ngày)`}
+          leftText={`32% (${date} ngày)`}
         />
         <DashboardCard
           mainIcon={<CircleUser size={30} color={Colors.success} />}
           title="Tổng khách hàng"
           subTitle="15,821"
           leftIcon={<ArrowUp size={30} color={Colors.success} />}
-          leftText={`33% (${numberOfDays} ngày)`}
+          leftText={`33% (${date} ngày)`}
         />
       </View>
     </DrawerLayoutAndroid>
