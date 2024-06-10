@@ -1,12 +1,20 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  items: [],
-  total: 0,
-  vouchers: [],
-  status: {
-    code: 200,
-    message: '',
+  snackbar: {
+    icon: null,
+    message: null,
+    open: false,
+    iconFunction: () => {
+      console.log('Snackbar icon function');
+    },
+    action: {
+      label: 'Undo',
+      onPress: () => {},
+    },
+    style: {},
+    duration: 5000,
+    elevation: 5,
   },
 };
 const globalSlice = createSlice({
@@ -17,6 +25,22 @@ const globalSlice = createSlice({
       return actions.payload;
     },
     resetState: (state, actions) => initialState,
+    openSnackBar: (state, actions) => {
+      state.snackbar.message = actions.payload.message;
+      state.snackbar.open = true;
+    },
+    closeSnackBar: (state, actions) => {
+      state.snackbar = initialState.snackbar;
+    },
+    customSnackBar: (state, actions) => {
+      const { icon, iconFunction, action, style, duration, elevation } = actions.payload;
+      if (icon) state.snackbar.icon = actions.payload.icon;
+      if (iconFunction) state.snackbar.iconFunction = actions.payload.iconFunction;
+      if (action) state.snackbar.action = actions.payload.action;
+      if (style) state.snackbar.style = actions.payload.style;
+      if (duration) state.snackbar.duration = actions.payload.duration;
+      if (elevation) state.snackbar.elevation = actions.payload.elevation;
+    },
   },
   // extraReducers: (builder) =>
   //   builder
@@ -35,3 +59,6 @@ const globalSlice = createSlice({
 });
 
 export default globalSlice;
+
+export const globalSelector = (state) => state.globalSlice;
+export const snackBarSelector = (state) => state.globalSlice.snackbar;

@@ -12,6 +12,7 @@ module.exports = {
         },
         glass: {
           DEFAULT: "#ffffffab",
+          100: "#3b0000cc"
         },
         shadow: {
           DEFAULT: '#df473093',

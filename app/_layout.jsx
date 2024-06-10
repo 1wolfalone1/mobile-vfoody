@@ -1,8 +1,13 @@
 import { useFonts } from 'expo-font';
 import { SplashScreen, Stack } from 'expo-router';
 import { useEffect } from 'react';
+import { PaperProvider } from 'react-native-paper';
 import { Provider } from 'react-redux';
+import { persistStore } from 'redux-persist';
+import { PersistGate } from 'redux-persist/lib/integration/react';
+import SnackBarCustom from '../components/common/SnackBarCustom';
 import { store } from '../redux/store';
+let persistor = persistStore(store);
 const RootLayout = () => {
   const [fontsLoaded, error] = useFonts({
     'Poppins-Black': require('../assets/fonts/Poppins-Black.ttf'),
@@ -41,20 +46,35 @@ const RootLayout = () => {
   }
   return (
     <Provider store={store}>
-      <Stack screenOptions={{ animation: 'slide_from_bottom' }}>
-        <Stack.Screen name="index" options={{ headerShown: false }} />
-        <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-        <Stack.Screen
-          name="(tabs)"
-          options={{ headerShown: false, animation: 'fade_from_bottom' }}
-        />
-        <Stack.Screen
-          name="oauthredirect"
-          options={{ headerShown: false, animation: 'slide_from_bottom' }}
-        />
-        <Stack.Screen name="shop" options={{ headerShown: false, animation: "slide_from_bottom" }} />
-        <Stack.Screen name="shop-owner" options={{ headerShown: false, animation: "slide_from_bottom" }} />
-      </Stack>
+      <PersistGate loading={null} persistor={persistor}>
+        <PaperProvider>
+          <Stack screenOptions={{ animation: 'slide_from_bottom' }}>
+            <Stack.Screen name="index" options={{ headerShown: false }} />
+            <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+            <Stack.Screen
+              name="(tabs)"
+              options={{ headerShown: false, animation: 'fade_from_bottom' }}
+            />
+            <Stack.Screen
+              name="oauthredirect"
+              options={{ headerShown: false, animation: 'slide_from_bottom' }}
+            />
+            <Stack.Screen
+              name="shop"
+              options={{ headerShown: false, animation: 'slide_from_bottom' }}
+            />
+            <Stack.Screen
+              name="shop-owner"
+              options={{ headerShown: false, animation: 'slide_from_bottom' }}
+            />
+            <Stack.Screen
+              name="(settings)"
+              options={{ headerShown: false, animation: 'slide_from_bottom' }}
+            />
+          </Stack>
+          <SnackBarCustom />
+        </PaperProvider>
+      </PersistGate>
     </Provider>
   );
 };

@@ -9,8 +9,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import api from '../../../api/api';
 import HeaderInAuth from '../../../components/common/HeaderInAuth';
 import { Colors, CommonConstants, Images } from '../../../constant';
-import userInfoSlice from '../../../redux/slice/userSlice';
 import persistSlice, { persistSliceSelector } from '../../../redux/slice/persistSlice';
+import userInfoSlice from '../../../redux/slice/userSlice';
 
 // const redirectUri = AuthSession.makeRedirectUri({
 //   path: '/sign-in',
