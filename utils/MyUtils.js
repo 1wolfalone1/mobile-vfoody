@@ -143,3 +143,14 @@ export const fix2 = (number) => {
     return 0;
   }
 };
+
+export function formatDate(dateString) {
+  const dateObj = new Date(dateString); // Parse the date string
+  const hours = dateObj.getHours().toString().padStart(2, '0'); // Add leading zero for single-digit hours
+  const minutes = dateObj.getMinutes().toString().padStart(2, '0');
+  const day = dateObj.getDate();
+  const month = dateObj.getMonth() + 1; // Months are zero-indexed (January is 0)
+  const year = dateObj.getFullYear();
+
+  return `${hours}:${minutes} ${day}/${month}/${year}`;
+}
