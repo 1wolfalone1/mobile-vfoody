@@ -4,6 +4,7 @@ import React, { useEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { useDispatch } from 'react-redux';
+import api from '../api/api';
 
 const OauthRedirectLayout = () => {
   const dispatch = useDispatch();
@@ -14,12 +15,23 @@ const OauthRedirectLayout = () => {
       console.log(loginMsg, ' >error');
       router.replace('/sign-in');
     } else {
-      router.replace('/home');
+      getUserInfo()
     }
   };
   useEffect(() => {
     handleAsyncLogin();
   }, []);
+  const getUserInfo = async () => {
+    try {
+      const res = await api.get('/api/v1/customer');
+      const data = await res.data;
+      console.log(data, "dffata");
+      router.replace('/home');
+    } catch (e) {
+      console.log(e);
+      router.push("/sign-in");
+    }
+  }
   return (
     <View>
       <Spinner visible={true} textContent={'Waiting...'} textStyle={styles.spinnerTextStyle} />
