@@ -1,8 +1,8 @@
 import { router } from 'expo-router';
 import SkeletonLoading from 'expo-skeleton-loading';
 import React from 'react';
-import { Dimensions, Image, StyleSheet, Text, TouchableHighlight, View } from 'react-native';
-import { Avatar } from 'react-native-paper';
+import { Dimensions, Image, StyleSheet, Text, View } from 'react-native';
+import { Avatar, TouchableRipple } from 'react-native-paper';
 import { Colors } from '../../constant';
 import { formatNumberVND } from '../../utils/MyUtils';
 
@@ -45,7 +45,7 @@ const ItemBestSellerInHome = ({ item }) => {
         width: widthItem,
       }}
     >
-      <TouchableHighlight
+      <TouchableRipple
         onPress={() =>
           router.push({
             pathname: '/shop',
@@ -54,7 +54,7 @@ const ItemBestSellerInHome = ({ item }) => {
             },
           })
         }
-        className="flex-1 w-full"
+        className="flex-1 w-full bg-white"
       >
         <View
           className="w-full bg-black-100  rounded-2xl "
@@ -76,7 +76,7 @@ const ItemBestSellerInHome = ({ item }) => {
           </Text>
           <Image source={itemImage} resizeMode="cover" className="w-full h-full z-[0] rounded-lg" />
         </View>
-      </TouchableHighlight>
+      </TouchableRipple>
       <View className="pt-1 items-start w-full gap-1">
         <View className="flex  justify-center w-full items-start">
           <Text style className="text-xs text-gray-400 font-hnow64regular">

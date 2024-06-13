@@ -168,7 +168,7 @@ const ProductDetail = () => {
 
               <View className="flex-1">
                 {product.topping.map((item, index) => (
-                  <ToppingItem topping={item} />
+                  <ToppingItem topping={item} key={item.id}/>
                 ))}
               </View>
             </View>

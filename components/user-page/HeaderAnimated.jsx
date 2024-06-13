@@ -76,14 +76,11 @@ export default function DynamicHeader({ animHeaderValue }) {
             </Button>
             <Text className="text-primary font-hnow64regular">Tòa S1.01 VinHome Grand Park</Text>
           </View>
-          <TouchableRipple
-          borderless
-          onPress={() => router.push('/user')}
-          >
+          <TouchableRipple borderless onPress={() => router.push('/user')} className="rounded-full">
             <Avatar.Image
               size={40}
               source={
-                userData.avatarUrl === null
+                userData != null
                   ? {
                       uri: userData.avatarUrl,
                     }
