@@ -4,6 +4,7 @@ import { Button, Dialog, Searchbar, Snackbar } from 'react-native-paper';
 import MenuCreate from '../../components/shop-owner/MenuCreate';
 import MenuTable from '../../components/shop-owner/MenuTable';
 import { Colors } from '../../constant';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const Menu = () => {
   const [openCreate, setOpenCreate] = useState(false);
@@ -29,7 +30,7 @@ const Menu = () => {
   };
 
   return (
-    <View className="flex-1">
+    <SafeAreaView className="flex-1">
       <Text className="text-2xl font-bold m-4 text-center tracking-wider text-primary">
         Quản lý thực đơn
       </Text>
@@ -99,7 +100,7 @@ const Menu = () => {
           </Button>
         </Dialog.Actions>
       </Dialog>
-    </View>
+    </SafeAreaView>
   );
 };
 
