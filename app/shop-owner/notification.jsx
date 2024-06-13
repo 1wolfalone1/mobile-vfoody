@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { Text, View } from 'react-native';
+import { Text } from 'react-native';
 import NotificationList from '../../components/shop-owner/Notification';
 import { Button, Dialog, TextInput } from 'react-native-paper';
 import { Colors } from '../../constant';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const Notification = () => {
   const [reason, setReason] = useState('');
@@ -17,7 +18,7 @@ const Notification = () => {
   };
 
   return (
-    <View className="flex-1">
+    <SafeAreaView className="flex-1">
       <Text className="text-2xl font-bold m-4 text-center tracking-wider text-primary">
         Thông báo đơn hàng mới
       </Text>
@@ -25,7 +26,7 @@ const Notification = () => {
 
       {/* Dialog for cancel order */}
       <Dialog className="bg-slate-100" visible={deleteDialogVisible} onDismiss={hideDeleteDialog}>
-        <Dialog.Title className='text-center'>Lý do từ chối</Dialog.Title>
+        <Dialog.Title className="text-center">Lý do từ chối</Dialog.Title>
         <Dialog.Content>
           <TextInput
             label="Vui lòng nhập lý do"
@@ -60,8 +61,8 @@ const Notification = () => {
           </Button>
         </Dialog.Actions>
       </Dialog>
-    </View>
+    </SafeAreaView>
   );
-}
+};
 
-export default Notification
+export default Notification;
