@@ -1,12 +1,15 @@
+import { router } from 'expo-router';
 import { Formik } from 'formik';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import MapView from 'react-native-maps';
-import { Button, HelperText, Modal, Portal, TextInput } from 'react-native-paper';
-import { useSelector } from 'react-redux';
+import { Button, HelperText, Modal, Portal, TextInput, Tooltip } from 'react-native-paper';
+import { useDispatch, useSelector } from 'react-redux';
 import * as yup from 'yup';
+import api from '../../api/api';
 import { Colors } from '../../constant';
-import { userInfoSliceSelector } from '../../redux/slice/userSlice';
+import globalSlice, { globalSelector } from '../../redux/slice/globalSlice';
+import { loadInfo, userInfoSliceSelector } from '../../redux/slice/userSlice';
 const validationSchema = yup.object().shape({
   phoneNumber: yup
     .string()
@@ -24,25 +27,109 @@ const styles = StyleSheet.create({
   },
 });
 const UserFormInfo = () => {
-
+  const [address, setAddress] = useState();
   const info = useSelector(userInfoSliceSelector);
+  const dispatch = useDispatch();
   const [visible, setVisible] = React.useState(false);
-  const handleUpdateUserprofile = async (data) => {};
-  const handleOpenMap = () => {
-    setVisible(true)
+  const { map } = useSelector(globalSelector);
+  const handleUpdateUserprofile = async (value) => {
+    try {
+      const res = await api.put('/api/v1/customer/profile/' + info.id, {
+        phoneNumber: value.phoneNumber,
+        fullName: value.fullName,
+        address: address.name,
+        latitude: address.latitude,
+        longitude: address.longitude,
+      });
+      const data = await res.data;
+      console.log(data);
+      if (data.isSuccess) {
+        dispatch(
+          globalSlice.actions.customSnackBar({
+            style: {
+              color: 'white',
+              backgroundColor: Colors.glass.green,
+              pos: {
+                top: 40,
+              },
+              actionColor: 'yellow',
+            },
+          }),
+        );
+        dispatch(globalSlice.actions.openSnackBar({ message: 'Thay đổi thông tin thành công <3' }));
+        dispatch(loadInfo())
+      } else {
+        dispatch(
+          globalSlice.actions.customSnackBar({
+            style: {
+              color: 'white',
+              backgroundColor: Colors.glass.red,
+              pos: {
+                top: 40,
+              },
+              actionColor: 'yellow',
+            },
+          }),
+        );
+        dispatch(
+          globalSlice.actions.openSnackBar({
+            message: 'Không thể thay đổi thông tin! Làm ơn thử lại sau :_)',
+          }),
+        );
+      }
+    } catch (e) {
+      console.log(e);
+      dispatch(
+        globalSlice.actions.customSnackBar({
+          style: {
+            color: 'white',
+            backgroundColor: Colors.glass.red,
+            pos: {
+              top: 40,
+            },
+            actionColor: 'yellow',
+          },
+        }),
+      );
+      dispatch(
+        globalSlice.actions.openSnackBar({
+          message: 'Có gì lỗi rồi, thử lại sau nhé :(',
+        }),
+      );
+    }
   };
+  const handleOpenMap = () => {
+    router.push('/map');
+  };
+  console.log(address);
+  useEffect(() => {
+    console.log(map, ' map ne');
+    if (map.isChange) {
+      setAddress(map.origin);
+    } else {
+      setAddress({
+        latitude: info.ltn,
+        longitude: info.lng,
+        name: info.building,
+      });
+    }
+  }, [map, info]);
   const hideModal = () => {
-    setVisible(false)
+    setVisible(false);
   };
   return (
     <>
       <Portal>
-        <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={{
-          backgroundColor: 'white',
-          padding: 10,
-          marginHorizontal: 20,
-          borderRadius: 20,
-        }}>
+        <Modal
+          visible={visible}
+          onDismiss={hideModal}
+          contentContainerStyle={{
+            backgroundColor: 'white',
+            padding: 10,
+            marginHorizontal: 20,
+            borderRadius: 20,
+          }}
+        >
           <Text>Example Modal. Click outside this area to dismiss.</Text>
           <MapView style={styles.map} />
         </Modal>
@@ -51,9 +138,10 @@ const UserFormInfo = () => {
         initialValues={{
           phoneNumber: info.phoneNumber,
           fullName: info.fullName,
-          building: info.building,
+          building: address,
         }}
         onSubmit={(values) => {
+          console.log('----------------------submit--------------------');
           handleUpdateUserprofile(values);
         }}
         validationSchema={validationSchema}
@@ -61,15 +149,7 @@ const UserFormInfo = () => {
         {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
           <View className="gap-4 px-8 mt-8">
             <View>
-              <TextInput
-                value={info.email}
-                disabled
-                mode="outlined"
-                label={'Email'}
-                contentStyle={{
-                  color: 'grey',
-                }}
-              />
+              <TextInput value={info.email} editable={false} mode="outlined" label={'Email'} />
               <HelperText type="error" visible={false}>
                 Email address is invalid!
               </HelperText>
@@ -102,33 +182,63 @@ const UserFormInfo = () => {
               </HelperText>
             </View>
             <View>
-              <View className="flex-row items-center justify-center gap-1">
-                <TextInput
-                  value={values.building}
-                  onChangeText={handleChange('building')}
-                  onBlur={handleBlur('building')}
-                  mode="outlined"
-                  label="Địa chỉ"
-                  className="flex-1 m-0"
-                  outlineStyle={{
-                    color: Colors.primaryBackgroundColor,
-                  }}
-                />
-                <Button
-                  icon="map-marker-plus"
-                  onPress={handleOpenMap}
-                  uppercase
-                  className="rounded-xl"
-                  mode="elevated"
-                  buttonColor={Colors.primaryBackgroundColor}
-                  textColor="white"
-                >
-                  change
-                </Button>
-              </View>
+              <Tooltip title={address?.name}>
+                <View className="flex-row items-end justify-center gap-1">
+                  <TextInput
+                    value={address?.name}
+                    onChangeText={handleChange('building')}
+                    onBlur={handleBlur('building')}
+                    mode="outlined"
+                    label="Địa chỉ"
+                    style={{
+                      flex: 1,
+                    }}
+                    editable={false}
+                    contentStyle={{
+                      color: '#000000',
+                    }}
+                    outlineColor="red"
+                    className="flex-1 m-0"
+                    outlineStyle={{
+                      color: Colors.primaryBackgroundColor,
+                    }}
+                  />
+                  <Button
+                    icon="map-marker-plus"
+                    onPress={handleOpenMap}
+                    uppercase
+                    className="rounded-xl p-1"
+                    mode="elevated"
+                    buttonColor={'blue'}
+                    textColor="white"
+                  >
+                    change
+                  </Button>
+                </View>
+              </Tooltip>
               <HelperText type="error" visible={touched.building && errors.building}>
                 {errors.building}
               </HelperText>
+            </View>
+            <View className="justify-center items-center pb-10">
+              <Button
+                buttonColor={Colors.primaryBackgroundColor}
+                textColor={Colors.commonBtnText}
+                mode="elevated"
+                style={{ width: '80%' }}
+                theme={{ roundness: 4 }}
+                contentStyle={{
+                  paddingVertical: 8,
+                }}
+                labelStyle={{
+                  fontFamily: 'HeadingNow-64Regular',
+                  fontSize: 18,
+                  lineHeight: 20,
+                }}
+                onPress={handleSubmit}
+              >
+                Cập nhật
+              </Button>
             </View>
           </View>
         )}

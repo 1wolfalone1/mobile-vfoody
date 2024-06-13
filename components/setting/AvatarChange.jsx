@@ -139,6 +139,7 @@ const AvatarChange = ({}) => {
               onPress={() => {
                 console.log('asdfasf');
                 handleSaveAvatar();
+                setIsChangeMode(!isChangeMode)
               }}
             >
               Lưu ảnh
