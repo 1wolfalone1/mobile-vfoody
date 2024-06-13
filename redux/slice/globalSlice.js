@@ -1,6 +1,19 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
+  map: {
+    origin: {
+      name: '',
+      lat: 0,
+      lng: 0,
+    },
+    destination: {
+      name: '',
+      lat: 0,
+      lng: 0,
+    },
+    isChange: false,
+  },
   snackbar: {
     icon: null,
     message: null,
@@ -31,6 +44,18 @@ const globalSlice = createSlice({
     },
     closeSnackBar: (state, actions) => {
       state.snackbar = initialState.snackbar;
+    },
+    changeMapState: (state, actions) => {
+      const { latitude, longitude, name } = actions.payload;
+      state.map.isChange = true;
+      state.map.origin = {
+        latitude,
+        longitude,
+        name,
+      };
+    },
+    resetMapsState: (state, actions) => {
+      state.map = initialState.map
     },
     customSnackBar: (state, actions) => {
       const { icon, iconFunction, action, style, duration, elevation } = actions.payload;

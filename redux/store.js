@@ -3,6 +3,7 @@ import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { persistReducer } from 'redux-persist';
 import cartSlice from './slice/cartSlice';
 import globalSlice from './slice/globalSlice';
+import persistSlice from './slice/persistSlice';
 import shopDetailsSlice from './slice/shopDetailsSlice';
 import userInfoSlice from './slice/userSlice';
 const reducers = combineReducers({
@@ -10,6 +11,7 @@ const reducers = combineReducers({
   cartSlice: cartSlice.reducer,
   shopDetailsSlice: shopDetailsSlice.reducer,
   globalSlice: globalSlice.reducer,
+ persistSlice: persistSlice.reducer 
 });
 const persistConfig = {
   key: 'root',

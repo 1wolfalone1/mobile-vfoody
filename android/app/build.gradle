@@ -90,6 +90,7 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0.0"
+        manifestPlaceholders = [API_KEY: "$System.env.EXPO_PUBLIC_API_MAPS_KEY"]
     }
     signingConfigs {
         debug {

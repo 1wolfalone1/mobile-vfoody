@@ -1,6 +1,6 @@
 import { NotebookPen } from 'lucide-react-native';
 import React, { useEffect, useState } from 'react';
-import { Dimensions, Image, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Dimensions, Image, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import {
   Button,
   Dialog,
@@ -83,7 +83,6 @@ const ItemInCart = ({ item, shopId }) => {
           if (index == 0) {
             if (isHasRadio) {
               toppingString += ' --- ' + item.topping.description + ': ' + checkBoxToppingString;
-
             } else {
               toppingString += item.topping.description + ': ' + checkBoxToppingString;
             }
@@ -107,6 +106,8 @@ const ItemInCart = ({ item, shopId }) => {
       }),
     );
   const handleOpenNote = () => {
+    console.log(item, 'noteeeeeeeeeeeeeeeeeeeeee');
+    setNoteTemp(itemInCart?.note);
     setOpenNote(true);
   };
   const handleHideNote = () => {
@@ -200,36 +201,43 @@ const ItemInCart = ({ item, shopId }) => {
             borderRadius: 20,
           }}
         >
-          <View className="items-center ">
-            <Text className="text-center text-lg font-hnow64regular">Ghi chú cho quán nào</Text>
-            <Divider style={{ width: '100%', marginVertical: 20 }} />
-          </View>
-          <View style={{ minHeight: 200 }}>
-            <TextInput
-              multiline
-              placeholder="Ghi chú tại đây ..."
-              onContentSizeChange={(event) => {
-                setHeightNote(event.nativeEvent.contentSize.height);
-              }}
-              defaultValue={itemInCart?.note}
-              value={noteTemp}
-              onChangeText={(e) => setNoteTemp(e)}
-              style={{
-                height: heightNote, // <- set the max height here
-              }}
-            />
-          </View>
-          <View className="flex-row justify-end items-center">
-            <Button
-              onPress={() => {
-                setOpenNote(false);
-              }}
-              textColor="red"
-            >
-              Hủy
-            </Button>
-            <Button onPress={handleSaveNote}>Lưu</Button>
-          </View>
+          <ScrollView
+            style={{
+            }}
+          >
+            <View className="items-center flex-1">
+              <Text className="text-center text-lg font-hnow64regular">Ghi chú cho quán nào</Text>
+              <Divider style={{ width: '100%', marginVertical: 20 }} />
+            </View>
+            <View style={{ minHeight: 200, flex: 1 }}>
+              <TextInput
+                placeholder="Ghi chú tại đây ..."
+                onContentSizeChange={(event) => {
+                  setHeightNote(event.nativeEvent.contentSize.height);
+                }}
+                 
+                numberOfLines={10}
+                multiline
+                defaultValue={noteTemp}
+                onChangeText={(e) => setNoteTemp(e)}
+                style={{
+                  height: heightNote,
+                  lineHeight: 28, // <- set the max height here
+                }}
+              />
+            </View>
+            <View className="flex-row justify-end items-center">
+              <Button
+                onPress={() => {
+                  setOpenNote(false);
+                }}
+                textColor="red"
+              >
+                Hủy
+              </Button>
+              <Button onPress={handleSaveNote}>Lưu</Button>
+            </View>
+          </ScrollView>
         </Modal>
       </Portal>
       <View className="bg-white rounded-2xl" style={styles.shadow}>

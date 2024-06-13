@@ -1,3 +1,5 @@
+import { Platform } from 'react-native';
+
 export const dataUrlToFile = (url, fileName) => {
   const [mediaType, data] = url.split(',');
 
@@ -14,21 +16,79 @@ export const dataUrlToFile = (url, fileName) => {
   return new File([arr], fileName, { type: mime });
 };
 export const dataAsyncUrlToFile = async (dataUrl, fileName) => {
-  const res = await fetch(dataUrl);
-  const blob = await res.blob();
-  const contentType = await res.headers.get('content-type');
-  console.log(contentType, 'content-type');
-  return new File([blob], fileName, { type: contentType });
+  try {
+    const res = await fetch(dataUrl);
+    const blob = await res.blob();
+    const contentType = await res.headers.get('content-type');
+    console.log(contentType, 'content-type');
+    return new File([blob], fileName, { type: contentType });
+  } catch (err) {
+    console.log(err, ' error in dataAsyncUrlToFile');
+    throw err;
+  }
+};
+export const getFilename = (url) => {
+  return url.substr(url.lastIndexOf('/') + 1);
 };
 
-export const objectToBlob = (object) => {
-  const json = JSON.stringify(object);
+export const getExtention = (mime) => {
+  switch (mime) {
+    case 'application/pdf':
+      return '.pdf';
+    case 'image/jpeg':
+      return '.jpg';
+    case 'image/jpg':
+      return '.jpg';
+    case 'image/png':
+      return '.png';
+    default:
+      return '.jpg';
+  }
+};
 
-  // Create a Blob from the JSON string
-  const blob = new Blob([json], {
-    type: 'application/json',
-  });
-  return blob;
+export const mobileUrlToFile = async (uri, data, field) => {
+  const os = Platform.OS;
+
+  if (os == 'android') {
+    const fileName = new Date().getTime() + getExtention(mime);
+    let fileInfo = '';
+    await RNFS.copyFile(uri, RNFS.CachesDirectoryPath + '/' + fileName).catch((e) => {
+      fileInfo = undefined;
+    });
+
+    if (!fileInfo) {
+      fileDetail = await RNFS.stat(RNFS.CachesDirectoryPath + '/' + fileName).catch((e) => {});
+      data.append(field, {
+        name: getFilename(fileDetail.path),
+        type: payload.file.type,
+        uri: 'file://' + fileDetail.path,
+      });
+    }
+  } else {
+    let localPath = uri;
+    if (!localPath.includes('private')) {
+      localPath = localPath.replace('/var', '/private/var');
+    }
+    data.append(field, {
+      name: getFilename(localPath),
+      type: mime,
+      uri: localPath.replace('file://', ''),
+    });
+  }
+};
+export const objectToBlob = (object) => {
+  try {
+    const json = JSON.stringify(object);
+
+    // Create a Blob from the JSON string
+    const blob = new Blob([json], {
+      type: 'application/json',
+    });
+    return blob;
+  } catch (err) {
+    console.log(err, ' error in objectToBlob');
+    throw err;
+  }
 };
 
 export const convertImageUrlToBase64 = async (imageUrl, a) => {
@@ -61,7 +121,7 @@ export const formatNumberVND = (q) => {
   if (q === undefined || q === null || q === '') {
     q = 0;
   }
-  
+
   // Format the number as Vietnamese dong (VND)
   return q.toLocaleString('vi-VN', {
     style: 'currency',
