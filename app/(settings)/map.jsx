@@ -7,9 +7,9 @@ import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplet
 import MapView, { Callout, Marker } from 'react-native-maps';
 import { Button, Divider, IconButton } from 'react-native-paper';
 import uuid from 'react-native-uuid';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Colors } from '../../constant';
-import globalSlice from '../../redux/slice/globalSlice';
+import globalSlice, { globalSelector } from '../../redux/slice/globalSlice';
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -32,6 +32,7 @@ const Map = () => {
   const refMap = useRef();
   const refMarker = useRef();
   const dispatch = useDispatch();
+  const { map } = useSelector(globalSelector);
   const [margin, setMargin] = useState({
     marginBottom: 1,
   });
@@ -45,9 +46,18 @@ const Map = () => {
   useEffect(() => {
     Location.requestForegroundPermissionsAsync();
     if (refSuggest) {
-      if (refSuggest.current) {
+      if(map.origin) {
+        refSuggest.current.setAddressText(map.origin.name);
+        setOrigin([{
+          latitude: map.origin.latitude,
+          longitude: map.origin.longitude,
+          name: map.origin.name,
+        }])
       }
-      refSuggest?.current?.setAddressText('Vinhome Grand Park');
+      if (refSuggest.current) {
+        
+      refSuggest?.current?.setAddressText(map.origin.name);
+      }
     }
     if (refMarker?.current) {
       refMarker.current.showCallout();

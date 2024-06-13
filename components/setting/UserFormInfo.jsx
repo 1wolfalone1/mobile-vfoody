@@ -27,7 +27,11 @@ const styles = StyleSheet.create({
   },
 });
 const UserFormInfo = () => {
-  const [address, setAddress] = useState();
+  const [address, setAddress] = useState({
+    name: '',
+    latitude: 0,
+    longitude: 0,
+  });
   const info = useSelector(userInfoSliceSelector);
   const dispatch = useDispatch();
   const [visible, setVisible] = React.useState(false);
@@ -57,7 +61,7 @@ const UserFormInfo = () => {
           }),
         );
         dispatch(globalSlice.actions.openSnackBar({ message: 'Thay đổi thông tin thành công <3' }));
-        dispatch(loadInfo())
+        dispatch(loadInfo());
       } else {
         dispatch(
           globalSlice.actions.customSnackBar({
@@ -107,13 +111,25 @@ const UserFormInfo = () => {
     if (map.isChange) {
       setAddress(map.origin);
     } else {
-      setAddress({
-        latitude: info.ltn,
-        longitude: info.lng,
-        name: info.building,
-      });
+      if (info.building) {
+        setAddress({
+          latitude: info.building.latitude,
+          longitude: info.building.longitude,
+          name: info.building.address,
+        });
+      }
+      dispatch(globalSlice.actions.changeMapState({
+        name: info.building.address,
+        longitude: info.building.longitude,
+        latitude: info.building.latitude,
+      }))
     }
   }, [map, info]);
+  useEffect(() => {
+    return () => {
+      dispatch(globalSlice.actions.resetMapsState());
+    }
+  }, [])
   const hideModal = () => {
     setVisible(false);
   };
@@ -197,11 +213,8 @@ const UserFormInfo = () => {
                     contentStyle={{
                       color: '#000000',
                     }}
-                    outlineColor="red"
                     className="flex-1 m-0"
-                    outlineStyle={{
-                      color: Colors.primaryBackgroundColor,
-                    }}
+                   
                   />
                   <Button
                     icon="map-marker-plus"
