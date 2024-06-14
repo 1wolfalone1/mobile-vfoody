@@ -27,12 +27,12 @@ const Dashboard = () => {
   const [isFromDatePickerVisible, setFromDatePickerVisibility] = useState(false);
   const [isToDatePickerVisible, setToDatePickerVisibility] = useState(false);
   const [isActive, setIsActive] = useState(true);
-  const [date, setDate] = useState(numberOfDays);
-
   const calculateDays = (start, end) => {
     return end.diff(start, 'day');
   };
   const numberOfDays = calculateDays(fromDate, toDate);
+  const [date, setDate] = useState(numberOfDays);
+
   const toggleFromDatePicker = () => {
     setFromDatePickerVisibility(!isFromDatePickerVisible);
   };
@@ -103,23 +103,22 @@ const Dashboard = () => {
         {/* Filter date */}
         <View className="flex-row justify-around mb-4 mx-2">
           {/* Date:To */}
-          <View className="flex-col">
-            <Text className="text-gray-500  text-sm">Từ ngày</Text>
+          <View className="flex-col w-1/2 px-2">
             <TouchableRipple onPress={toggleFromDatePicker} className="bg-slate-300 p-2 rounded-md">
-              <Text className="text-black mx-2 text-lg">{fromDate.format('DD/MM/YYYY')}</Text>
+              <Text className="text-black mx-2 text-lg">Từ: {fromDate.format('DD/MM/YYYY')}</Text>
             </TouchableRipple>
           </View>
 
           {/* Date:To */}
-          <View className="flex-col">
-            <Text className="text-gray-500  text-sm">Đến ngày</Text>
+          <View className="flex-col w-1/2 px-2">
+            {/* <Text className="text-gray-500  text-sm"></Text> */}
             <TouchableRipple onPress={toggleToDatePicker} className="bg-slate-300 p-2 rounded-md">
-              <Text className="text-black mx-2 text-lg">{toDate.format('DD/MM/YYYY')}</Text>
+              <Text className="text-black mx-2 text-lg">Đến: {toDate.format('DD/MM/YYYY')}</Text>
             </TouchableRipple>
           </View>
         </View>
 
-        <View className="px-5">
+        <View className="px-4">
           <Button
             buttonColor={Colors.primaryBackgroundColor}
             textColor={Colors.commonBtnText}
@@ -129,11 +128,11 @@ const Dashboard = () => {
             }}
             className="rounded-md"
             labelStyle={{
-              fontSize: 16,
+              fontSize: 18,
             }}
             onPress={handleSubmit}
           >
-            Thống kê
+            Xem thống kê
           </Button>
         </View>
 
@@ -195,15 +194,8 @@ const Dashboard = () => {
           mainIcon={<TrendingUp size={30} color={Colors.success} />}
           title="Tổng doanh thu"
           subTitle="89,972,872.85 VNĐ"
-          leftIcon={<ArrowDown size={30} color={Colors.loss} />}
-          leftText={`12% (${date} ngày)`}
-        />
-        <DashboardCard
-          mainIcon={<DollarSign size={30} color={Colors.success} />}
-          title="Tổng lợi nhuận"
-          subTitle="53,827,912.96 VNĐ"
           leftIcon={<ArrowUp size={30} color={Colors.success} />}
-          leftText={`53% (${date} ngày)`}
+          leftText={`12% (${date} ngày)`}
         />
         <DashboardCard
           mainIcon={<NotepadText size={30} color={Colors.success} />}

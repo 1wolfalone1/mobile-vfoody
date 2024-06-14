@@ -51,7 +51,7 @@ export default function StartPage() {
             fontSize: 24,
             lineHeight: 27,
           }}
-          onPress={() => router.push('/home')}
+          onPress={() => router.push('/shop-owner')}
         >
           Bắt đầu
         </Button>
