@@ -5,6 +5,7 @@
     "scheme": "mobile-vfoody",
     "version": "1.0.0",
     "orientation": "portrait",
+    "backgroundColor": "#000000",
     "icon": "./assets/icon/icon-light.png",
     "userInterfaceStyle": "light",
     "splash": {

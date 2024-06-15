@@ -1,5 +1,6 @@
 import { useFonts } from 'expo-font';
 import { SplashScreen, Stack } from 'expo-router';
+import * as SystemUI from 'expo-system-ui';
 import { useEffect } from 'react';
 import { PaperProvider } from 'react-native-paper';
 import { Provider } from 'react-redux';
@@ -44,6 +45,7 @@ const RootLayout = () => {
   if (!fontsLoaded && !error) {
     return null;
   }
+  SystemUI.setBackgroundColorAsync('black');
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>

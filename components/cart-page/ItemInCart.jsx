@@ -48,11 +48,12 @@ const ItemInCart = ({ item, shopId }) => {
   const dispatch = useDispatch();
   const [visible, setVisible] = useState(false);
   const [heightNote, setHeightNote] = useState(200);
+  const [price, setPrice] = useState('');
   useEffect(() => {
     if (items) {
       console.log(items, ' itemsInfo');
       const itemsInfo = items[shopId]?.find((e) => e.productId === item.id);
-
+      let priceTopping = 0;
       if (!itemsInfo) {
         return;
       }
@@ -66,6 +67,8 @@ const ItemInCart = ({ item, shopId }) => {
           } else {
             toppingString += ' - ' + item.topping.description + ' : ' + item.option.description;
           }
+
+          priceTopping += item.option.price;
           isHasRadio = true;
         }
       });
@@ -73,6 +76,7 @@ const ItemInCart = ({ item, shopId }) => {
         console.log(item, ' tessssssssssssssssssssssss');
         if (item) {
           const checkBoxToppingString = item.options.reduce((a, option, index) => {
+            priceTopping += option.price;
             console.log(option);
             if (index == 0) {
               return option.description;
@@ -95,8 +99,18 @@ const ItemInCart = ({ item, shopId }) => {
       setToppingString(toppingString);
       setQuantity(itemsInfo.quantity);
       setNoteTemp(itemsInfo.note);
+      const mainPrice = formatNumberVND(item.price);
+      const priceToppingString = formatNumberVND(priceTopping);
+      setPrice(mainPrice + ' +' + ' ' + priceToppingString);
+      dispatch(
+        cartSlice.actions.changePriceItem({
+          shopId: shopId,
+          itemId: item?.id,
+          price: parseInt(item.price) + parseInt(priceTopping),
+        }),
+      );
     }
-  }, [items]);
+  }, []);
   console.log(item, ' item ne');
   const handleRemoveItem = () =>
     dispatch(
@@ -201,10 +215,7 @@ const ItemInCart = ({ item, shopId }) => {
             borderRadius: 20,
           }}
         >
-          <ScrollView
-            style={{
-            }}
-          >
+          <ScrollView style={{}}>
             <View className="items-center flex-1">
               <Text className="text-center text-lg font-hnow64regular">Ghi chú cho quán nào</Text>
               <Divider style={{ width: '100%', marginVertical: 20 }} />
@@ -215,7 +226,6 @@ const ItemInCart = ({ item, shopId }) => {
                 onContentSizeChange={(event) => {
                   setHeightNote(event.nativeEvent.contentSize.height);
                 }}
-                 
                 numberOfLines={10}
                 multiline
                 defaultValue={noteTemp}
@@ -287,9 +297,7 @@ const ItemInCart = ({ item, shopId }) => {
             </View>
           </TouchableRipple>
           <View className=" justify-between items-end flex-row">
-            <Text className="text-sm text-primary font-hnow63book">
-              {formatNumberVND(item.price)}
-            </Text>
+            <Text className="text-sm text-primary font-hnow63book">{price}</Text>
             <View className="flex-row justify-between items-center">
               <IconButton
                 icon={'minus'}

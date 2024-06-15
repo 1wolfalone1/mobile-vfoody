@@ -74,7 +74,13 @@ const ItemBestSellerInHome = ({ item }) => {
           >
             {formatNumberVND(item.price)}
           </Text>
-          <Image source={itemImage} resizeMode="cover" className="w-full h-full z-[0] rounded-lg" />
+          <Image
+            source={{
+              uri: item?.imageUrl,
+            }}
+            resizeMode="cover"
+            className="w-full h-full z-[0] rounded-lg"
+          />
         </View>
       </TouchableRipple>
       <View className="pt-1 items-start w-full gap-1">
@@ -88,7 +94,9 @@ const ItemBestSellerInHome = ({ item }) => {
             className="bg-transparent"
             size={16}
             resizeMethod="resize"
-            source={avatar}
+            source={{
+              uri: item?.shopLogoUrl,
+            }}
           />
           <View className="ml-2">
             <Text className="text-xs font-hnow64regular">{item.shopName}</Text>

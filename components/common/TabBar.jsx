@@ -2,15 +2,14 @@ import { router } from 'expo-router';
 import { Bell, Heart, ReceiptText, ShoppingBag, Store } from 'lucide-react-native';
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { Colors } from '../../constant';
 
 const TabBar = ({ state, descriptors, navigation }) => {
   const icons = {
-    home: (props) => <Store name="storefront" size={20} color={Colors.primaryBackgroundColor} />,
-    cart: (props) => <ShoppingBag color={Colors.primaryBackgroundColor} size={20} />,
-    like: (props) => <Heart color={Colors.primaryBackgroundColor} size={20} />,
-    notify: (props) => <Bell color={Colors.primaryBackgroundColor} size={20} />,
-    order: (props) => <ReceiptText color={Colors.primaryBackgroundColor} size={20} />,
+    home: (props) => <Store name="storefront" size={20} color={'red'} />,
+    cart: (props) => <ShoppingBag color={'red'} size={20} />,
+    like: (props) => <Heart color={'red'} size={20} />,
+    notify: (props) => <Bell color={'red'} size={20} />,
+    order: (props) => <ReceiptText color={'red'} size={20} />,
   };
 
   const primaryColor = '#0891b2';

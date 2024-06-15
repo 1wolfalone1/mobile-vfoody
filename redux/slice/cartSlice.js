@@ -16,11 +16,23 @@ const cartSlice = createSlice({
   name: 'cartSlice',
   initialState: initialState,
   reducers: {
+    changePriceItem: (state, actions) => {
+      const { shopId, itemId, price } = actions.payload;
+      if (state.items[shopId]) {
+        state.items[shopId] = state.items[shopId].map((item) => {
+          if (item.productId === itemId) {
+            item.price = price;
+            return item;
+          } else {
+            return item;
+          }
+        });
+      }
+    },
     setQuantity: (state, action) => {
       const { shopId, itemId, quantity } = action.payload;
       console.log(shopId, itemId, quantity, ' set quantity reducer');
       if (state.items[shopId]) {
-       
         state.items[shopId] = state.items[shopId].map((item) => {
           if (item.productId === itemId) {
             item.quantity = quantity;
@@ -73,12 +85,13 @@ const cartSlice = createSlice({
     },
     addToCart: (state, actions) => {
       console.log(actions.payload, ' add to cart');
-      const { productId, shopId, quantity, topping } = actions.payload;
+      const { price, productId, shopId, quantity, topping } = actions.payload;
       const carts = state.items;
       const cartItem = {
         productId,
         quantity,
         topping,
+        price,
       };
       if (Array.isArray(carts[shopId])) {
         let isExists = false;

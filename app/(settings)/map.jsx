@@ -46,17 +46,18 @@ const Map = () => {
   useEffect(() => {
     Location.requestForegroundPermissionsAsync();
     if (refSuggest) {
-      if(map.origin) {
+      if (map.origin) {
         refSuggest.current.setAddressText(map.origin.name);
-        setOrigin([{
-          latitude: map.origin.latitude,
-          longitude: map.origin.longitude,
-          name: map.origin.name,
-        }])
+        setOrigin([
+          {
+            latitude: map.origin.latitude,
+            longitude: map.origin.longitude,
+            name: map.origin.name,
+          },
+        ]);
       }
       if (refSuggest.current) {
-        
-      refSuggest?.current?.setAddressText(map.origin.name);
+        refSuggest?.current?.setAddressText(map.origin.name);
       }
     }
     if (refMarker?.current) {

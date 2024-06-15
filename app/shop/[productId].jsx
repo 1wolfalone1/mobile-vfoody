@@ -77,6 +77,7 @@ const ProductDetail = () => {
           shopId: info.id,
           quantity: totalOrder,
           topping: product.toppingSelected,
+          price: product.info.price
         }),
       );
     } else {

@@ -25,6 +25,9 @@ const HomePage = () => {
         scrollEventThrottle={16}
         showsVerticalScrollIndicator={false}
         nestedScrollEnabled={true}
+        contentContainerStyle={{
+          paddingBottom: 100,
+        }}
         onScroll={Animated.event([{ nativeEvent: { contentOffset: { y: scrollOffsetY } } }], {
           useNativeDriver: false,
         })}
