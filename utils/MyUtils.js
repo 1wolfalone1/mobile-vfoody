@@ -116,6 +116,11 @@ export const formatNumber = (q) => {
   });
 };
 
+export function parseDateStringToOnlyDate(dateString) {
+  const dateObj = new Date(dateString);
+  const formattedDate = dateObj.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: '2-digit' });
+  return formattedDate;
+}
 export const formatNumberVND = (q) => {
   // Handle undefined, null, or empty values
   if (q === undefined || q === null || q === '') {

@@ -7,6 +7,7 @@ import { Provider } from 'react-redux';
 import { persistStore } from 'redux-persist';
 import { PersistGate } from 'redux-persist/lib/integration/react';
 import SnackBarCustom from '../components/common/SnackBarCustom';
+import SpinnerCustom from '../components/common/SpinnerCustom';
 import { store } from '../redux/store';
 let persistor = persistStore(store);
 const RootLayout = () => {
@@ -75,6 +76,7 @@ const RootLayout = () => {
             />
           </Stack>
           <SnackBarCustom />
+         <SpinnerCustom />
         </PaperProvider>
       </PersistGate>
     </Provider>

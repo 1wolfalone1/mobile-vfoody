@@ -1,9 +1,11 @@
+import { ArrowRight } from 'lucide-react-native';
 import React, { useState } from 'react';
 import { Dimensions, Image, StyleSheet, Text, View } from 'react-native';
 import { RadioButton } from 'react-native-paper';
 import { Colors } from '../../constant';
 import colors from '../../constant/colors';
 import images from '../../constant/images';
+import { parseDateStringToOnlyDate } from '../../utils/MyUtils';
 const styles = StyleSheet.create({
   shadow: {
     shadowOffset: { width: 4, height: 4 },
@@ -23,10 +25,11 @@ const styles = StyleSheet.create({
     // background color must be set
   },
 });
-const ActiveVoucher = ({ item }) => {
+const ActiveVoucher = ({ item}) => {
   const [image, setImage] = useState('');
   const { width, height } = Dimensions.get('window');
   const widthImage = parseInt((width * 25) / 100);
+  console.log(item, ' vouche4r details')
   return (
     <View
       className="flex-row mb-4 justify-between"
@@ -47,17 +50,25 @@ const ActiveVoucher = ({ item }) => {
         }}
       />
       <View className="ml-2 flex-1 justify-between p-2">
-        <Text numberOfLines={5} className="font-hnow63book">
+        <Text numberOfLines={5} className=" flex-1">
           {item.title}
         </Text>
-        <Text numberOfLines={2}>
-          Áp dụng từ <Text className="text-primary">{item.startDate}</Text> đến{' '}
-          <Text className="text-blue-500">{item.endDate}</Text>
+        <Text className="text-xs mb-1 text-gray-500">
+          Giới hạn: {item.usageLimit} mã
         </Text>
+        <View className="flex-row gap-2 flex-wrap h-[30]">
+          <Text numberOfLines={1} className="text-primary">
+            {parseDateStringToOnlyDate(item.startDate)}
+          </Text>
+          <ArrowRight color={'red'} size={20} />
+          <Text numberOfLines={1} className="text-blue-500">
+            {parseDateStringToOnlyDate(item.endDate)}
+          </Text>
+        </View>
       </View>
       <View className="items-center justify-center">
         <RadioButton.Android
-          value={item.id}
+          value={`${item.id}-${item.promotionType}`}
           // status={toppingChecked === item.name ? 'checked' : 'unchecked'}
           color={colors.primaryBackgroundColor}
         />

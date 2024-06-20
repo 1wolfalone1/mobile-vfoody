@@ -32,6 +32,10 @@ const initialState = {
     duration: 5000,
     elevation: 5,
   },
+  loading: {
+    isLoaded: false,
+    msg: "Chờ tí nhé..."
+  },
 };
 const globalSlice = createSlice({
   name: 'globalSlice',
@@ -42,6 +46,9 @@ const globalSlice = createSlice({
     },
     changeUserInfo: (state, actions) => {
       return actions.payload;
+    },
+    changeLoadings: (state, actions) => {
+      state.loading = actions.payload;
     },
     resetState: (state, actions) => initialState,
     openSnackBar: (state, actions) => {

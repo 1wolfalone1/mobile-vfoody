@@ -39,6 +39,7 @@ const AvatarChange = ({}) => {
   }, [info]);
 
   const pickImage = async () => {
+    console.log(' -----------------pick image----------------');
     if (Platform.OS !== 'web') {
       const libraryStatus = await ImagePicker.requestMediaLibraryPermissionsAsync();
       if (libraryStatus.status !== 'granted') {

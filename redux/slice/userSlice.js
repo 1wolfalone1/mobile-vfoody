@@ -13,7 +13,7 @@ const initialState = {
       latitude: 0,
       longitude: 0,
     },
-    avatarUrl: ""
+    avatarUrl: '',
   },
   role: CommonConstants.USER_ROLE.GUEST,
 };

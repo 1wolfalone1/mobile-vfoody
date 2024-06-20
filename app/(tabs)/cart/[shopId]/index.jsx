@@ -1,11 +1,11 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import { HandCoins, Ticket, Truck } from 'lucide-react-native';
-import React, { useEffect } from 'react';
-import { Dimensions, ScrollView, Text, View } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import { Animated, Dimensions, ScrollView, Text, View } from 'react-native';
 import MapViewDirections from 'react-native-maps-directions';
 import { Button, Divider } from 'react-native-paper';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux';
+import api from '../../../../api/api';
 import CartHeader from '../../../../components/cart-page/CartHeader';
 import ItemInCart from '../../../../components/cart-page/ItemInCart';
 import OrderInfoViewInCart from '../../../../components/cart-page/OrderInfoViewInCart';
@@ -16,13 +16,17 @@ import orderSlice, {
   orderSelector,
   orderTotalOrderSelector,
 } from '../../../../redux/slice/orderSlice';
-import { dataShopDetailsSelector, getShopInfo } from '../../../../redux/slice/shopDetailsSlice';
+import shopDetailsSlice, {
+  dataShopDetailsSelector,
+  getShopInfo,
+} from '../../../../redux/slice/shopDetailsSlice';
 import { userInfoSliceSelector } from '../../../../redux/slice/userSlice';
 import { formatQuantity } from '../../../../utils/MyUtils';
 
 const CartItemInShop = () => {
   const apiKey = process.env.EXPO_PUBLIC_SERVICE_API;
   const { shopId } = useLocalSearchParams();
+  const [isNotScroll, setIsNotScroll] = useState(true);
   const { width, height } = Dimensions.get('window');
   const widthItem = parseInt((width * 85) / 100);
   const { listItemInfo, items } = useSelector(cartSelector);
@@ -31,7 +35,29 @@ const CartItemInShop = () => {
   const { orderPrice, ship } = useSelector(orderSelector);
   const totalOrderPrice = useSelector(orderTotalOrderSelector);
   const dispatch = useDispatch();
-  const { orderInfo } = useSelector(orderSelector);
+  const { orderInfo, voucher } = useSelector(orderSelector);
+  const order = useSelector(orderSelector);
+  let scrollOffsetY = useRef(new Animated.Value(0)).current;
+
+  console.log(orderPrice, ' price of order -----------------------');
+  useEffect(() => {
+    dispatch(orderSlice.actions.calculateVoucherPrice());
+  }, [voucher]);
+  useEffect(() => {
+    const listener = scrollOffsetY.addListener(({ value }) => {
+      // console.log(value, ' scroll value');
+
+      if (value <= 0) {
+        setIsNotScroll(true);
+      } else {
+        setIsNotScroll(false);
+      }
+    });
+    console.log(' testtstest');
+    return () => {
+      scrollOffsetY.removeListener(listener);
+    };
+  }, []);
   useEffect(() => {
     dispatch(
       orderSlice.actions.changeOrderInfo({
@@ -46,7 +72,7 @@ const CartItemInShop = () => {
     );
     return () => {};
   }, []);
-  console.log(items[shopId], ' cart info');
+  console.log(orderInfo, ' cart i nfo orderInfoooooooooooooooooooooo');
   useEffect(() => {
     dispatch(globalSlice.actions.changePositionTabBar(500));
     console.log(listItemInfo);
@@ -54,35 +80,64 @@ const CartItemInShop = () => {
       console.log(' is herrrrrrrrrrrrrrrrrrrrr', shopId);
       dispatch(getCartInfo(shopId));
       dispatch(getShopInfo(shopId));
+      dispatch(orderSlice.actions.changeShopId(shopId));
     }
     return () => {
       dispatch(cartSlice.actions.resetStateListItemInfo());
       dispatch(orderSlice.actions.resetState());
       dispatch(globalSlice.actions.changePositionTabBar(0));
+      dispatch(shopDetailsSlice.actions.resetState());
     };
   }, []);
   useEffect(() => {
     if (items[shopId]) {
       dispatch(orderSlice.actions.calculateTotalProductPrice(items[shopId]));
+      dispatch(orderSlice.actions.changeProducts(items[shopId]));
     }
   }, [items]);
-  console.log(orderPrice, '0-00000');
-  return (
-    <SafeAreaView className="flex-1 bg-white overflow-visible">
-      <MapViewDirections
-        apikey={apiKey}
-        origin={orderInfo?.building}
-        destination={info?.building}
-        onReady={(result) => {
-          dispatch(orderSlice.actions.changeShipInfo({
-            distance: result.distance,
-            duration: result.duration,
-          }))
-        }}
-      ></MapViewDirections>
 
-      <CartHeader info={info} />
+    console.log(order, ' orrrrrrrrrrrrrrrr')
+  const handleOrder = async () => {
+    try {
+      console.log(order, ' order info ------------------')
+      const res = await api.post('', order)
+      const data = await res.data;
+      if(data.isSuccess) {
+
+      } else {
+
+      }
+    } catch(e) {
+      console.error(e);
+    }
+  }
+  return (
+    <View className="flex-1 bg-white overflow-visible">
+      {orderInfo &&
+        orderInfo.building &&
+        orderInfo?.building?.latitude != 0 &&
+        info &&
+        info.building && (
+          <MapViewDirections
+            apikey={apiKey}
+            origin={orderInfo?.building}
+            destination={info?.building}
+            onReady={(result) => {
+              dispatch(
+                orderSlice.actions.changeShipInfo({
+                  distance: result.distance,
+                  duration: result.duration,
+                }),
+              );
+            }}
+          ></MapViewDirections>
+        )}
+
+      <CartHeader info={info} scrollY={isNotScroll} />
       <ScrollView
+        onScroll={Animated.event([{ nativeEvent: { contentOffset: { y: scrollOffsetY } } }], {
+          useNativeDriver: false,
+        })}
         className="flex-1 bg-white w-full  pb-[120]"
         contentContainerStyle={{
           marginBottom: 100,
@@ -108,16 +163,16 @@ const CartItemInShop = () => {
             />
             <Text>
               {parseFloat(ship.distance).toPrecision(2)}
-               km - {parseFloat(ship.duration).toPrecision(2)} phút
+              km - {parseFloat(ship.duration).toPrecision(2)} phút
             </Text>
           </View>
         </View>
-        <View className="p-8" style={{ width: widthItem }}>
+        <View className="p-8" style={{ zIndex: -1 }}>
           <View className="mb-5">
             <Text className="ml-2 text-lg font-psemibold">Thông tin đơn hàng</Text>
           </View>
-          {listItemInfo.map((item) => (
-            <ItemInCart key={item.id} item={item} shopId={shopId} />
+          {items[shopId].map((item) => (
+            <ItemInCart key={item.productId} itemsInfo={item} shopId={shopId} />
           ))}
           <View className="" style={{ width: widthItem }}>
             <Divider className="mt-4 bg-black-700 h-0.5" />
@@ -203,14 +258,14 @@ const CartItemInShop = () => {
                 fontSize: 20,
                 lineHeight: 22,
               }}
-              onPress={() => router.push('/home')}
+              onPress={handleOrder}
             >
               Đặt hàng
             </Button>
           </View>
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 };
 

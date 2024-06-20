@@ -19,7 +19,7 @@ const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
   version: 1,
-  blacklist: ['shopDetailsSlice', 'globalSlice'],
+  blacklist: ['shopDetailsSlice', 'globalSlice', 'orderSlice'],
 };
 const persistedReducer = persistReducer(persistConfig, reducers);
 

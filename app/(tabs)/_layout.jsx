@@ -98,7 +98,9 @@ const TabLayout = () => {
             tabBarIcon: ({ ref }) => (
              <ReceiptText color={'white'} size={24} /> 
             ),
+            
           }}
+           
         />
         <Tabs.Screen
           name="cart"

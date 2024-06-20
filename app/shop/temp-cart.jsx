@@ -75,9 +75,9 @@ const TempCartPage = () => {
           paddingBottom: 20,
         }}
       >
-        {listItemInfo.length > 0 ? (
-          listItemInfo.map((item) => (
-            <ItemInCart key={item ? item.id : null} item={item} shopId={info.id} />
+        {items[info?.id] && items[info?.id].length > 0 ? (
+          items[info?.id].map((item) => (
+            <ItemInCart key={item ? item.productId : null} itemsInfo={item} shopId={info.id} />
           ))
         ) : (
           <Image

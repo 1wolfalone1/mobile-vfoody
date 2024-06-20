@@ -30,17 +30,19 @@ const styles = StyleSheet.create({
 
 const CartPage = () => {
   const { listShopInfo } = useSelector(cartSelector);
-  const userInfo = useSelector(userInfoSliceSelector)
+  const userInfo = useSelector(userInfoSliceSelector);
+  const { items } = useSelector(cartSelector);
   const dispatch = useDispatch();
-  console.log(listShopInfo, ' asdfasfasdfadsfasdfasdfasdfafsd');
+  console.log(listShopInfo, 
+    ' asdfasfasdfadsfasdfasdfasdfafsd', items);
+
   useEffect(() => {
     console.log(listShopInfo);
     dispatch(getListShopInfo());
     return () => {
-      
-      dispatch(cartSlice.actions.resetStateListShop())
-    }
-  }, []);
+      dispatch(cartSlice.actions.resetStateListShop());
+    };
+  }, [items]);
   return (
     <View className="bg-white flex-1 pb-120">
       <SafeAreaView className="bg-white pb-4 rounded-b-3xl" style={styles.shadow} edges={['top']}>
@@ -56,7 +58,9 @@ const CartPage = () => {
         </View>
       </SafeAreaView>
       <View className="items-center m-5">
-        <Text className="font-hnow65medium text-lg text-green-800">{userInfo?.building?.address}</Text>
+        <Text className="font-hnow65medium text-lg text-green-800">
+          {userInfo?.building?.address}
+        </Text>
       </View>
       <View className="flex-1  overflow-visible mx-5">
         <FlatList
