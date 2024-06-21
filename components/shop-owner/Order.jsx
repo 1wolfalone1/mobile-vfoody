@@ -12,9 +12,9 @@ const Item = ({ item }) => (
           <Text className="text-sm">{item.customerName}</Text>
         </DataTable.Cell>
         <DataTable.Cell className="flex-1">
-          <Text className="text-sm pl-4">{formatNumberVND(item.totalPrice)}</Text>
+          <Text className="text-sm">{formatNumberVND(item.totalPrice)}</Text>
         </DataTable.Cell>
-        <DataTable.Cell numeric className="flex-1">
+        <DataTable.Cell className="flex-1">
           <Text className="text-sm">{formatDate(item.date)}</Text>
         </DataTable.Cell>
       </DataTable.Row>
@@ -42,11 +42,11 @@ export default function Order() {
   return (
     <Provider>
       <ScrollView>
-        <DataTable className="p-4">
+        <DataTable className="p-1">
           <DataTable.Header className="bg-gray-200">
             <DataTable.Title>Tên khách hàng</DataTable.Title>
             <DataTable.Title>Tổng tiền hóa đơn</DataTable.Title>
-            <DataTable.Title numeric>Thời gian giao dịch</DataTable.Title>
+            <DataTable.Title >Thời gian giao dịch</DataTable.Title>
           </DataTable.Header>
 
           {orders.slice(from, to).map((item) => (

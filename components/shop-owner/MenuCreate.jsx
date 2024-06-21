@@ -3,7 +3,6 @@ import { Modal, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'rea
 import { Appbar, Button, IconButton, TextInput } from 'react-native-paper';
 import { launchImageLibrary as _launchImageLibrary } from 'react-native-image-picker';
 import { Colors } from '../../constant';
-import { MaterialIcons } from '@expo/vector-icons';
 import SectionedMultiSelect from 'react-native-sectioned-multi-select';
 import { ArrowDown, Check } from 'lucide-react-native';
 import { MaterialIcons as Icon } from '@expo/vector-icons';
@@ -64,7 +63,7 @@ const MenuCreate = ({ handleCloseCreate, showSnackbarCreate }) => {
       <View className="px-5 pb-5 flex-1 flex-col justify-between">
         <View className="flex-0.9">
           <Appbar.Header>
-            <MaterialIcons
+            <Icon
               name="arrow-back-ios-new"
               size={36}
               color={Colors.primaryBackgroundColor}
