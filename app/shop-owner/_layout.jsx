@@ -134,6 +134,22 @@ const ShopOwnerLayout = () => {
             ),
           }}
         />
+        <Tabs.Screen
+          name="dashboard-v1"
+          options={{
+            headerShown: false,
+            href: null,
+            tabBarStyle: { display: 'none' },
+          }}
+        />
+        <Tabs.Screen
+          name="account"
+          options={{
+            headerShown: false,
+            href: null,
+            tabBarStyle: { display: 'none' },
+          }}
+        />
       </Tabs>
     </>
   );

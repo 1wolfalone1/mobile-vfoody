@@ -5,6 +5,7 @@ import {
   ArrowUp,
   CircleUser,
   DollarSign,
+  Menu,
   NotepadText,
   TrendingUp,
 } from 'lucide-react-native';
@@ -15,9 +16,7 @@ import dayjs from 'dayjs';
 import { BlurView } from 'expo-blur';
 import { Button, TouchableRipple } from 'react-native-paper';
 import { Colors } from '../../constant';
-import CustomDrawer from '../../components/CustomDrawer';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import DashboardHeader from '../../components/shop-owner/DashboardHeader';
+import { Drawer } from 'react-native-drawer-layout';
 
 const Dashboard = () => {
   const [openDrawerDashboard, setOpenDrawerDashboard] = useState(false);
@@ -27,12 +26,12 @@ const Dashboard = () => {
   const [isFromDatePickerVisible, setFromDatePickerVisibility] = useState(false);
   const [isToDatePickerVisible, setToDatePickerVisibility] = useState(false);
   const [isActive, setIsActive] = useState(true);
+  const [date, setDate] = useState(numberOfDays);
+
   const calculateDays = (start, end) => {
     return end.diff(start, 'day');
   };
   const numberOfDays = calculateDays(fromDate, toDate);
-  const [date, setDate] = useState(numberOfDays);
-
   const toggleFromDatePicker = () => {
     setFromDatePickerVisibility(!isFromDatePickerVisible);
   };
@@ -45,80 +44,60 @@ const Dashboard = () => {
   const handleSubmit = () => {
     setDate(calculateDays(fromDate, toDate));
   };
-  const handleOpenDashboardDrawer = () => {
-    setOpenDrawerDashboard(true);
-  };
-  const handleCloseDashboardDrawer = () => {
-    setOpenDrawerDashboard(false);
-  };
-  const renderDrawerContent = () => {
-    return (
-      <DashboardDrawerContent
-        closeDrawer={handleCloseDashboardDrawer}
-        openDrawerDashboard={openDrawerDashboard}
-      />
-    );
-  };
 
   return (
-    <CustomDrawer
+    <Drawer
       open={openDrawerDashboard}
-      onOpen={handleOpenDashboardDrawer}
-      onClose={handleCloseDashboardDrawer}
-      renderDrawerContent={renderDrawerContent}
+      onOpen={() => setOpenDrawerDashboard(true)}
+      onClose={() => setOpenDrawerDashboard(false)}
+      renderDrawerContent={() => <DashboardDrawerContent />}
+      className="mt-4"
     >
-      <SafeAreaView>
+      <View>
         {/* Header */}
-        <DashboardHeader
-          setOpenDrawerDashboard={setOpenDrawerDashboard}
-          centerContent={
-            <View className="flex-col items-center">
-              <Text className="text-[18px] font-semibold">Tiệm ăn tháng năm</Text>
-              <Text className="text-[12px] text-slate-500">Tòa S1.01 VinHome</Text>
-            </View>
-          }
-          rightContent={
-            <View>
-              <Button
-                type="contained"
-                mode="contained"
-                buttonColor={isActive ? Colors.success : Colors.primaryBackgroundColor}
-                className="w-20 rounded-xl"
-                labelStyle={{
-                  fontSize: 18,
-                }}
-                onPress={() => handleActive()}
-              >
-                {isActive ? 'On' : 'Off'}
-              </Button>
-            </View>
-          }
-        />
-
-        {/* Content */}
-        <Text className="text-2xl font-bold justify-center py-8 text-center tracking-wider text-primary">
-          Thống kê tổng quan về shop
-        </Text>
-
-        {/* Filter date */}
-        <View className="flex-row justify-around mb-4 mx-2">
-          {/* Date:To */}
-          <View className="flex-col w-1/2 px-2">
-            <TouchableRipple onPress={toggleFromDatePicker} className="bg-slate-300 p-2 rounded-md">
-              <Text className="text-black mx-2 text-lg">Từ: {fromDate.format('DD/MM/YYYY')}</Text>
-            </TouchableRipple>
+        <View className="flex-row items-center justify-between py-2 px-5">
+          <Menu
+            size={36}
+            color={Colors.primaryBackgroundColor}
+            onPress={() => setOpenDrawerDashboard((prevOpen) => !prevOpen)}
+          />
+          <View className="flex-col">
+            <Text className="text-[18px] font-semibold">Tiệm ăn tháng năm</Text>
+            <Text className="text-[12px] text-slate-500">Tòa S1.01 VinHome</Text>
           </View>
-
-          {/* Date:To */}
-          <View className="flex-col w-1/2 px-2">
-            {/* <Text className="text-gray-500  text-sm"></Text> */}
-            <TouchableRipple onPress={toggleToDatePicker} className="bg-slate-300 p-2 rounded-md">
-              <Text className="text-black mx-2 text-lg">Đến: {toDate.format('DD/MM/YYYY')}</Text>
-            </TouchableRipple>
+          <View>
+            <Button
+              type="contained"
+              mode="contained"
+              buttonColor={isActive ? Colors.success : Colors.primaryBackgroundColor}
+              className="w-20 rounded-xl"
+              labelStyle={{
+                fontSize: 18,
+              }}
+              onPress={() => handleActive()}
+            >
+              {isActive ? 'On' : 'Off'}
+            </Button>
           </View>
         </View>
 
-        <View className="px-4">
+        <Text className="text-2xl font-bold my-12 text-center tracking-wider text-primary">
+          Thống kê tổng quan về shop
+        </Text>
+
+        <View className="flex-row">
+          <Text className="text-gray-500 ml-3 text-sm">Từ ngày</Text>
+          <Text className="text-gray-500 ml-20 text-sm">Đến ngày</Text>
+        </View>
+
+        {/* Filter Date */}
+        <View className="flex-row justify-around mb-4 mx-2">
+          <TouchableRipple onPress={toggleFromDatePicker} className="bg-slate-300 p-2 rounded-md">
+            <Text className="text-black mx-2 text-lg">{fromDate.format('DD/MM/YYYY')}</Text>
+          </TouchableRipple>
+          <TouchableRipple onPress={toggleToDatePicker} className="bg-slate-300 p-2 rounded-md">
+            <Text className="text-black mx-2 text-lg">{toDate.format('DD/MM/YYYY')}</Text>
+          </TouchableRipple>
           <Button
             buttonColor={Colors.primaryBackgroundColor}
             textColor={Colors.commonBtnText}
@@ -126,13 +105,13 @@ const Dashboard = () => {
             contentStyle={{
               paddingVertical: 4,
             }}
-            className="rounded-md"
+            className="w-32 rounded-md"
             labelStyle={{
-              fontSize: 18,
+              fontSize: 16,
             }}
             onPress={handleSubmit}
           >
-            Xem thống kê
+            Thống kê
           </Button>
         </View>
 
@@ -194,8 +173,15 @@ const Dashboard = () => {
           mainIcon={<TrendingUp size={30} color={Colors.success} />}
           title="Tổng doanh thu"
           subTitle="89,972,872.85 VNĐ"
-          leftIcon={<ArrowUp size={30} color={Colors.success} />}
+          leftIcon={<ArrowDown size={30} color={Colors.loss} />}
           leftText={`12% (${date} ngày)`}
+        />
+        <DashboardCard
+          mainIcon={<DollarSign size={30} color={Colors.success} />}
+          title="Tổng lợi nhuận"
+          subTitle="53,827,912.96 VNĐ"
+          leftIcon={<ArrowUp size={30} color={Colors.success} />}
+          leftText={`53% (${date} ngày)`}
         />
         <DashboardCard
           mainIcon={<NotepadText size={30} color={Colors.success} />}
@@ -211,8 +197,8 @@ const Dashboard = () => {
           leftIcon={<ArrowUp size={30} color={Colors.success} />}
           leftText={`33% (${date} ngày)`}
         />
-      </SafeAreaView>
-    </CustomDrawer>
+      </View>
+    </Drawer>
   );
 };
 

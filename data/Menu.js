@@ -244,114 +244,62 @@ const notification = [
   {
     id: 1,
     customerName: 'Đen Vâu',
-    product: {
-      name: 'Mỳ Quảng',
-      quantity: 2,
-    },
+    content: 'vừa đặt một đơn mới',
+    date: '2024-06-15 10:05:22',
   },
   {
     id: 2,
     customerName: 'Jack 5tr',
-    product: {
-      name: 'Cháo thịt bằm',
-      quantity: 1,
-    },
+    content: 'vừa thêm shop bạn vào yêu thích',
+    date: '2024-06-15 10:05:22',
   },
   {
     id: 3,
     customerName: 'Sơn Tùng',
-    product: {
-      name: 'Coffee',
-      quantity: 3,
-    },
+    content: 'vừa đặt một đơn mới',
+    date: '2024-06-14 10:05:22',
   },
   {
     id: 4,
     customerName: 'Kiều Chi',
-    product: {
-      name: 'Trà sữa trân châu',
-      quantity: 2,
-    },
+    content: 'vừa đánh giá shop của bạn',
+    date: '2024-06-14 10:05:22',
   },
   {
     id: 5,
     customerName: 'Rosé',
-    product: {
-      name: 'Hambuger',
-      quantity: 1,
-    },
+    content: 'vừa đặt một đơn mới',
+    date: '2024-06-14 10:05:22',
   },
   {
     id: 6,
     customerName: 'Vũ',
-    product: {
-      name: 'Cơm gà xối mỡ',
-      quantity: 4,
-    },
+    content: 'vừa đặt một đơn mới',
+    date: '2024-06-13 10:05:22',
   },
   {
     id: 7,
     customerName: 'Mạc Văn Khoa',
-    product: {
-      name: 'Bún đậu mắm tôm',
-      quantity: 2,
-    },
+    content: 'vừa đánh giá shop của bạn',
+    date: '2024-06-12 10:05:22',
   },
   {
     id: 8,
     customerName: 'Trường Giang',
-    product: {
-      name: 'Nem nướng',
-      quantity: 3,
-    },
+    content: 'vừa đặt một đơn mới',
+    date: '2024-06-12 10:05:22',
   },
   {
     id: 9,
     customerName: 'Tùng Dương',
-    product: {
-      name: 'Hủ tiếu bò viên',
-      quantity: 5,
-    },
+    content: 'vừa đặt một đơn mới',
+    date: '2024-06-11 10:05:22',
   },
   {
     id: 10,
     customerName: 'Thùy Chi',
-    product: {
-      name: 'Bún thịt nướng',
-      quantity: 2,
-    },
-  },
-  {
-    id: 11,
-    customerName: 'Thùy Chi',
-    product: {
-      name: 'Bún thịt nướng',
-      quantity: 2,
-    },
-  },
-  {
-    id: 12,
-    customerName: 'Thùy Chi',
-    product: {
-      name: 'Bún thịt nướng',
-      quantity: 2,
-    },
-  },
-  {
-    id: 13,
-    customerName: 'Thùy Chi',
-    product: {
-      name: 'Bún thịt nướng',
-      quantity: 2,
-    },
-  },
-  {
-    id: 14,
-    customerName: 'Thùy Chi',
-    product: {
-      name: 'Bún thịt nướng',
-      quantity: 2,
-    },
+    content: 'vừa thêm shop bạn vào yêu thích',
+    date: '2024-06-11 10:05:22',
   },
 ];
 

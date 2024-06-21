@@ -4,6 +4,7 @@ import { Button, Dialog, Searchbar, Snackbar } from 'react-native-paper';
 import VoucherCreate from '../../components/shop-owner/VoucherCreate';
 import VoucherTable from '../../components/shop-owner/VoucherTable';
 import { Colors } from '../../constant';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const Promotion = () => {
   const [openCreate, setOpenCreate] = useState(false);
@@ -29,7 +30,7 @@ const Promotion = () => {
   };
 
   return (
-    <View className="flex-1">
+    <SafeAreaView className="flex-1">
       <Text className="text-2xl font-bold m-4 text-center tracking-wider text-primary">
         Quản lý khuyến mãi
       </Text>
@@ -61,7 +62,10 @@ const Promotion = () => {
       {/* Create Modal */}
       <Modal visible={openCreate} onRequestClose={handleCloseCreate} animationType="slide">
         {/* Create menu Form */}
-        <VoucherCreate showSnackbarCreate={showSnackbarCreate} handleCloseCreate={handleCloseCreate} />
+        <VoucherCreate
+          showSnackbarCreate={showSnackbarCreate}
+          handleCloseCreate={handleCloseCreate}
+        />
       </Modal>
 
       {/* Snack bar: Create */}
@@ -99,7 +103,7 @@ const Promotion = () => {
           </Button>
         </Dialog.Actions>
       </Dialog>
-    </View>
+    </SafeAreaView>
   );
 };
 

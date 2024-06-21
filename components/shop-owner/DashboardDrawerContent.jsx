@@ -1,18 +1,57 @@
-import { router } from 'expo-router';
+import { router, usePathname } from 'expo-router';
 import React from 'react';
 import { Text } from 'react-native';
 import { StyleSheet, View } from 'react-native';
 import { Avatar, Button, Drawer } from 'react-native-paper';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
-const DashboardDrawerContent = () => {
-  const [active, setActive] = React.useState('');
+const dashboardNavigations = [
+  {
+    icon: 'home',
+    label: 'Trang chủ',
+    path: 'dashboard',
+  },
+  {
+    icon: 'account',
+    label: 'Tài khoản',
+    path: 'account',
+  },
+  {
+    icon: 'history',
+    label: 'Lịch sử đơn hàng',
+  },
+  {
+    icon: 'comment-edit-outline',
+    label: 'Đánh giá',
+  },
+  {
+    icon: 'cash-check',
+    label: 'Thanh toán',
+  },
+  {
+    icon: 'cog',
+    label: 'Cài đặt',
+  },
+  {
+    icon: 'chat-question',
+    label: 'Trợ giúp',
+  },
+];
+
+const DashboardDrawerContent = ({ closeDrawer }) => {
+  const path = usePathname();
+  const [, , currentPathName] = path.split('/');
   const handleLogout = () => {
-    router.push('/sign-in')
-  }
+    router.push('/sign-in');
+  };
+  const handleNaviagte = (pathName) => {
+    router.push(`/shop-owner/${pathName}`);
+    closeDrawer();
+  };
 
   return (
     <>
-      <View className="flex-1 bg-white flex-col">
+      <SafeAreaView className="flex-1 bg-white flex-col">
         <View className="p-5">
           <Avatar.Image
             size={90}
@@ -27,44 +66,19 @@ const DashboardDrawerContent = () => {
         </View>
 
         <Drawer.Section>
-          <Drawer.Item
-            active={active === 'first'}
-            icon="account"
-            label="Tài khoản"
-            onPress={() => setActive('first')}
-          />
-          <Drawer.Item
-            active={active === 'second'}
-            icon="history"
-            label="Lịch sử đơn hàng"
-            onPress={() => setActive('second')}
-          />
-          <Drawer.Item
-            active={active === 'third'}
-            icon="comment-edit-outline"
-            label="Đánh giá"
-            onPress={() => setActive('third')}
-          />
-          <Drawer.Item
-            active={active === 'fourth'}
-            icon="cash-check"
-            label="Thanh toán"
-            onPress={() => setActive('fourth')}
-          />
-          <Drawer.Item
-            active={active === 'fifth'}
-            icon="cog"
-            label="Cài đặt"
-            onPress={() => setActive('fifth')}
-          />
-          <Drawer.Item
-            active={active === 'sixth'}
-            icon="chat-question"
-            label="Trợ giúp"
-            onPress={() => setActive('sixth')}
-          />
+          {dashboardNavigations.map((navigation) => {
+            return (
+              <Drawer.Item
+                key={navigation.label}
+                active={currentPathName === navigation.path}
+                icon={navigation.icon}
+                label={navigation.label}
+                onPress={() => handleNaviagte(navigation.path)}
+              />
+            );
+          })}
         </Drawer.Section>
-      </View>
+      </SafeAreaView>
 
       <View className="pl-3 pb-5">
         <Button
