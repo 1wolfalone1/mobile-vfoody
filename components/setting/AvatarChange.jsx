@@ -72,7 +72,7 @@ const AvatarChange = ({}) => {
         type: 'image/jpg',
         name: 'image.jpg',
       });
-      const res = await api.put('/api/v1/customer/updload/' + info.id, formData, {
+      const res = await api.put('/api/v1/customer/upload/' + info.id, formData, {
         headers: {
           'Content-type': 'multipart/form-data',
         },

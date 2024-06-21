@@ -31,6 +31,7 @@ const CartHeader = ({ info, scrollY }) => {
     <SafeAreaView
       className="gap-2 items-center bg-white"
       style={[!scrollY && styles.shadow, { backgroundColor: 'white', zIndex: 10 }]}
+      edges={["top", "left", "right"]}
     >
       {!(info && info.id) ? (
         <SkeletonItem />

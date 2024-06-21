@@ -38,8 +38,7 @@ const CartItemInShop = () => {
   const { orderInfo, voucher } = useSelector(orderSelector);
   const order = useSelector(orderSelector);
   let scrollOffsetY = useRef(new Animated.Value(0)).current;
-
-  console.log(orderPrice, ' price of order -----------------------');
+  console.log(items, ' itemsssssssssssssssssssssssss')
   useEffect(() => {
     dispatch(orderSlice.actions.calculateVoucherPrice());
   }, [voucher]);
@@ -53,7 +52,6 @@ const CartItemInShop = () => {
         setIsNotScroll(false);
       }
     });
-    console.log(' testtstest');
     return () => {
       scrollOffsetY.removeListener(listener);
     };
@@ -72,12 +70,10 @@ const CartItemInShop = () => {
     );
     return () => {};
   }, []);
-  console.log(orderInfo, ' cart i nfo orderInfoooooooooooooooooooooo');
   useEffect(() => {
     dispatch(globalSlice.actions.changePositionTabBar(500));
     console.log(listItemInfo);
     if (shopId) {
-      console.log(' is herrrrrrrrrrrrrrrrrrrrr', shopId);
       dispatch(getCartInfo(shopId));
       dispatch(getShopInfo(shopId));
       dispatch(orderSlice.actions.changeShopId(shopId));
@@ -96,17 +92,25 @@ const CartItemInShop = () => {
     }
   }, [items]);
 
-    console.log(order, ' orrrrrrrrrrrrrrrr')
   const handleOrder = async () => {
     try {
-      console.log(order, ' order info ------------------')
-      const res = await api.post('', order)
+      const {listVoucher, ...orther} = order
+      console.log(orther);
+      const res = await api.post('api/v1/customer/order',orther)
       const data = await res.data;
+      console.log("dataa ordrrrrrrrrrrr", data)
       if(data.isSuccess) {
-
+      
       } else {
 
       }
+    } catch(e) {
+      console.error(e);
+    }
+  }
+  const handleNavigateToOrderTracking = async (id) => {
+    try {
+      const res = await api.get()
     } catch(e) {
       console.error(e);
     }

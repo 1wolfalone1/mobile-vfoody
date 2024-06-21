@@ -118,6 +118,12 @@ const TabLayout = () => {
           options={{
             title: 'Thông báo',
             headerShown: false,
+            headerStyle: {
+
+            },
+            headerSearchBarOptions: {
+              placeholder: "Search"
+            },
             tabBarIcon: ({ ref }) => (
              <Bell color={'white'} size={24} />
             ),

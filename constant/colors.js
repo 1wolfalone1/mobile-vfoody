@@ -10,6 +10,9 @@ export default {
   cyan500: '#0ea5e9',
   // button color:
   commonBtnBackground: '#df4730c4',
+  blue: {
+    100: '#015fda',
+  },
   commonBtnText: '#FFFFFF',
   btnBackground: '#FFFFFF',
   btnText: '#DF4830',
@@ -17,7 +20,12 @@ export default {
   glass: {
     100: '#000000a8',
     red: '#e40000da',
-    green: '#376100c0'
+    green: '#376100c0',
+    blue: '#015fdab6',
+    yellow: '#ffee00ff',
+    purple: '#800080ff',
+    orange: '#ffa500ff',
+    pink: '#ff1493ff',
   }, 
   success: '#15803d',
   loss: '#dc2626',

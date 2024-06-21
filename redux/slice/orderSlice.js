@@ -7,7 +7,7 @@ const initialState = {
     total: 0,
     totalProduct: 0,
     voucher: 10000,
-    shippingFee: 4000,
+    shippingFee: 0,
   },
   voucher: {},
   listVoucher: {
@@ -57,7 +57,7 @@ const orderSlice = createSlice({
               console.log(optionIds, 'optionIds');
               newToppingCheckbox.push({
                 id: key,
-                options: optionIds,
+                optionIds: optionIds,
               });
             }
           }

@@ -1,10 +1,12 @@
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 import * as Location from 'expo-location';
 import { useLocalSearchParams } from 'expo-router';
-import { ConciergeBell, PackageCheck, ShoppingBasket, Truck } from 'lucide-react-native';
+import { ConciergeBell, MapPinned, PackageCheck, Timer, Truck } from 'lucide-react-native';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Dimensions, Image, PermissionsAndroid, StyleSheet, Text, View } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
 import MapView, { Callout, Marker } from 'react-native-maps';
+import { Divider } from 'react-native-paper';
 import { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import StepIndicator from 'react-native-step-indicator';
@@ -151,6 +153,7 @@ const OrderTracking = () => {
       </View>
       <BottomSheet
         ref={bottomSheetRef}
+        
         style={{
           backgroundColor: 'white',
           ...styles.shadow,
@@ -159,9 +162,13 @@ const OrderTracking = () => {
         onChange={handleSheetChanges}
         snapPoints={[300, heightMap != 0 ? heightMap : 100]}
       >
-        <BottomSheetView style={{}}>
+        <BottomSheetView 
+         
+        style={{
+          flex: 1
+        }}>
           <StepIndicator
-            stepCount={3}
+            stepCount={4}
             customStyles={customStyles}
             currentPosition={2}
             labels={labels}
@@ -179,10 +186,10 @@ const OrderTracking = () => {
           </View>
           <View className="px-10 flex-row justify-between items-center">
             <Text className="font-hnow64regular text-blue-500 text-xs">
-              Đặt lúc: 21/05/2024 14:21PM
+              Đặt lúc: 21/05/2024 14:21
             </Text>
             <Text className="font-hnow64regular text-green-800 text-xs">
-              Dự kiến giao: 21/05/2024 15:22PM
+              Dự kiến giao: 21/05/2024 15:22
             </Text>
           </View>
           <View
@@ -195,7 +202,7 @@ const OrderTracking = () => {
               source={images.FoodOrder}
               style={{ height: widthImageIllustration, width: widthImageIllustration }}
             />
-            <View className="justify-between py-4 flex-1 pr-2 ">
+            <View className="justify-between py-4 flex-1 pr-10 ">
               <View className="flex-row items-center gap-2">
                 <Image
                   source={images.PromotionShopLogo}
@@ -209,19 +216,36 @@ const OrderTracking = () => {
                 <Text className="font-bold text-base">Tiệm trà tháng năm</Text>
               </View>
               <View className="flex-row justify-between items-center">
-                <View className="flex-row items-center gap-2">
-                  <ShoppingBasket color={"black"} />
-                  <Text className="text-red text-base">3 món</Text>
-                </View>
-                <Text className="text-red-500 text-base">Mã giảm giá: Không có </Text>
+                <Text numberOfLines={1} className="flex-wrap flex-1 text-sm text-gray-600">
+                  {info.fullName}
+                </Text>
+                <Divider className="h-full" style={{ width: 2 }} />
+                <Text
+                  className="flex-wrap flex-1 text-sm text-gray-600 "
+                  style={{
+                    textAlign: 'right',
+                  }}
+                >
+                  {info.phoneNumber}
+                </Text>
               </View>
-              <View className=" flex-row  items-end">
+              <View className=" flex-row  items-end gap-2">
+                <MapPinned color={'grey'} size={20} />
                 <Text numberOfLines={2} className="flex-wrap flex-1 text-sm text-gray-600">
-                  Giao tới {info.building.address}
+                  {info.building.address}
                 </Text>
               </View>
             </View>
           </View>
+          <ScrollView 
+          showsVerticalScrollIndicator={true}
+          className=" bg-red-200" contentContainerStyle={{
+            flexGrow: 1
+          }}>
+            <View className="h-1000" style={{
+              height: 10000
+            }}/>
+          </ScrollView>
         </BottomSheetView>
       </BottomSheet>
     </SafeAreaView>
@@ -245,33 +269,33 @@ const styles = StyleSheet.create({
     elevation: 20,
   },
 });
-const labels = ['Xác nhận đơn', 'Đang giao', 'Hoàn thành'];
+const labels = ['Chờ xác nhận','Shop đang làm', 'Đang giao', 'Hoàn thành'];
 const customStyles = {
   stepIndicatorSize: 35,
   currentStepIndicatorSize: 40,
   separatorStrokeWidth: 2,
   currentStepStrokeWidth: 3,
-  stepStrokeCurrentColor: Colors.primaryBackgroundColor,
+  stepStrokeCurrentColor: Colors.blue[100],
   stepStrokeWidth: 3,
-  stepStrokeFinishedColor: Colors.primaryBackgroundColor,
+  stepStrokeFinishedColor: Colors.blue[100],
   stepStrokeUnFinishedColor: '#aaaaaa',
-  separatorFinishedColor: Colors.primaryBackgroundColor,
+  separatorFinishedColor: Colors.blue[100],
   separatorUnFinishedColor: '#aaaaaa',
-  stepIndicatorFinishedColor: Colors.primaryBackgroundColor,
+  stepIndicatorFinishedColor: Colors.blue[100],
   stepIndicatorUnFinishedColor: '#ffffff',
   stepIndicatorCurrentColor: '#ffffff',
   stepIndicatorLabelFontSize: 30,
   currentStepIndicatorLabelFontSize: 35,
-  stepIndicatorLabelCurrentColor: Colors.primaryBackgroundColor,
+  stepIndicatorLabelCurrentColor: Colors.blue[100],
   stepIndicatorLabelFinishedColor: '#ffffff',
   stepIndicatorLabelUnFinishedColor: '#aaaaaa',
   labelColor: '#999999',
   labelSize: 12,
-  currentStepLabelColor: Colors.primaryBackgroundColor,
+  currentStepLabelColor: Colors.blue[100],
 };
 const getStepIndicatorIconConfig = ({ position, stepStatus }) => {
   const iconConfig = {
-    color: stepStatus === 'finished' ? '#ffffff' : Colors.primaryBackgroundColor,
+    color: stepStatus === 'finished' ? '#ffffff' : Colors.blue[100],
     size: 24,
   };
 
@@ -281,10 +305,12 @@ const getStepIndicatorIconConfig = ({ position, stepStatus }) => {
 const renderStepIndicator = (params) => {
   const { position, stepStatus } = params;
   if (position == 0) {
-    return <ConciergeBell {...getStepIndicatorIconConfig(params)} />;
+    return <Timer {...getStepIndicatorIconConfig(params)} />;
   } else if (position == 1) {
-    return <Truck {...getStepIndicatorIconConfig(params)} />;
+    return <ConciergeBell {...getStepIndicatorIconConfig(params)} />;
   } else if (position == 2) {
+    return <Truck {...getStepIndicatorIconConfig(params)} />;
+  } else if (position == 3) {
     return <PackageCheck {...getStepIndicatorIconConfig(params)} />;
   }
 };

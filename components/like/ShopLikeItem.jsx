@@ -1,6 +1,7 @@
-import { AntDesign } from '@expo/vector-icons';
+import { AntDesign, MaterialIcons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import SkeletonLoading from 'expo-skeleton-loading';
+import { MoveRight } from 'lucide-react-native';
 import React from 'react';
 import { Dimensions, Image, StyleSheet, Text, View } from 'react-native';
 import { Avatar, TouchableRipple } from 'react-native-paper';
@@ -25,9 +26,9 @@ const styles = StyleSheet.create({
   },
 });
 
-const ItemShopRegulerInHome = ({ item }) => {
+const ShopLikeItem = ({ item }) => {
   const { width, height } = Dimensions.get('window');
-  const widthItem = parseInt((width * 65) / 100);
+  const widthItem = parseInt((width * 80) / 100);
   const heightImage = parseInt((widthItem * 65) / 100);
 
   console.log(widthItem);
@@ -36,7 +37,7 @@ const ItemShopRegulerInHome = ({ item }) => {
   ) : (
     <View
       key={item.id}
-      className={`flex justify-start items-center bg-white rounded-2xl  mr-5 mb-10`}
+      className={`flex justify-start items-center bg-white rounded-2xl  mb-10`}
       style={{
         ...styles.shadow,
         width: widthItem,
@@ -58,7 +59,7 @@ const ItemShopRegulerInHome = ({ item }) => {
       >
         <View>
           <View
-            className="w-full bg-black-100 flex-1 overflow-hidden rounded-t-2xl "
+            className="w-full bg-black-100 overflow-hidden rounded-t-2xl "
             style={{
               height: heightImage,
             }}
@@ -73,11 +74,15 @@ const ItemShopRegulerInHome = ({ item }) => {
             </View>
             <Image
               source={{
-                backgroundColor: 'black',
                 uri: item.bannerUrl,
               }}
               resizeMode="cover"
               className="w-full h-full z-[0]"
+              style={{
+                backgroundColor: 'black',
+                width: widthItem,
+                height: widthItem,
+              }}
             />
           </View>
           <View className="p-3 items-start w-full gap-1">
@@ -89,11 +94,19 @@ const ItemShopRegulerInHome = ({ item }) => {
                   uri: item.logoUrl,
                 }}
               />
-              <View className="ml-2">
-                <Text className="text-sm font-hnow65medium">Cơm nhà làm</Text>
-                <Text style className="text-xs text-gray-600 font-hnow64regular">
-                  {item.description}
-                </Text>
+              <View className="ml-2 flex-row justify-between flex-1">
+                <View>
+                  <Text className="text-sm font-hnow65medium">{item.name}</Text>
+                  <Text style className="text-xs text-gray-600 font-hnow64regular">
+                    {item.description}
+                  </Text>
+                </View>
+                <View className="flex-row gap-1 items-center">
+                  <MaterialIcons name="schedule" size={16} color="green" />
+                  <Text className="text-xs text-blue-600">{item.activeFrom}h</Text>
+                  <MoveRight color={'blue'} size={20} />
+                  <Text className="text-xs text-blue-600">{item.activeTo}h</Text>
+                </View>
               </View>
             </View>
             <View className="flex-row gap-2 justify-between w-full items-center">
@@ -109,7 +122,7 @@ const ItemShopRegulerInHome = ({ item }) => {
   );
 };
 
-export default ItemShopRegulerInHome;
+export default ShopLikeItem;
 const SkeletonItem = () => {
   const { width, height } = Dimensions.get('window');
   const widthItem = parseInt((width * 65) / 100);

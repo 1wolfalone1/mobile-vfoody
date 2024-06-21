@@ -61,7 +61,7 @@ const OrderLayout = () => {
           tabBarStyle: { backgroundColor: Colors.primaryBackgroundColor },
           tabBarIndicatorStyle: {
             borderBottomWidth: 1.5,
-            borderBottomColor: 'black',
+            borderBottomColor: 'white',
           },
           tabBarAllowFontScaling: false,
         }}

@@ -27,6 +27,11 @@ const shopDetailsSlice = createSlice({
   name: 'shopDetailsSlice ',
   initialState: initialState,
   reducers: {
+    toggleFavouriteShop: (state, action) => {
+      if (state.info) {
+        state.info.isFavouriteShop = !state.info.isFavouriteShop;
+      }
+    },
     changeUserInfo: (state, actions) => {
       return actions.payload;
     },
@@ -37,9 +42,9 @@ const shopDetailsSlice = createSlice({
 
     addToppingRadio: (state, actions) => {
       const { toppingId, optionId } = actions.payload;
-      if(optionId == -1) {
+      if (optionId == -1) {
         state.product.toppingSelected.radio[toppingId] = undefined;
-        return
+        return;
       }
       const item = state.product.topping.find((item) => item.id === toppingId);
       console.log(optionId, ' optinnnnnnnnnnnnnnnnnnn');
