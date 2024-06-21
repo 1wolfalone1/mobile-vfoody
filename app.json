@@ -5,6 +5,7 @@
     "scheme": "mobile-vfoody",
     "version": "1.0.0",
     "orientation": "portrait",
+    "backgroundColor": "#000000",
     "icon": "./assets/icon/icon-light.png",
     "userInterfaceStyle": "light",
     "splash": {
@@ -20,7 +21,12 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.anonymous.mobilevfoody"
+      "googleServicesFile": "./google-services.json",
+      "package": "com.anonymous.mobilevfoody",
+      "permissions": [
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_FINE_LOCATION"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -34,6 +40,14 @@
           "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location."
         }
       ]
-    ]
+    ],
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "835e7a82-e822-490d-8591-32649b9e57b1"
+      }
+    }
   }
 }

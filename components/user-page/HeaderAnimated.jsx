@@ -80,7 +80,7 @@ export default function DynamicHeader({ animHeaderValue }) {
             <Avatar.Image
               size={40}
               source={
-                userData != null
+                userData != null && userData.avatarUrl
                   ? {
                       uri: userData.avatarUrl,
                     }

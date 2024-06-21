@@ -1,11 +1,14 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
+  tabBar: {
+    translateY: 0,
+  },
   map: {
     origin: {
       name: '',
-      lat: 0,
-      lng: 0,
+      latitude: 0,
+      longitude: 0,
     },
     destination: {
       name: '',
@@ -29,13 +32,23 @@ const initialState = {
     duration: 5000,
     elevation: 5,
   },
+  loading: {
+    isLoaded: false,
+    msg: "Chờ tí nhé..."
+  },
 };
 const globalSlice = createSlice({
   name: 'globalSlice',
   initialState: initialState,
   reducers: {
+    changePositionTabBar: (state, actions) => {
+      state.tabBar.translateY = actions.payload;
+    },
     changeUserInfo: (state, actions) => {
       return actions.payload;
+    },
+    changeLoadings: (state, actions) => {
+      state.loading = actions.payload;
     },
     resetState: (state, actions) => initialState,
     openSnackBar: (state, actions) => {
@@ -55,7 +68,7 @@ const globalSlice = createSlice({
       };
     },
     resetMapsState: (state, actions) => {
-      state.map = initialState.map
+      state.map = initialState.map;
     },
     customSnackBar: (state, actions) => {
       const { icon, iconFunction, action, style, duration, elevation } = actions.payload;

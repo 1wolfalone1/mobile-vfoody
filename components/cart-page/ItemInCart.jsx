@@ -1,3 +1,4 @@
+import SkeletonLoading from 'expo-skeleton-loading';
 import { NotebookPen } from 'lucide-react-native';
 import React, { useEffect, useState } from 'react';
 import { Dimensions, Image, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
@@ -33,12 +34,12 @@ const styles = StyleSheet.create({
     // background color must be set
   },
 });
-const ItemInCart = ({ item, shopId }) => {
+const ItemInCart = ({ itemsInfo: itemInCart, shopId }) => {
   const { width, height } = Dimensions.get('window');
   const heightItem = parseInt((width * 30) / 100);
   const widthItem = parseInt((width * 85) / 100);
-  const { items } = useSelector(cartSelector);
-  const [itemInCart, setItemInCart] = useState({});
+  const { items, listItemInfo } = useSelector(cartSelector);
+  const [item, setItemInCart] = useState(null);
   const [toppingString, setToppingString] = useState('');
   const [note, setNote] = useState('');
   const [quantity, setQuantity] = useState(1);
@@ -48,31 +49,54 @@ const ItemInCart = ({ item, shopId }) => {
   const dispatch = useDispatch();
   const [visible, setVisible] = useState(false);
   const [heightNote, setHeightNote] = useState(200);
+  const [price, setPrice] = useState('');
+  const [priceToppingString, setPriceToppingString] = useState(0);
   useEffect(() => {
-    if (items) {
-      console.log(items, ' itemsInfo');
-      const itemsInfo = items[shopId]?.find((e) => e.productId === item.id);
+    if (listItemInfo) {
+      const item = listItemInfo.find((itemInfo) => {
+        console.log(
+          itemInCart.productId.split('-')[0],
+          '----',
+          itemInCart,
+          itemInfo,
+          ' tesssssssttt',
+        );
+        if (itemInCart) {
+          if (
+            itemInCart.productId.split('-') &&
+            itemInCart.productId.split('-')[0] == itemInfo.id
+          ) {
+            console.log('okkkkkkkk tesssssssttt');
+            return true;
+          }
+        }
+        return false;
+      });
 
-      if (!itemsInfo) {
+      console.log(item, ' test');
+      let priceTopping = 0;
+      if (!item) {
         return;
       }
-      setItemInCart(itemsInfo);
+      setItemInCart(item);
       let toppingString = '';
       let isHasRadio = false;
-      Object.values(itemsInfo.topping.radio).forEach((item, index) => {
+      Object.values(itemInCart.topping.radio).forEach((item, index) => {
         if (item) {
           if (index === 0) {
             toppingString += item.topping.description + ' : ' + item.option.description;
           } else {
             toppingString += ' - ' + item.topping.description + ' : ' + item.option.description;
           }
+
+          priceTopping += item.option.price;
           isHasRadio = true;
         }
       });
-      Object.values(itemsInfo.topping.checkbox).forEach((item, index) => {
-        console.log(item, ' tessssssssssssssssssssssss');
+      Object.values(itemInCart.topping.checkbox).forEach((item, index) => {
         if (item) {
           const checkBoxToppingString = item.options.reduce((a, option, index) => {
+            priceTopping += option.price;
             console.log(option);
             if (index == 0) {
               return option.description;
@@ -91,18 +115,31 @@ const ItemInCart = ({ item, shopId }) => {
           }
         }
       });
-      console.log(toppingString, ' toppingggggggggggggggggg');
       setToppingString(toppingString);
-      setQuantity(itemsInfo.quantity);
-      setNoteTemp(itemsInfo.note);
+      setQuantity(itemInCart.quantity);
+      setNoteTemp(itemInCart.note);
+      setPriceToppingString(priceTopping);
     }
-  }, [items]);
+  }, [listItemInfo]);
+  useEffect(() => {
+    if (item) {
+      setPrice(formatNumberVND(item.price) + ' +' + ' ' + formatNumberVND(priceToppingString));
+      dispatch(
+        cartSlice.actions.changePriceItem({
+          shopId: shopId,
+          itemId: itemInCart.productId,
+          price: parseInt(item.price) + parseInt(priceToppingString),
+        }),
+      );
+    }
+  }, [item]);
+
   console.log(item, ' item ne');
   const handleRemoveItem = () =>
     dispatch(
       cartSlice.actions.removeItemInCart({
         shopId: shopId,
-        itemId: item.id,
+        itemId: itemInCart.productId,
       }),
     );
   const handleOpenNote = () => {
@@ -118,7 +155,7 @@ const ItemInCart = ({ item, shopId }) => {
     dispatch(
       cartSlice.actions.setNote({
         shopId: shopId,
-        itemId: item.id,
+        itemId: itemInCart.productId,
         note: noteTemp,
       }),
     );
@@ -136,7 +173,7 @@ const ItemInCart = ({ item, shopId }) => {
       dispatch(
         cartSlice.actions.setQuantity({
           shopId: shopId,
-          itemId: item.id,
+          itemId: itemInCart.productId,
           quantity: valueNum,
         }),
       );
@@ -147,7 +184,7 @@ const ItemInCart = ({ item, shopId }) => {
       dispatch(
         cartSlice.actions.removeItemInCart({
           shopId: shopId,
-          itemId: item.id,
+          itemId: itemInCart.productId,
         }),
       );
     }
@@ -157,7 +194,7 @@ const ItemInCart = ({ item, shopId }) => {
       dispatch(
         cartSlice.actions.removeItemInCart({
           shopId: shopId,
-          itemId: item.id,
+          itemId: itemInCart.productId,
         }),
       );
     } else {
@@ -166,13 +203,24 @@ const ItemInCart = ({ item, shopId }) => {
       dispatch(
         cartSlice.actions.setQuantity({
           shopId: shopId,
-          itemId: item.id,
+          itemId: itemInCart.productId,
           quantity: valueNum,
         }),
       );
     }
   };
-  return (
+  const handleViewTopping = () => {
+    if(toppingString) {
+      let string = '';
+      toppingString.split('---').forEach(item => {
+        string += item.trim() + "\n";
+      })
+      return string;
+    }
+  }
+  return item == null ? (
+    <SkeletonItem />
+  ) : (
     <View
       className="flex-row bg-white mb-4"
       style={{ height: heightItem, width: widthItem, zIndex: 1, overflow: 'visible' }}
@@ -183,7 +231,7 @@ const ItemInCart = ({ item, shopId }) => {
             <Text className="font-hnow65medium text-xl">Topping nè</Text>
           </Dialog.Title>
           <Dialog.Content>
-            <Text className="font-hnow64regular text-sm">{toppingString}</Text>
+            <Text className="font-hnow64regular text-sm">{handleViewTopping()}</Text>
           </Dialog.Content>
           <Dialog.Actions>
             <Button onPress={hideDialog}>Hủy</Button>
@@ -201,10 +249,7 @@ const ItemInCart = ({ item, shopId }) => {
             borderRadius: 20,
           }}
         >
-          <ScrollView
-            style={{
-            }}
-          >
+          <ScrollView style={{}}>
             <View className="items-center flex-1">
               <Text className="text-center text-lg font-hnow64regular">Ghi chú cho quán nào</Text>
               <Divider style={{ width: '100%', marginVertical: 20 }} />
@@ -215,7 +260,6 @@ const ItemInCart = ({ item, shopId }) => {
                 onContentSizeChange={(event) => {
                   setHeightNote(event.nativeEvent.contentSize.height);
                 }}
-                 
                 numberOfLines={10}
                 multiline
                 defaultValue={noteTemp}
@@ -287,9 +331,7 @@ const ItemInCart = ({ item, shopId }) => {
             </View>
           </TouchableRipple>
           <View className=" justify-between items-end flex-row">
-            <Text className="text-sm text-primary font-hnow63book">
-              {formatNumberVND(item.price)}
-            </Text>
+            <Text className="text-sm text-primary font-hnow63book">{price}</Text>
             <View className="flex-row justify-between items-center">
               <IconButton
                 icon={'minus'}
@@ -327,3 +369,25 @@ const ItemInCart = ({ item, shopId }) => {
 };
 
 export default ItemInCart;
+
+const SkeletonItem = () => {
+  const {width, height} = Dimensions.get('window')
+  const heightItem = parseInt((width * 30) / 100);
+  const widthItem = parseInt((width * 85) / 100);
+
+  return (
+    <SkeletonLoading background={Colors.skeleton.bg} highlight={Colors.skeleton.hl}>
+      <View
+        style={{
+          zIndex: 1000,
+          marginBottom: 16,
+          flex: 1,
+          width: widthItem,
+          height: heightItem,
+          borderRadius: 16,
+          backgroundColor: Colors.skeleton.bg,
+        }}
+      />
+    </SkeletonLoading>
+  );
+};
