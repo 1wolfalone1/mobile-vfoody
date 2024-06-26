@@ -52,9 +52,9 @@ const ShopItem = ({ item }) => {
             <Text className="font-hnow65medium text-sm">{item.name}</Text>
           </View>
           <View className="mt-1 flex-row items-center justify-between">
-            <Text>{item.buildingName} (0.2km)</Text> 
+            <Text numberOfLines={2} className="flex-1">{item.buildingName} (0.2km)</Text> 
             <Divider horizontalInset style={{ width: 1, height: '100%' }} />
-            <Text className="text-primary">Freeship</Text>
+            <Text className="text-primary w-[50]">Frsdfas feeship</Text>
           </View>
           <View className="mt-3 flex-row justify-between">
             <View className="flex-row">

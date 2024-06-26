@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import ShopItem from '../../../components/cart-page/ShopItem';
 import { Colors } from '../../../constant';
 import cartSlice, { cartSelector, getListShopInfo } from '../../../redux/slice/cartSlice';
+import { userInfoSliceSelector } from '../../../redux/slice/userSlice';
 const styles = StyleSheet.create({
   shadow: {
     shadowOffset: { width: 2, height: 4 },
@@ -29,17 +30,21 @@ const styles = StyleSheet.create({
 
 const CartPage = () => {
   const { listShopInfo } = useSelector(cartSelector);
+  const userInfo = useSelector(userInfoSliceSelector);
+  const { items } = useSelector(cartSelector);
   const dispatch = useDispatch();
-  console.log(' asdfasfasdfadsfasdfasdfasdfafsd');
+  console.log(listShopInfo, 
+    ' asdfasfasdfadsfasdfasdfasdfafsd', items);
+
   useEffect(() => {
     console.log(listShopInfo);
     dispatch(getListShopInfo());
     return () => {
-      dispatch(cartSlice.actions.resetStateListShop())
-    }
-  }, []);
+      dispatch(cartSlice.actions.resetStateListShop());
+    };
+  }, [items]);
   return (
-    <View className="bg-white flex-1 ">
+    <View className="bg-white flex-1 pb-120">
       <SafeAreaView className="bg-white pb-4 rounded-b-3xl" style={styles.shadow} edges={['top']}>
         <View className="flex-row justify-center items-center w-full ">
           <IconButton
@@ -53,7 +58,9 @@ const CartPage = () => {
         </View>
       </SafeAreaView>
       <View className="items-center m-5">
-        <Text className="font-hnow65medium text-lg text-green-800">Giao tới S705 khu Origami</Text>
+        <Text className="font-hnow65medium text-lg text-green-800">
+          {userInfo?.building?.address}
+        </Text>
       </View>
       <View className="flex-1  overflow-visible mx-5">
         <FlatList

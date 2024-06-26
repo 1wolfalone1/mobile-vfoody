@@ -75,9 +75,9 @@ const TempCartPage = () => {
           paddingBottom: 20,
         }}
       >
-        {listItemInfo.length > 0 ? (
-          listItemInfo.map((item) => (
-            <ItemInCart key={item ? item.id : null} item={item} shopId={info.id} />
+        {items[info?.id] && items[info?.id].length > 0 ? (
+          items[info?.id].map((item) => (
+            <ItemInCart key={item ? item.productId : null} itemsInfo={item} shopId={info.id} />
           ))
         ) : (
           <Image
@@ -90,6 +90,27 @@ const TempCartPage = () => {
           />
         )}
       </ScrollView>
+      <View className="flex mb-4 w-full items-center absolute bottom-0">
+        <Button
+          textColor="white"
+          mode="elevated"
+          buttonColor={Colors.primaryBackgroundColor}
+          className="rounded-full items-center"
+          labelStyle={{
+            padding: 2,
+          }}
+          contentStyle={{
+            flexDirection: 'row-reverse',
+            alignItems: 'center',
+          }}
+          onPress={() => {
+           
+            router.push('/cart/' + info?.id);
+          }}
+        >
+          Đặt hàng ngay
+        </Button>
+      </View>
     </View>
   );
 };

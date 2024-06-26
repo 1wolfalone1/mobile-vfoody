@@ -30,6 +30,7 @@ const ItemBestProctInShop = ({ item }) => {
 
   const widthCard = parseInt((width * 75) / 100);
   const itemImageUrl = { uri: item?.imageUrl };
+  console.log('')
   return item == null ? (
     <SkeletonItem />
   ) : (

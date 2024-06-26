@@ -2,14 +2,32 @@ import { router } from 'expo-router';
 import React from 'react';
 import { Dimensions, Text, View } from 'react-native';
 import { IconButton } from 'react-native-paper';
+import { useDispatch } from 'react-redux';
+import api from '../../api/api';
 import { Colors } from '../../constant';
+import shopDetailsSlice from '../../redux/slice/shopDetailsSlice';
 
-const HeaderStickyShop = ({shopInfo, isHeaderTop, shopName, heightHeaderSticky }) => {
+const HeaderStickyShop = ({ shopInfo, isHeaderTop, shopName, heightHeaderSticky }) => {
   const { width, height } = Dimensions.get('window');
+  const dispatch = useDispatch();
+  const handleFavouriteShop = async () => {
+    try {
+      const res = await api.put('/api/v1/customer/favourite/shop', {
+        shopId: shopInfo?.id,
+      });
+      const data = await res.data;
+      console.log(data, ' favourite shop api');
+      if (data.isSuccess) {
+        dispatch(shopDetailsSlice.actions.toggleFavouriteShop());
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
   return (
     <View
       className="flex-row items-center justify-between absolute top-0  z-1000 mt-8"
-      style={{ width: width, height: heightHeaderSticky , zIndex: 1000}}
+      style={{ width: width, height: heightHeaderSticky, zIndex: 1000 }}
     >
       <View className="flex-row items-center" style={{ width: (width * 70) / 100 }}>
         <IconButton
@@ -41,10 +59,19 @@ const HeaderStickyShop = ({shopInfo, isHeaderTop, shopName, heightHeaderSticky }
         />
         <IconButton
           icon="heart"
-          iconColor={Colors.btnBackground}
-          containerColor={Colors.primaryBackgroundColor}
+          iconColor={
+            shopInfo?.isFavouriteShop ? Colors.btnBackground : Colors.primaryBackgroundColor
+          }
+          containerColor={
+            !shopInfo?.isFavouriteShop ? Colors.btnBackground : Colors.primaryBackgroundColor
+          }
+          style={{
+            borderRadius: 1000,
+            borderWidth: 1,
+            borderColor: Colors.primaryBackgroundColor,
+          }}
           size={16}
-          onPress={() => router.back()}
+          onPress={handleFavouriteShop}
         />
       </View>
     </View>

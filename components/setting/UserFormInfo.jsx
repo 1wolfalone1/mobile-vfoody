@@ -117,19 +117,21 @@ const UserFormInfo = () => {
           longitude: info.building.longitude,
           name: info.building.address,
         });
+        dispatch(
+          globalSlice.actions.changeMapState({
+            name: info.building.address,
+            longitude: info.building.longitude,
+            latitude: info.building.latitude,
+          }),
+        );
       }
-      dispatch(globalSlice.actions.changeMapState({
-        name: info.building.address,
-        longitude: info.building.longitude,
-        latitude: info.building.latitude,
-      }))
     }
   }, [map, info]);
   useEffect(() => {
     return () => {
       dispatch(globalSlice.actions.resetMapsState());
-    }
-  }, [])
+    };
+  }, []);
   const hideModal = () => {
     setVisible(false);
   };
@@ -214,7 +216,6 @@ const UserFormInfo = () => {
                       color: '#000000',
                     }}
                     className="flex-1 m-0"
-                   
                   />
                   <Button
                     icon="map-marker-plus"
