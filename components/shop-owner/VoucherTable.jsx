@@ -5,7 +5,7 @@ import { DataTable } from 'react-native-paper';
 import { vouchers } from '../../data/Menu';
 import { Colors } from '../../constant';
 
-function formatDate(dateString) {
+function formatDateToSeconds(dateString) {
   const dateObj = new Date(dateString); // Parse the date string
   const hours = dateObj.getHours().toString().padStart(2, '0'); // Add leading zero for single-digit hours
   const minutes = dateObj.getMinutes().toString().padStart(2, '0');
@@ -60,7 +60,7 @@ const VoucherTable = ({ showDeleteDialog }) => {
                 <Text>{item.quantity}</Text>
               </DataTable.Cell>
               <DataTable.Cell numeric className="flex-1">
-                <Text>{formatDate(item.dueDate)}</Text>
+                <Text>{formatDateToSeconds(item.dueDate)}</Text>
               </DataTable.Cell>
               <DataTable.Cell numeric className="flex-1">
                 <View className="flex-row gap-2">
