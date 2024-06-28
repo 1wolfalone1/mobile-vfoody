@@ -18,6 +18,8 @@ import { Colors } from '../../constant';
 import CustomDrawer from '../../components/CustomDrawer';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import DashboardHeader from '../../components/shop-owner/DashboardHeader';
+import { Ionicons } from '@expo/vector-icons';
+import { router } from 'expo-router';
 
 const Dashboard = () => {
   const [openDrawerDashboard, setOpenDrawerDashboard] = useState(false);
@@ -78,20 +80,34 @@ const Dashboard = () => {
             </View>
           }
           rightContent={
-            <View>
-              <Button
-                type="contained"
-                mode="contained"
-                buttonColor={isActive ? Colors.success : Colors.primaryBackgroundColor}
-                className="w-20 rounded-xl"
-                labelStyle={{
-                  fontSize: 18,
+            <View className="flex-row ">
+              <TouchableRipple
+                onPress={() => router.push('chat')}
+                className="rounded-full"
+                style={{
+                  borderRadius: 1000,
                 }}
-                onPress={() => handleActive()}
+                borderless
               >
-                {isActive ? 'On' : 'Off'}
-              </Button>
+                <View className="" style={{ backgroundColor: '#8f88883a', padding: 8 }}>
+                  <Ionicons name="chatbubble-ellipses" size={24} color={Colors.blue[100]} />
+                </View>
+              </TouchableRipple>
             </View>
+            // <View>
+            //   <Button
+            //     type="contained"
+            //     mode="contained"
+            //     buttonColor={isActive ? Colors.success : Colors.primaryBackgroundColor}
+            //     className="w-20 rounded-xl"
+            //     labelStyle={{
+            //       fontSize: 18,
+            //     }}
+            //     onPress={() => handleActive()}
+            //   >
+            //     {isActive ? 'On' : 'Off'}
+            //   </Button>
+            // </View>
           }
         />
 

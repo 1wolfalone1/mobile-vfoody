@@ -36,7 +36,7 @@ const persistSlice = createSlice({
     saveIsSignup: (state, action) => {
       state.isSignup = action.payload;
     },
-    saveisRefreshOrder: (state, action) => {
+    saveIsRefreshOrder: (state, action) => {
       state.isRefreshOrder = action.payload;
     },
   },
