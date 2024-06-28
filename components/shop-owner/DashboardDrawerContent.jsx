@@ -19,10 +19,12 @@ const dashboardNavigations = [
   {
     icon: 'history',
     label: 'Lịch sử đơn hàng',
+    path: 'order-history',
   },
   {
     icon: 'comment-edit-outline',
     label: 'Đánh giá',
+    path: 'review',
   },
   {
     icon: 'cash-check',
@@ -44,7 +46,7 @@ const DashboardDrawerContent = ({ closeDrawer }) => {
   const handleLogout = () => {
     router.push('/sign-in');
   };
-  const handleNaviagte = (pathName) => {
+  const handleNavigate = (pathName) => {
     router.push(`/shop-owner/${pathName}`);
     closeDrawer();
   };
@@ -73,7 +75,7 @@ const DashboardDrawerContent = ({ closeDrawer }) => {
                 active={currentPathName === navigation.path}
                 icon={navigation.icon}
                 label={navigation.label}
-                onPress={() => handleNaviagte(navigation.path)}
+                onPress={() => handleNavigate(navigation.path)}
               />
             );
           })}

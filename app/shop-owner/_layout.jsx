@@ -135,7 +135,7 @@ const ShopOwnerLayout = () => {
           }}
         />
         <Tabs.Screen
-          name="dashboard-v1"
+          name="account"
           options={{
             headerShown: false,
             href: null,
@@ -143,7 +143,7 @@ const ShopOwnerLayout = () => {
           }}
         />
         <Tabs.Screen
-          name="account"
+          name="order-history"
           options={{
             headerShown: false,
             href: null,
