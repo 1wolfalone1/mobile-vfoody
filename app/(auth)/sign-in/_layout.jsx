@@ -1,8 +1,9 @@
 import { BASE_URL } from '@env';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useIsFocused } from '@react-navigation/native';
 import * as Google from 'expo-auth-session/providers/google';
-import { Slot } from 'expo-router';
-import React from 'react';
+import { router, Slot } from 'expo-router';
+import React, { useEffect } from 'react';
 import { Dimensions, Image, ScrollView, Text, View } from 'react-native';
 import { Snackbar, TouchableRipple } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
@@ -22,6 +23,7 @@ const AuthenLayout = () => {
   const widthGoogleButton = parseInt((width * 80) / 100);
   const [userInfo, setUserInfo] = React.useState(null);
   const [loginErrorGoogleMessage, setLoginErrorGoogleMessage] = React.useState('');
+  const isFocus = useIsFocused();
   const [request, response, promptAsync] = Google.useAuthRequest({
     androidClientId: '378831586584-r6qbnlk6sqad743mf5b68voupgi06uk0.apps.googleusercontent.com',
     webClientId: '378831586584-tr3bua7id30bgc7mgfgefea3o0d7jjfq.apps.googleusercontent.com',
@@ -39,6 +41,7 @@ const AuthenLayout = () => {
     } else {
       console.log(response.error, ' error');
       await AsyncStorage.setItem('@statusLogin', 'error');
+
     }
   }
 
@@ -46,10 +49,12 @@ const AuthenLayout = () => {
     if (!token) return;
     try {
       const response = await api.post('/api/v1/customer/google/login', { accessToken: token });
+
       const user = await response.data;
       console.log(user, ' userrrrrrrrrrr');
       if (user.isSuccess) {
         await AsyncStorage.setItem('@token', user.value.accessTokenResponse.accessToken);
+        
         dispatch(
           userInfoSlice.actions.changeUserInfo({
             info: user.value.accountResponse,
@@ -57,14 +62,25 @@ const AuthenLayout = () => {
           }),
         );
       }
+      router.push('/home');
     } catch (e) {
-      console.log(e);
+      console.log(e, ' errorrrr login with google');
     }
   };
   React.useEffect(() => {
     handleSignInWithGoogle();
-  }, [response]);
+    
+  }, [response, isFocus, request]);
 
+  useEffect(() => {
+    // handleIsToken();
+  }, []);
+  const handleIsToken = async () => {
+    const token = await AsyncStorage.getItem('@token');
+    if (token) {
+      router.push('/oauthredirect');
+    }
+  };
   return (
     <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
       <View className="bg-bg-100 flex-1 h-full">

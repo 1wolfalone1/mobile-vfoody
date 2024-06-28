@@ -314,7 +314,7 @@ const ItemInCart = ({ itemsInfo: itemInCart, shopId }) => {
             <View>
               <Text
                 numberOfLines={2}
-                className="text-gray-600 text-ellipsis font-hnow63book text-xs"
+                className="text-gray-600 text-ellipsis font-pmedium text-xs"
               >
                 {toppingString}
               </Text>
