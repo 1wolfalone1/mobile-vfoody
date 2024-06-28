@@ -119,7 +119,7 @@ const VoucherPage = () => {
         </Button>
       </Animated.View>
       <View className="items-center py-3 bg-primary">
-        <Text className="font-bold text-xl text-white">Khuyến mãi </Text>
+        <Text className="font-bold text-xl text-white">Khuyến mãi</Text>
       </View>
 
       <Divider className="h-[1] w-full mb-4" />

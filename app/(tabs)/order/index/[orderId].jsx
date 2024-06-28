@@ -1,4 +1,5 @@
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
+import { useIsFocused } from '@react-navigation/native';
 import * as Location from 'expo-location';
 import { useLocalSearchParams } from 'expo-router';
 import { ConciergeBell, MapPinned, PackageCheck, Timer, Truck } from 'lucide-react-native';
@@ -6,12 +7,14 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Dimensions, Image, PermissionsAndroid, StyleSheet, Text, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import MapView, { Callout, Marker } from 'react-native-maps';
+import MapViewDirections from 'react-native-maps-directions';
 import { Divider } from 'react-native-paper';
 import { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import StepIndicator from 'react-native-step-indicator';
 import uuid from 'react-native-uuid';
 import { useSelector } from 'react-redux';
+import api from '../../../../api/api';
 import { Colors } from '../../../../constant';
 import images from '../../../../constant/images';
 import { userInfoSliceSelector } from '../../../../redux/slice/userSlice';
@@ -31,10 +34,8 @@ const OrderTracking = () => {
   const translateY = useSharedValue(0);
   const bottomSheetRef = useRef(null);
   const info = useSelector(userInfoSliceSelector);
-  // callbacks
-  const handleSheetChanges = useCallback((index) => {
-    console.log('handleSheetChanges', index);
-  }, []);
+  const isFocus = useIsFocused();
+  const apiKey = process.env.EXPO_PUBLIC_SERVICE_API;
   const [origin, setOrigin] = useState([
     {
       latitude: 10.8387911,
@@ -42,6 +43,31 @@ const OrderTracking = () => {
       name: 'Vinhome Grand Park',
     },
   ]);
+  const [orderData, setOrderData] = useState(null);
+  // callbacks
+  useEffect(() => {
+    handleGetOrderData();
+  }, [isFocus]);
+  const handleGetOrderData = async () => {
+    try {
+      const res = await api.get(`/api/v1/customer/order/${params.orderId}`);
+      const data = await res.data;
+      console.log(data, ' data OrderTracking');
+      setOrderData(data.value);
+      if (data.value) {
+        if (data.value.shopInfo) {
+          const newState = origin.push(data.value.shopInfo.building);
+          console.log(newState, ' newState');
+        }
+      }
+    } catch (err) {
+      console.log(err, ' error in OrderTracking');
+    }
+  };
+  const handleSheetChanges = useCallback((index) => {
+    console.log('handleSheetChanges', index);
+  }, []);
+
   console.log(heightMap, ' height map');
   useEffect(() => {
     Location.requestForegroundPermissionsAsync();
@@ -59,7 +85,6 @@ const OrderTracking = () => {
       minHeight: translateY.value,
     };
   });
-  console.log(params);
   return (
     <SafeAreaView
       edges={['bottom', 'left', 'right']}
@@ -96,17 +121,14 @@ const OrderTracking = () => {
         showsMyLocationButton={true}
         ref={refMap}
       >
-        {
-          //   <MapViewDirections
-          //   apikey={apiKey}
-          //   origin={origin}
-          //   destination={{
-          //     latitude: 14.058213,
-          //     longitude: 108.27734,
-          //   }}
-          // />
-        }
-        {origin.map((marker) => {
+        {orderData && (
+          <MapViewDirections
+            apikey={apiKey}
+            origin={origin[0]}
+            destination={orderData?.shopInfo.building}
+          />
+        )}
+        {origin != undefined && origin.map((marker) => {
           return (
             <Marker key={uuid.v4()} coordinate={marker} tracksViewChanges={true}>
               <Callout style={{ flex: 1, position: 'relative' }} tooltip>
@@ -153,7 +175,6 @@ const OrderTracking = () => {
       </View>
       <BottomSheet
         ref={bottomSheetRef}
-        
         style={{
           backgroundColor: 'white',
           ...styles.shadow,
@@ -162,11 +183,11 @@ const OrderTracking = () => {
         onChange={handleSheetChanges}
         snapPoints={[300, heightMap != 0 ? heightMap : 100]}
       >
-        <BottomSheetView 
-         
-        style={{
-          flex: 1
-        }}>
+        <BottomSheetView
+          style={{
+            flex: 1,
+          }}
+        >
           <StepIndicator
             stepCount={4}
             customStyles={customStyles}
@@ -237,14 +258,19 @@ const OrderTracking = () => {
               </View>
             </View>
           </View>
-          <ScrollView 
-          showsVerticalScrollIndicator={true}
-          className=" bg-red-200" contentContainerStyle={{
-            flexGrow: 1
-          }}>
-            <View className="h-1000" style={{
-              height: 10000
-            }}/>
+          <ScrollView
+            showsVerticalScrollIndicator={true}
+            className=" bg-red-200"
+            contentContainerStyle={{
+              flexGrow: 1,
+            }}
+          >
+            <View
+              className="h-1000"
+              style={{
+                height: 10000,
+              }}
+            />
           </ScrollView>
         </BottomSheetView>
       </BottomSheet>
@@ -269,7 +295,7 @@ const styles = StyleSheet.create({
     elevation: 20,
   },
 });
-const labels = ['Chờ xác nhận','Shop đang làm', 'Đang giao', 'Hoàn thành'];
+const labels = ['Chờ xác nhận', 'Shop đang làm', 'Đang giao', 'Hoàn thành'];
 const customStyles = {
   stepIndicatorSize: 35,
   currentStepIndicatorSize: 40,

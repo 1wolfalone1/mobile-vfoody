@@ -1,65 +1,22 @@
-import messaging from '@react-native-firebase/messaging';
 import { useFonts } from 'expo-font';
 import { SplashScreen, Stack } from 'expo-router';
 import * as SystemUI from 'expo-system-ui';
 import { useContext, useEffect } from 'react';
-import { PermissionsAndroid } from 'react-native';
 import { PaperProvider } from 'react-native-paper';
 import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
-import Toastable, { showToastable } from 'react-native-toastable';
+import Toastable from 'react-native-toastable';
 import { Provider } from 'react-redux';
 import { persistStore } from 'redux-persist';
 import { PersistGate } from 'redux-persist/lib/integration/react';
-import NotifyFisebaseForegroundItem from '../components/common/NotifyFisebaseForegroundItem';
 import SnackBarCustom from '../components/common/SnackBarCustom';
 import SpinnerCustom from '../components/common/SpinnerCustom';
 import { store } from '../redux/store';
 let persistor = persistStore(store);
 const RootLayout = () => {
-  const requestUserPermissions = async (req, res) => {
-    const authStatus = await messaging().requestPermission();
-    const enabled =
-      authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-      authStatus === messaging.AuthorizationStatus.PROVISIONAL;
 
-    PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);
-    if (enabled) {
-      console.log('Authorization status:', authStatus);
-    }
-  };
   const insets = useContext(SafeAreaInsetsContext);
-  useEffect(() => {
-    if (requestUserPermissions()) {
-      messaging()
-        .getToken()
-        .then((token) => {
-          console.log(token);
-        });
-    } else {
-      console.log('Permission denied');
-    }
-    messaging()
-      .getInitialNotification()
-      .then((notification) => {
-        console.log(notification);
-      });
-    messaging().onNotificationOpenedApp((remoteMessage) => {
-      console.log(remoteMessage, 'on open');
-    });
-    messaging().setBackgroundMessageHandler(async (msg) => {
-      console.log(msg, 'in background');
-    });
-    const unsubscribe = messaging().onMessage(async (msg) => {
-      console.log(msg, 'in foreground');
-      console.log('----------------------------------');
-      showToastable({
-        message: 'React Native Heroes is awesome! 🚀',
-        status: 'success',
-        renderContent: () => <NotifyFisebaseForegroundItem {...msg.notification} />,
-      });
-    });
-    return unsubscribe;
-  }, []);
+
+  
   const [fontsLoaded, error] = useFonts({
     'Poppins-Black': require('../assets/fonts/Poppins-Black.ttf'),
     'Poppins-Bold': require('../assets/fonts/Poppins-Bold.ttf'),
@@ -119,6 +76,11 @@ const RootLayout = () => {
               name="shop-owner"
               options={{ headerShown: false, animation: 'slide_from_bottom' }}
             />
+            <Stack.Screen
+              name="chat"
+              options={{ headerShown: false, animation: 'slide_from_bottom' }}
+            />
+
             <Stack.Screen
               name="(settings)"
               options={{ headerShown: false, animation: 'slide_from_bottom' }}

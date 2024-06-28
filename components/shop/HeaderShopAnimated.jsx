@@ -172,7 +172,7 @@ const HeaderShopAnimated = ({
                   size={16}
                   color={Colors.primaryBackgroundColor}
                 />
-                <Text className="text-xs text-gray-700 font-hnow63book">
+                <Text className="text-xs text-gray-700 font-hnow64regular">
                   Shipping Fee {shopInfo.shippingFee}k
                 </Text>
               </View>
@@ -186,7 +186,7 @@ const HeaderShopAnimated = ({
               </View>
               <View className="flex-row gap-1">
                 <Ionicons name="receipt" size={16} color="#660155" />
-                <Text className="font-hnow63book text-gray-700 text-xs">150 đơn đã bán</Text>
+                <Text className="font-hnow64regular text-gray-700 text-xs">150 đơn đã bán</Text>
               </View>
             </View>
           </View>

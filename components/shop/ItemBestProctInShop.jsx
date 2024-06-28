@@ -38,6 +38,7 @@ const ItemBestProctInShop = ({ item }) => {
       className="flex-row my-4 p-2"
       style={{ borderRadius: 20, backgroundColor: 'white', ...styles.shadow, width: widthCard }}
     >
+      
       <Image
         style={{ height: widthItem, width: widthItem, borderRadius: 20 }}
         source={itemImageUrl}
