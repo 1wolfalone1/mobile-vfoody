@@ -1,6 +1,6 @@
 import { MaterialIcons } from '@expo/vector-icons';
 import React, { useState } from 'react';
-import { Image, ScrollView, Text, View } from 'react-native';
+import { Image, Linking, ScrollView, Text, View } from 'react-native';
 import { Button, Dialog, Divider, TextInput } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 import api from '../../../api/api';
@@ -94,14 +94,14 @@ const ShowDetailOrder = ({ handleClose, orderDetailData, isActiveTab }) => {
   // dang giao -> hoan tat don hang
   const handleCompleted = async (orderId) => {
     try {
-      // handle successful order
-      // const res = await api.put(`/api/v1/shop/order/${orderId}/confirmed`);
-      // console.log('ressssss', res.data.value);
-      // if (res.data.isSuccess) {
-      //   handleClose();
-      // }
+      const res = await api.put(`api/v1/shop/order/${orderId}/request-payment-link`);
+      if (res.data.isSuccess) {
+        const qrUrl = res.data.value.checkOutLink;
+        console.log('qrUrl', qrUrl);
+        Linking.openURL(qrUrl);
+      }
     } catch (err) {
-      console.log(err, '>>> error in confirmed order');
+      console.log(err, '>>> error in completed order');
     }
   };
 
