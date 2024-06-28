@@ -18,7 +18,7 @@ const Settings = () => {
   }, [isFocus]);
   const handleGetListLikeShop = async () => {
     try {
-      const res = await api.get('/api/v1/customer/shop/top');
+      const res = await api.get('/api/v1/customer/shop/favourite?pageIndex=1&pageSize=10');
       const data = await res.data;
       console.log(data);
       setListLikeShop(data.value.items);

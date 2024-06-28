@@ -65,8 +65,7 @@ const PreviewCardChat = ({ item }) => {
             </View>
             <View className="flex-1 pr-2 flex-row">
               <Text numberOfLines={2} className="flex-wrap flex-1 text-xs text-gray-600 text-ellipsis">
-                {item.text} asdfasdf asdfasdf asd fasd fads fasdf asd fasdf asdf asdf asdf asdf as dfasd fkasd fasd fasdf 
-                asfd asd fadsf asfd  asd fasd fas
+                {item.text}
               </Text>
             </View>
           </View>

@@ -2,13 +2,20 @@ import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 import { useIsFocused } from '@react-navigation/native';
 import * as Location from 'expo-location';
 import { useLocalSearchParams } from 'expo-router';
-import { ConciergeBell, MapPinned, PackageCheck, Timer, Truck } from 'lucide-react-native';
+import {
+  ConciergeBell,
+  MapPinned,
+  PackageCheck,
+  TicketCheck,
+  Timer,
+  Truck,
+} from 'lucide-react-native';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Dimensions, Image, PermissionsAndroid, StyleSheet, Text, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import MapView, { Callout, Marker } from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
-import { Divider } from 'react-native-paper';
+import { Button, Divider } from 'react-native-paper';
 import { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import StepIndicator from 'react-native-step-indicator';
@@ -56,7 +63,13 @@ const OrderTracking = () => {
       setOrderData(data.value);
       if (data.value) {
         if (data.value.shopInfo) {
-          const newState = origin.push(data.value.shopInfo.building);
+          const newArray = [];
+          const newState = newArray.push(data.value.shopInfo.building);
+          newArray.push({
+            ...data.value.orderInfo.building,
+            name: data.value.orderInfo.building.address,
+          });
+          setOrigin(newArray);
           console.log(newState, ' newState');
         }
       }
@@ -85,7 +98,9 @@ const OrderTracking = () => {
       minHeight: translateY.value,
     };
   });
-  return (
+  return orderData == null ? (
+    <></>
+  ) : (
     <SafeAreaView
       edges={['bottom', 'left', 'right']}
       className=""
@@ -122,25 +137,22 @@ const OrderTracking = () => {
         ref={refMap}
       >
         {orderData && (
-          <MapViewDirections
-            apikey={apiKey}
-            origin={origin[0]}
-            destination={orderData?.shopInfo.building}
-          />
+          <MapViewDirections apikey={apiKey} origin={origin[0]} destination={origin[1]} />
         )}
-        {origin != undefined && origin.map((marker) => {
-          return (
-            <Marker key={uuid.v4()} coordinate={marker} tracksViewChanges={true}>
-              <Callout style={{ flex: 1, position: 'relative' }} tooltip>
-                <View className="rounded-xl p-2 bg-white" style={{}}>
-                  <Text numberOfLines={5} className="font-hnow63book">
-                    {marker.name}
-                  </Text>
-                </View>
-              </Callout>
-            </Marker>
-          );
-        })}
+        {origin != undefined &&
+          origin.map((marker) => {
+            return (
+              <Marker key={uuid.v4()} coordinate={marker} tracksViewChanges={true}>
+                <Callout style={{ flex: 1, position: 'relative' }} tooltip>
+                  <View className="rounded-xl p-2 bg-white" style={{}}>
+                    <Text numberOfLines={5} className="font-hnow63book">
+                      {marker.name}
+                    </Text>
+                  </View>
+                </Callout>
+              </Marker>
+            );
+          })}
       </MapView>
       <View className=" absolute bottom-0 right-0 left-0 items-center">
         {
@@ -191,18 +203,22 @@ const OrderTracking = () => {
           <StepIndicator
             stepCount={4}
             customStyles={customStyles}
-            currentPosition={2}
+            currentPosition={orderData.orderInfo.orderStatus - 1}
             labels={labels}
             renderStepIndicator={renderStepIndicator}
           />
           <View className="flex-row px-10 justify-between my-4 items-center">
             <View className="flex-row gap-2 items-center">
               <Text className="text-sm">Tổng cộng: </Text>
-              <Text className="text-primary text-lg">{formatNumberVND(40000)}</Text>
+              <Text className="text-primary text-lg">
+                {formatNumberVND(
+                  orderData.orderInfo.totalPrice - orderData.orderInfo.totalPromotion,
+                )}
+              </Text>
             </View>
             <View className="flex-row">
               <Text className="font-hnow63book mr-4 text-green-800">Mã đơn hàng: {params.id}</Text>
-              <Text className="font-hnow63book text-green-800">#213</Text>
+              <Text className="font-hnow63book text-green-800">#{orderData.orderInfo.orderId}</Text>
             </View>
           </View>
           <View className="px-10 flex-row justify-between items-center">
@@ -234,11 +250,11 @@ const OrderTracking = () => {
                     overflow: 'hidden',
                   }}
                 />
-                <Text className="font-bold text-base">Tiệm trà tháng năm</Text>
+                <Text className="font-bold text-base">{orderData.shopInfo.name}</Text>
               </View>
               <View className="flex-row justify-between items-center">
                 <Text numberOfLines={1} className="flex-wrap flex-1 text-sm text-gray-600">
-                  {info.fullName}
+                  {orderData.orderInfo.fullName}
                 </Text>
                 <Divider className="h-full" style={{ width: 2 }} />
                 <Text
@@ -247,30 +263,79 @@ const OrderTracking = () => {
                     textAlign: 'right',
                   }}
                 >
-                  {info.phoneNumber}
+                  {orderData.orderInfo.phoneNumber}
                 </Text>
               </View>
               <View className=" flex-row  items-end gap-2">
                 <MapPinned color={'grey'} size={20} />
                 <Text numberOfLines={2} className="flex-wrap flex-1 text-sm text-gray-600">
-                  {info.building.address}
+                  {orderData.shopInfo.building.name}
                 </Text>
               </View>
             </View>
           </View>
           <ScrollView
             showsVerticalScrollIndicator={true}
-            className=" bg-red-200"
             contentContainerStyle={{
               flexGrow: 1,
             }}
           >
-            <View
-              className="h-1000"
-              style={{
-                height: 10000,
-              }}
-            />
+            {orderData.orderInfo.voucher && orderData.orderInfo.voucher.promotionId && (
+              <View className="flex-row gap-1 flex-1">
+                <TicketCheck size={20} color={Colors.primaryBackgroundColor} />
+                <Text>{orderData.orderInfo.voucher.title}</Text>
+              </View>
+            )}
+            <Text className="pl-7 text-lg font-bold">Thông tin giỏ hàng</Text>
+            {orderData.products.map((product) => (
+              <View className="flex-row gap-4 pl-7 mt-4">
+                <Image
+                  source={{ uri: product.imageUrl }}
+                  style={{
+                    height: parseInt((width * 25) / 100),
+                    width: parseInt((width * 25) / 100),
+                    borderRadius: 10,
+                  }}
+                />
+                <View className="flex-1 justify-between">
+                  <Text numberOfLines={2} className="font-bold text-sm">
+                    {product.productName}
+                  </Text>
+                  <View className="flex-row items-center gap-2">
+                    <Text className="text-primary text-base">
+                      {formatNumberVND(product.totalProductPrice)}
+                    </Text>
+                    <Text className="text-gray-600 text-base  font-bold">
+                     / {product.productQuantity}  món
+                    </Text>
+                  </View>
+                </View>
+              </View>
+            ))}
+            <Text className="pl-7 text-lg font-bold mt-8">Ghi chú</Text>
+            <Text numberOfLines={4} className="pl-7 text-sm text-gray-600 mb-8">
+              {orderData.orderInfo.note}
+            </Text>
+            <View className="px-7">
+              <Button
+                mode="elevated"
+                textColor="white"
+                buttonColor={Colors.cyan500}
+                theme={{ roundness: 2 }}
+                contentStyle={{
+                  paddingVertical: 4,
+                }}
+                className="rounded-xl"
+                labelStyle={{
+                  fontFamily: 'HeadingNow-64Regular',
+                  fontSize: 20,
+                  lineHeight: 22,
+                }}
+                onPress={() => {}}
+              >
+               Hủy đơn hàng
+              </Button>
+            </View>
           </ScrollView>
         </BottomSheetView>
       </BottomSheet>
