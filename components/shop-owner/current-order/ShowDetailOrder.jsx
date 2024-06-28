@@ -1,55 +1,97 @@
 import { MaterialIcons } from '@expo/vector-icons';
-import React from 'react';
+import React, { useState } from 'react';
 import { Image, ScrollView, Text, View } from 'react-native';
-import { Appbar, Button, Dialog, Divider } from 'react-native-paper';
+import { Button, Dialog, Divider, TextInput } from 'react-native-paper';
+import { useDispatch, useSelector } from 'react-redux';
 import api from '../../../api/api';
 import { Colors } from '../../../constant';
-import { formatNumberVND, formatPhoneNumber } from '../../../utils/MyUtils';
 import colors from '../../../constant/colors';
-import { useDispatch, useSelector } from 'react-redux';
 import persistSlice, { persistSliceSelector } from '../../../redux/slice/persistSlice';
+import { formatNumberVND, formatPhoneNumber } from '../../../utils/MyUtils';
 
 const ShowDetailOrder = ({ handleClose, orderDetailData, isActiveTab }) => {
   const [isDeleteDialog, setIsDeleteDialog] = React.useState(false);
   const dispatch = useDispatch();
   const { isRefreshOrder } = useSelector(persistSliceSelector);
-  console.log('isRefreshOrder', isRefreshOrder);
+  const [reason, setReason] = useState('');
+  const [isError, setIsError] = useState(false);
 
+  const handleDismiss = () => {
+    setReason('');
+    setIsDeleteDialog(false);
+    setIsError(false);
+  };
+
+  // don moi -> huy don -> dong y
   const handleReject = async (orderId) => {
+    if (!reason) {
+      setIsError(true);
+      return;
+    }
+    const payload = {
+      reason: reason,
+    };
     try {
-      setIsDeleteDialog(false);
-      handleClose();
-      // handle reject order
+      const res = await api.put(`api/v1/shop/order/${orderId}/reject`, payload);
+      if (res.data.isSuccess) {
+        setIsDeleteDialog(false);
+        handleClose();
+        dispatch(persistSlice.actions.saveIsRefreshOrder(!isRefreshOrder));
+      }
     } catch (err) {
-      console.log(err, '>>> error in confirmed order');
+      console.log(err, '>>> error in reject order');
     }
   };
 
+  // don moi -> nhan don
   const handleConfirm = async (orderId) => {
     try {
       const res = await api.put(`/api/v1/shop/order/${orderId}/confirmed`);
-      console.log('ressssss', res.data.value);
       if (res.data.isSuccess) {
         handleClose();
-        dispatch(persistSlice.actions.saveisRefreshOrder(!isRefreshOrder));
+        dispatch(persistSlice.actions.saveIsRefreshOrder(!isRefreshOrder));
       }
     } catch (err) {
       console.log(err, '>>> error in confirmed order');
     }
   };
 
+  // dang chuan bi -> san sang giao hang
   const handleReady = async (orderId) => {
     try {
       const res = await api.put(`/api/v1/shop/order/${orderId}/delivering`);
       console.log('ressssss', res.data.value);
       if (res.data.isSuccess) {
         handleClose();
-        dispatch(persistSlice.actions.saveisRefreshOrder(!isRefreshOrder));
+        dispatch(persistSlice.actions.saveIsRefreshOrder(!isRefreshOrder));
       }
     } catch (err) {
       console.log(err, '>>> error in delivering order');
     }
   };
+
+  // dang chuan bi -> huy don -> dong y
+  const handleCancel = async (orderId) => {
+    if (!reason) {
+      setIsError(true);
+      return;
+    }
+    const payload = {
+      reason: reason,
+    };
+    try {
+      const res = await api.put(`api/v1/shop/order/${orderId}/cancel`, payload);
+      if (res.data.isSuccess) {
+        setIsDeleteDialog(false);
+        handleClose();
+        dispatch(persistSlice.actions.saveIsRefreshOrder(!isRefreshOrder));
+      }
+    } catch (err) {
+      console.log(err, '>>> error in cancel order');
+    }
+  };
+
+  // dang giao -> hoan tat don hang
   const handleCompleted = async (orderId) => {
     try {
       // handle successful order
@@ -63,17 +105,40 @@ const ShowDetailOrder = ({ handleClose, orderDetailData, isActiveTab }) => {
     }
   };
 
+  // dang giao -> huy don -> dong y
+  const handleFail = async (orderId) => {
+    if (!reason) {
+      setIsError(true);
+      return;
+    }
+    const payload = {
+      reason: reason,
+    };
+    try {
+      const res = await api.put(`api/v1/shop/order/${orderId}/fail`, payload);
+      if (res.data.isSuccess) {
+        setIsDeleteDialog(false);
+        handleClose();
+        dispatch(persistSlice.actions.saveIsRefreshOrder(!isRefreshOrder));
+      }
+    } catch (err) {
+      console.log(err, '>>> error in cancel order');
+    }
+  };
+
   return (
     <ScrollView>
-      <Appbar.Header className="px-5 mb-4">
+      <View className="flex flex-row py-4 items-center pl-5">
         <MaterialIcons
           name="arrow-back-ios-new"
           size={36}
           color={Colors.primaryBackgroundColor}
-          onPress={handleClose}
+          onPress={() => {
+            handleClose();
+          }}
         />
         <Text className="font-bold text-xl pl-20">Đơn hàng chi tiết</Text>
-      </Appbar.Header>
+      </View>
       <View className="p-8 shadow-md shadow-gray-400 bg-white rounded-xl flex-1 flex-col justify-between">
         <View>
           <View>
@@ -250,7 +315,7 @@ const ShowDetailOrder = ({ handleClose, orderDetailData, isActiveTab }) => {
               labelStyle={{
                 fontSize: 16,
               }}
-              // onPress={() => handleCancel()}
+              onPress={() => setIsDeleteDialog(true)}
             >
               Hủy đơn
             </Button>
@@ -287,7 +352,7 @@ const ShowDetailOrder = ({ handleClose, orderDetailData, isActiveTab }) => {
               labelStyle={{
                 fontSize: 16,
               }}
-              // onPress={() => handleCancel()}
+              onPress={() => setIsDeleteDialog(true)}
             >
               Hủy đơn
             </Button>
@@ -312,21 +377,26 @@ const ShowDetailOrder = ({ handleClose, orderDetailData, isActiveTab }) => {
         )}
       </View>
 
-      <Dialog
-        className="bg-slate-100"
-        visible={isDeleteDialog}
-        onDismiss={() => setIsDeleteDialog(false)}
-      >
-        <Dialog.Title>Cảnh báo</Dialog.Title>
+      <Dialog className="bg-slate-100" visible={isDeleteDialog} onDismiss={handleDismiss}>
+        <Dialog.Title>Lý do hủy đơn</Dialog.Title>
         <Dialog.Content>
-          <Text variant="bodyMedium">Bạn có chắc chắn muốn hủy đơn này không?</Text>
+          <TextInput
+            label="Nhập lý do"
+            value={reason}
+            onChangeText={setReason}
+            mode="outlined"
+            outlineStyle={{ borderRadius: 12 }}
+            className="text-base"
+            activeOutlineColor="#DF4830"
+          />
+          {!reason && isError && <Text className="text-red-500 mt-2">Vui lòng nhập lý do</Text>}
         </Dialog.Content>
         <Dialog.Actions>
           <Button
             className="px-5"
             mode="elevated"
             textColor={colors.primaryBackgroundColor}
-            onPress={() => setIsDeleteDialog(false)}
+            onPress={handleDismiss}
           >
             Từ chối
           </Button>
@@ -334,7 +404,16 @@ const ShowDetailOrder = ({ handleClose, orderDetailData, isActiveTab }) => {
             mode="contained"
             className="px-5"
             buttonColor={Colors.primaryBackgroundColor}
-            onPress={() => handleReject(orderDetailData.orderInfo.orderId)}
+            onPress={() => {
+              if (isActiveTab === 1) {
+                console.log('asdabs');
+                handleReject(orderDetailData.orderInfo.orderId);
+              } else if (isActiveTab === 2) {
+                handleCancel(orderDetailData.orderInfo.orderId);
+              } else {
+                handleFail(orderDetailData.orderInfo.orderId);
+              }
+            }}
           >
             Đồng ý
           </Button>

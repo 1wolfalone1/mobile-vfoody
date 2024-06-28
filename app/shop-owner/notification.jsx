@@ -10,7 +10,7 @@ const Notification = () => {
       <Text className="text-2xl font-bold m-4 text-center tracking-wider text-primary">
         Thông báo
       </Text>
-      <Divider className='mt-4' />
+      <Divider className='my-2' />
       <NotificationList />
     </SafeAreaView>
   );
