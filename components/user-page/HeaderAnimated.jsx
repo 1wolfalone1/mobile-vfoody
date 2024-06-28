@@ -1,4 +1,4 @@
-import { DrawerActions } from '@react-navigation/native';
+import { Ionicons } from '@expo/vector-icons';
 import { router, useNavigation } from 'expo-router';
 import { SlidersHorizontal } from 'lucide-react-native';
 import * as React from 'react';
@@ -6,6 +6,7 @@ import { Animated, StyleSheet, Text, TextInput, View } from 'react-native';
 import { Avatar, Button, IconButton, TouchableRipple } from 'react-native-paper';
 import { useSelector } from 'react-redux';
 import { Colors } from '../../constant';
+import colors from '../../constant/colors';
 import { userInfoSliceSelector } from '../../redux/slice/userSlice';
 
 const Header_Max_Height = 90;
@@ -50,15 +51,21 @@ export default function DynamicHeader({ animHeaderValue }) {
           },
         ]}
       >
-        <View className="flex-row justify-between items-center pl-2 pr-4">
-          <IconButton
-            icon="menu"
-            iconColor={Colors.primaryBackgroundColor}
-            size={40}
-            onPress={() => {
-              navigation.dispatch(DrawerActions.openDrawer());
-            }}
-          />
+        <View className="flex-row justify-between items-center pl-7 pr-7">
+          <TouchableRipple borderless onPress={() => router.push('/setting-list')} className="rounded-full">
+            <Avatar.Image
+              size={40}
+              source={
+                userData != null && userData.avatarUrl
+                  ? {
+                      uri: userData.avatarUrl,
+                    }
+                  : {
+                      uri: 'https://w7.pngwing.com/pngs/205/731/png-transparent-default-avatar-thumbnail.png',
+                    }
+              }
+            />
+          </TouchableRipple>
           <View className="justify-center items-center">
             <Button
               textColor={Colors.greyText}
@@ -76,20 +83,21 @@ export default function DynamicHeader({ animHeaderValue }) {
             </Button>
             <Text className="text-primary font-hnow64regular">Tòa S1.01 VinHome Grand Park</Text>
           </View>
-          <TouchableRipple borderless onPress={() => router.push('/user')} className="rounded-full">
-            <Avatar.Image
-              size={40}
-              source={
-                userData != null && userData.avatarUrl
-                  ? {
-                      uri: userData.avatarUrl,
-                    }
-                  : {
-                      uri: 'https://w7.pngwing.com/pngs/205/731/png-transparent-default-avatar-thumbnail.png',
-                    }
-              }
-            />
-          </TouchableRipple>
+          <View className="flex-row ">
+            <TouchableRipple
+              onPress={() => router.push('chat')}
+              className="rounded-full"
+              style={{
+                borderRadius: 1000,
+                
+              }}
+              borderless
+            >
+              <View className="" style={{backgroundColor: '#8f88883a' , padding: 8 }}> 
+                <Ionicons name="chatbubble-ellipses" size={24} color={colors.blue[100]} />
+              </View>
+            </TouchableRipple>
+          </View>
         </View>
       </Animated.View>
 

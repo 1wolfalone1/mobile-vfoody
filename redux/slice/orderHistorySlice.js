@@ -11,12 +11,18 @@ const orderHistorySlice = createSlice({
   reducers: {},
   extraReducers: (builder) =>
     builder
-      .addCase(getListOrderHistory.fulfilled,
-         (state, actions) => {
-          console.log(actions.payload, ' actions payload in order history')
+      .addCase(getListOrderHistory.fulfilled, (state, actions) => {
+        console.log(actions.payload, ' actions payload in order history');
         state.listOrderHistory = actions.payload.items;
       })
       .addCase(getListOrderHistory.rejected, (state, actions) => {
+        console.log(actions.payload);
+      })
+      .addCase(getListOrderTracking.fulfilled, (state, actions) => {
+        console.log(actions.payload, ' actions payload in order history');
+        state.listOrderTracking = actions.payload.items;
+      })
+      .addCase(getListOrderTracking.rejected, (state, actions) => {
         console.log(actions.payload);
       }),
 });
@@ -35,6 +41,26 @@ export const getListOrderHistory = createAsyncThunk(
 
       const data = await res.data;
       console.log(data, ' order history api response');
+      return data.value;
+    } catch (e) {
+      console.log(e);
+    }
+  },
+);
+export const getListOrderTracking = createAsyncThunk(
+  'orderHistorySlice/getListOrderHistory ',
+  async ({ accountId, pageIndex, pageSize }, { getState }) => {
+    try {
+      const res = await api.get('/api/v1/customer/order/history', {
+        params: {
+          accountId: accountId,
+          pageIndex: pageIndex,
+          pageSize: pageSize,
+          status: 1,
+        },
+      });
+      const data = await res.data;
+      console.log(data, ' order tracking api response');
       return data.value;
     } catch (e) {
       console.log(e);

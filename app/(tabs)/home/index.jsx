@@ -1,4 +1,5 @@
 import { BASE_URL } from '@env';
+import auth from '@react-native-firebase/auth';
 import { useEffect, useState } from 'react';
 import { Dimensions, FlatList, Image, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useSelector } from 'react-redux';
@@ -8,8 +9,50 @@ import ItemBestSellerInHome from '../../../components/user-page/ItemBestSellerIn
 import ItemShopRegulerInHome from '../../../components/user-page/ItemShopRegulerInHome';
 import { Colors } from '../../../constant';
 import { userInfoSliceSelector } from '../../../redux/slice/userSlice';
-
 const Index = () => {
+  const [tokenFB, setTokenFB] = useState('');
+  const info = useSelector(userInfoSliceSelector);
+  function onAuthStateChanged(user) {
+    console.log(user, 'Auth state changed');
+  }
+  const authenticateWithFirebase = async () => {
+    try {
+      console.log('token  FB authenticated', tokenFB)
+      const authState = await auth().signInWithCustomToken(tokenFB);
+      const test = authState;
+      console.log(test, 'test =- custom token -----------------');
+    } catch (e) {
+      console.log(e, ' invalid auth state with custom token');
+    }
+  };
+
+  const handleGetFBToken = async () => {
+    try {
+      const res = await api.get('/api/v1/firebase/custom-token');
+      const data = await res.data;
+      if (data.isSuccess) {
+        console.log(data, ' is success get token for authen in firebase');
+
+        setTokenFB(data.value.customToken);
+      } else {
+        console.log(data, ' is failure get token for authen in firebase');
+      }
+    } catch (err) {
+      console.log(err, 'error getting token for authen in firebase');
+    }
+  };
+  useEffect(() => {
+    if (tokenFB) {
+      authenticateWithFirebase();
+    }
+  }, [tokenFB]);
+  useEffect(() => {
+    handleGetFBToken();
+  }, [info]);
+  useEffect(() => {
+    const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
+    return subscriber; // unsubscribe on unmount
+  }, []);
   console.log(BASE_URL, 'Base url home');
   const { width, height } = Dimensions.get('window');
   const widthCategory = parseInt((width * 15) / 100);

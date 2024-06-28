@@ -5,7 +5,9 @@ import { JsStack } from '../../components/custom-stack/JsStack';
 const UserLayout = () => {
   return (
     <JsStack screenOptions={{ animation: 'slide_from_bottom' }}>
+      <JsStack.Screen name="setting-list" options={{ headerShown: false, animation: 'fade_from_bottom' }} />
       <JsStack.Screen name="user" options={{ headerShown: false, animation: 'fade_from_bottom' }} />
+      <JsStack.Screen name="upgrade-shop" options={{ headerShown: false, animation: 'fade_from_bottom' }} />
       <JsStack.Screen
         name="map"
         options={{
@@ -20,4 +22,3 @@ const UserLayout = () => {
 };
 
 export default UserLayout;
-

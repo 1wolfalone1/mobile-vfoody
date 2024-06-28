@@ -59,7 +59,6 @@ const index = () => {
       setMessage(errorMessage);
     }
   };
-
   return (
     <Formik
       initialValues={{ email: '', password: '' }}

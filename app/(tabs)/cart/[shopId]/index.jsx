@@ -13,12 +13,12 @@ import { Colors } from '../../../../constant';
 import cartSlice, { cartSelector, getCartInfo } from '../../../../redux/slice/cartSlice';
 import globalSlice from '../../../../redux/slice/globalSlice';
 import orderSlice, {
-  orderSelector,
-  orderTotalOrderSelector,
+    orderSelector,
+    orderTotalOrderSelector,
 } from '../../../../redux/slice/orderSlice';
 import shopDetailsSlice, {
-  dataShopDetailsSelector,
-  getShopInfo,
+    dataShopDetailsSelector,
+    getShopInfo,
 } from '../../../../redux/slice/shopDetailsSlice';
 import { userInfoSliceSelector } from '../../../../redux/slice/userSlice';
 import { formatQuantity } from '../../../../utils/MyUtils';
@@ -38,7 +38,7 @@ const CartItemInShop = () => {
   const { orderInfo, voucher } = useSelector(orderSelector);
   const order = useSelector(orderSelector);
   let scrollOffsetY = useRef(new Animated.Value(0)).current;
-  console.log(items, ' itemsssssssssssssssssssssssss')
+  console.log(items, ' itemsssssssssssssssssssssssss');
   useEffect(() => {
     dispatch(orderSlice.actions.calculateVoucherPrice());
   }, [voucher]);
@@ -94,27 +94,30 @@ const CartItemInShop = () => {
 
   const handleOrder = async () => {
     try {
-      const {listVoucher, ...orther} = order
+      const { listVoucher, ...orther } = order;
       console.log(orther);
-      const res = await api.post('api/v1/customer/order',orther)
+      dispatch(globalSlice.actions.changeLoadings(true));
+      const res = await api.post('api/v1/customer/order', orther);
       const data = await res.data;
-      console.log("dataa ordrrrrrrrrrrr", data)
-      if(data.isSuccess) {
-      
+      console.log('dataa ordrrrrrrrrrrr', data);
+      if (data.isSuccess) {
+        dispatch(globalSlice.actions.changeLoadings(true));
+        router.push('/order/')
       } else {
-
+        dispatch(globalSlice.actions.changeLoadings(false));
       }
-    } catch(e) {
+    } catch (e) {
+      dispatch(globalSlice.actions.changeLoadings(false));
       console.error(e);
     }
-  }
+  };
   const handleNavigateToOrderTracking = async (id) => {
     try {
-      const res = await api.get()
-    } catch(e) {
+      const res = await api.get();
+    } catch (e) {
       console.error(e);
     }
-  }
+  };
   return (
     <View className="flex-1 bg-white overflow-visible">
       {orderInfo &&

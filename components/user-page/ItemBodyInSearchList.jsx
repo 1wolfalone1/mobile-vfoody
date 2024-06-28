@@ -10,7 +10,7 @@ const styles = StyleSheet.create({
 
     shadowOpacity: 0.2,
     elevation: 5,
-    // background color must be set
+    // background color must be setvjjkkvjjkjj
   },
 });
 

@@ -23,7 +23,7 @@ const OrderHistory = () => {
     console.log(listOrderHistory, 'orderHistory');
   }, [isFocus]);
   return (
-    <SafeAreaView edges={['bottom']} className="bg-white">
+    <SafeAreaView edges={['bottom']} className="bg-gray-50">
       <FlatList
         data={listOrderHistory ?  listOrderHistory: emptyList}
         contentContainerStyle={{
