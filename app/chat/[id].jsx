@@ -34,14 +34,14 @@ const ChatChannel = () => {
       // Create a query to find a chatroom with both emails
       const chatroomQuery = db
         .collection('chatrooms')
-        .where('emails', 'array-contains-any', [currentUser.email, otherUserEmail]);
+        .where('emails', 'array-contains', currentUser.email);
 
       const querySnapshot = await chatroomQuery.get();
 
       // Check if a chatroom already exists
       if (querySnapshot.size > 0) {
         // Existing chatroom found
-
+        
         const existingChatroom = querySnapshot.docs[0];
         console.log('Joined existing chatroom:', existingChatroom.id, otherUserEmail);
         setChatRoomId(existingChatroom.id);

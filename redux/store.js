@@ -7,6 +7,7 @@ import orderHistorySlice from './slice/orderHistorySlice';
 import orderSlice from './slice/orderSlice';
 import persistSlice from './slice/persistSlice';
 import shopDetailsSlice from './slice/shopDetailsSlice';
+import shopOwnerSlice from './slice/shopOwnerSlice';
 import userInfoSlice from './slice/userSlice';
 const reducers = combineReducers({
   userInfoSlice: userInfoSlice.reducer,
@@ -15,7 +16,8 @@ const reducers = combineReducers({
   globalSlice: globalSlice.reducer,
   persistSlice: persistSlice.reducer,
   orderSlice: orderSlice.reducer,
-  orderHistorySlice: orderHistorySlice.reducer
+  orderHistorySlice: orderHistorySlice.reducer,
+  shopOwnerSlice: shopOwnerSlice.reducer
 });
 const persistConfig = {
   key: 'root',

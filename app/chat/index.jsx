@@ -1,6 +1,6 @@
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FlatList } from 'react-native';
 import { Divider } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -11,6 +11,7 @@ const ListChatChannelPage = () => {
     const chatCollection = await firestore().collection('chatrooms').get();
     const test = chatCollection.docChanges();
   };
+  const [listChannel, setListChannel] = useState([]);
   useEffect(() => {
     const user = auth().currentUser;
     const subscriber = firestore()
@@ -65,7 +66,7 @@ const listShop = [
     text: 'This is test chate',
     logoUrl:
       'https://repository-images.githubusercontent.com/366884555/c2d2e700-b396-11eb-871e-2faafc8e4d07',
-      channelId: 'thiencnse160231@fpt.edu.vn',
+    channelId: 'phuothuynhfptk16@gmail.com',
   },
   {
     id: 1232,
@@ -73,6 +74,8 @@ const listShop = [
     text: 'This is test chate',
     logoUrl:
       'https://repository-images.githubusercontent.com/366884555/c2d2e700-b396-11eb-871e-2faafc8e4d07',
+      
+    channelId: 'thiencnse160231@fpt.edu.vn',
   },
   {
     id: 1,
