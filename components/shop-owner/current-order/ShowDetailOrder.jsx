@@ -1,16 +1,71 @@
+import { MaterialIcons } from '@expo/vector-icons';
 import React from 'react';
 import { Image, ScrollView, Text, View } from 'react-native';
-import { Appbar, Button, Divider } from 'react-native-paper';
-import { formatNumberVND, formatPhoneNumber } from '../../../utils/MyUtils';
-
-import { MaterialIcons } from '@expo/vector-icons';
+import { Appbar, Button, Dialog, Divider } from 'react-native-paper';
+import api from '../../../api/api';
 import { Colors } from '../../../constant';
+import { formatNumberVND, formatPhoneNumber } from '../../../utils/MyUtils';
+import colors from '../../../constant/colors';
+import { useDispatch, useSelector } from 'react-redux';
+import persistSlice, { persistSliceSelector } from '../../../redux/slice/persistSlice';
 
 const ShowDetailOrder = ({ handleClose, orderDetailData, isActiveTab }) => {
-  console.log('showDetailOrder neq', orderDetailData);
+  const [isDeleteDialog, setIsDeleteDialog] = React.useState(false);
+  const dispatch = useDispatch();
+  const { isRefreshOrder } = useSelector(persistSliceSelector);
+  console.log('isRefreshOrder', isRefreshOrder);
+
+  const handleReject = async (orderId) => {
+    try {
+      setIsDeleteDialog(false);
+      handleClose();
+      // handle reject order
+    } catch (err) {
+      console.log(err, '>>> error in confirmed order');
+    }
+  };
+
+  const handleConfirm = async (orderId) => {
+    try {
+      const res = await api.put(`/api/v1/shop/order/${orderId}/confirmed`);
+      console.log('ressssss', res.data.value);
+      if (res.data.isSuccess) {
+        handleClose();
+        dispatch(persistSlice.actions.saveisRefreshOrder(!isRefreshOrder));
+      }
+    } catch (err) {
+      console.log(err, '>>> error in confirmed order');
+    }
+  };
+
+  const handleReady = async (orderId) => {
+    try {
+      const res = await api.put(`/api/v1/shop/order/${orderId}/delivering`);
+      console.log('ressssss', res.data.value);
+      if (res.data.isSuccess) {
+        handleClose();
+        dispatch(persistSlice.actions.saveisRefreshOrder(!isRefreshOrder));
+      }
+    } catch (err) {
+      console.log(err, '>>> error in delivering order');
+    }
+  };
+  const handleCompleted = async (orderId) => {
+    try {
+      // handle successful order
+      // const res = await api.put(`/api/v1/shop/order/${orderId}/confirmed`);
+      // console.log('ressssss', res.data.value);
+      // if (res.data.isSuccess) {
+      //   handleClose();
+      // }
+    } catch (err) {
+      console.log(err, '>>> error in confirmed order');
+    }
+  };
+
   return (
     <ScrollView>
-      <Appbar.Header className="px-5">
+      <Appbar.Header className="px-5 mb-4">
         <MaterialIcons
           name="arrow-back-ios-new"
           size={36}
@@ -36,7 +91,21 @@ const ShowDetailOrder = ({ handleClose, orderDetailData, isActiveTab }) => {
               Địa chỉ:{' '}
               <Text className="font-bold">{orderDetailData?.orderInfo?.building?.address}</Text>
             </Text>
-            <Divider className="my-4" bold />
+            {orderDetailData?.orderInfo?.orderStatus === 1 ? (
+              <Text className="text-base">
+                Trạng thái: <Text className="font-bold text-yellow-500">Chờ xác nhận</Text>
+              </Text>
+            ) : orderDetailData?.orderInfo?.orderStatus === 2 ? (
+              <Text className="text-base">
+                Trạng thái: <Text className="font-bold text-blue-500">Đang chuẩn bị</Text>
+              </Text>
+            ) : (
+              <Text className="text-base">
+                Trạng thái: <Text className="font-bold text-teal-500">Đang giao hàng</Text>
+              </Text>
+            )}
+
+            <Divider className="my-8" bold />
             {orderDetailData?.products?.map((item) => (
               <View>
                 <View className="flex flex-row justify-between items-center">
@@ -63,18 +132,20 @@ const ShowDetailOrder = ({ handleClose, orderDetailData, isActiveTab }) => {
                             (q) =>
                               q.options?.length > 0 && (
                                 <>
-                                  <Text className="font-bold text-slate-500">
+                                  <Text className="font-bold text-slate-500 mt-4">
                                     {q.queDescription}:
                                   </Text>
                                   {q.options.map((option) =>
                                     option.optionPrice > 0 ? (
                                       <Text className="text-slate-500">
-                                        {option.opDescription} (+
+                                        - {option.opDescription} (+
                                         {formatNumberVND(option.optionPrice * item.productQuantity)}
                                         )
                                       </Text>
                                     ) : (
-                                      <Text className="text-slate-500">{option.opDescription}</Text>
+                                      <Text className="text-slate-500">
+                                        - {option.opDescription}
+                                      </Text>
                                     ),
                                   )}
                                 </>
@@ -88,7 +159,7 @@ const ShowDetailOrder = ({ handleClose, orderDetailData, isActiveTab }) => {
                     {formatNumberVND(item.totalProductPrice)}
                   </Text>
                 </View>
-                <Divider className="my-2" />
+                <Divider className="my-4" />
               </View>
             ))}
             {orderDetailData.orderInfo?.note && (
@@ -97,7 +168,7 @@ const ShowDetailOrder = ({ handleClose, orderDetailData, isActiveTab }) => {
                 <Text className="text-primary">{orderDetailData.orderInfo?.note}</Text>
               </View>
             )}
-            <Divider className="mt-8 mb-2" bold />
+            <Divider className="mt-16 mb-12" bold />
           </View>
           <View className="flex flex-col">
             <View className="flex flex-row justify-end">
@@ -128,7 +199,7 @@ const ShowDetailOrder = ({ handleClose, orderDetailData, isActiveTab }) => {
         </View>
 
         {isActiveTab === 1 ? (
-          <View className="flex flex-row items-end justify-center gap-4 mt-4">
+          <View className="flex flex-row justify-center gap-4 mt-12">
             <Button
               buttonColor={Colors.loss}
               textColor={Colors.commonBtnText}
@@ -142,7 +213,7 @@ const ShowDetailOrder = ({ handleClose, orderDetailData, isActiveTab }) => {
               labelStyle={{
                 fontSize: 16,
               }}
-              // onPress={() => handleCancel()}
+              onPress={() => setIsDeleteDialog(true)}
             >
               Hủy đơn
             </Button>
@@ -159,7 +230,7 @@ const ShowDetailOrder = ({ handleClose, orderDetailData, isActiveTab }) => {
               labelStyle={{
                 fontSize: 16,
               }}
-              // onPress={() => handleAccept()}
+              onPress={() => handleConfirm(orderDetailData.orderInfo.orderId)}
             >
               Nhận đơn
             </Button>
@@ -196,7 +267,7 @@ const ShowDetailOrder = ({ handleClose, orderDetailData, isActiveTab }) => {
               labelStyle={{
                 fontSize: 16,
               }}
-              // onPress={() => handleReady()}
+              onPress={() => handleReady(orderDetailData.orderInfo.orderId)}
             >
               Đã sẵn sàng
             </Button>
@@ -233,13 +304,42 @@ const ShowDetailOrder = ({ handleClose, orderDetailData, isActiveTab }) => {
               labelStyle={{
                 fontSize: 16,
               }}
-              // onPress={() => handleCompleted()}
+              onPress={() => handleCompleted(orderDetailData.orderInfo.orderId)}
             >
               Hoàn tất
             </Button>
           </View>
         )}
       </View>
+
+      <Dialog
+        className="bg-slate-100"
+        visible={isDeleteDialog}
+        onDismiss={() => setIsDeleteDialog(false)}
+      >
+        <Dialog.Title>Cảnh báo</Dialog.Title>
+        <Dialog.Content>
+          <Text variant="bodyMedium">Bạn có chắc chắn muốn hủy đơn này không?</Text>
+        </Dialog.Content>
+        <Dialog.Actions>
+          <Button
+            className="px-5"
+            mode="elevated"
+            textColor={colors.primaryBackgroundColor}
+            onPress={() => setIsDeleteDialog(false)}
+          >
+            Từ chối
+          </Button>
+          <Button
+            mode="contained"
+            className="px-5"
+            buttonColor={Colors.primaryBackgroundColor}
+            onPress={() => handleReject(orderDetailData.orderInfo.orderId)}
+          >
+            Đồng ý
+          </Button>
+        </Dialog.Actions>
+      </Dialog>
     </ScrollView>
   );
 };

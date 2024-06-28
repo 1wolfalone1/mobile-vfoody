@@ -9,6 +9,7 @@ const persistSlice = createSlice({
     isReset: false,
     isSignup: false,
     code: '',
+    isRefreshOrder: false,
   },
   reducers: {
     saveTempOrder: (state, action) => {
@@ -34,6 +35,9 @@ const persistSlice = createSlice({
     },
     saveIsSignup: (state, action) => {
       state.isSignup = action.payload;
+    },
+    saveisRefreshOrder: (state, action) => {
+      state.isRefreshOrder = action.payload;
     },
   },
 });

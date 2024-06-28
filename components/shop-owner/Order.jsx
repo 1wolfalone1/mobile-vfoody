@@ -1,14 +1,26 @@
 import React, { useEffect, useState } from 'react';
 import { ScrollView, Text, View } from 'react-native';
-import { Button } from 'react-native-paper';
+import { Button, Snackbar } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import api from '../../api/api';
 import { Colors } from '../../constant';
 import OrderList from './current-order/OrderList';
+import { useSelector } from 'react-redux';
+import { persistSliceSelector } from '../../redux/slice/persistSlice';
 
 export default function Order() {
   const [isActiveTab, setIsActiveTab] = useState(1);
   const [orders, setOrders] = useState([]);
+  const { isRefreshOrder } = useSelector(persistSliceSelector);
+
+  // const [snackbarVisible, setSnackbarVisible] = useState(false);
+
+  // Effect to toggle Snackbar visibility when isRefreshOrder changes
+  // useEffect(() => {
+  //   if (isRefreshOrder !== null) {
+  //     setSnackbarVisible(true);
+  //   }
+  // }, [isRefreshOrder]);
 
   const fetchOrders = async (status) => {
     try {
@@ -29,7 +41,7 @@ export default function Order() {
     return () => {
       isMounted = false;
     };
-  }, [isActiveTab]);
+  }, [isActiveTab, isRefreshOrder]);
 
   return (
     <SafeAreaView className="mx-4">
@@ -64,10 +76,26 @@ export default function Order() {
             <Text className="text-center text-xl text-red-500 mt-64">Không có đơn hàng nào</Text>
           ) : (
             orders?.map((item) => {
-              return <OrderList item={item} isActiveTab={isActiveTab}/>;
+              return <OrderList key={item.id} item={item} isActiveTab={isActiveTab} />;
             })
           )}
         </View>
+        {/* <Snackbar
+          visible={snackbarVisible}
+          onDismiss={() => setSnackbarVisible(false)}
+          action={{
+            label: 'Ok',
+            onPress: () => {
+              setSnackbarVisible(false);
+            },
+            style: { color: 'red' },
+          }}
+          style={{ position: 'absolute', bottom: 0, left: 0, right: 0, backgroundColor: 'red' }}
+        >
+          <Text style={{ color: '#ffffff', textAlign: 'center' }}>
+            Cập nhật trạng thái đơn hàng thành công!
+          </Text>
+        </Snackbar> */}
       </ScrollView>
     </SafeAreaView>
   );
