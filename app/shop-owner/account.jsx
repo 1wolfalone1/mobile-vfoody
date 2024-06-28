@@ -89,7 +89,7 @@ const Account = () => {
           </Text>
           {/* Input */}
           <TextInput
-            editable={false}
+            editable={isEdit}
             aria-labelledby="phone"
             value={formatPhoneNumber(phone)}
             className={`w-full pl-4 py-4 text-base font-psemibold rounded-2xl bg-green-50`}

@@ -1,75 +1,102 @@
 import React, { useEffect, useState } from 'react';
-import { ScrollView, Text } from 'react-native';
-import { DataTable, Provider } from 'react-native-paper';
-import { formatDate, formatNumberVND } from '../../utils/MyUtils';
-import { orders } from '../../data/Menu';
-
-const Item = ({ item }) => (
-  <ScrollView>
-    <DataTable className="my-1">
-      <DataTable.Row key={item.id}>
-        <DataTable.Cell className="flex-1">
-          <Text className="text-sm">{item.customerName}</Text>
-        </DataTable.Cell>
-        <DataTable.Cell className="flex-1">
-          <Text className="text-sm">{formatNumberVND(item.totalPrice)}</Text>
-        </DataTable.Cell>
-        <DataTable.Cell className="flex-1">
-          <Text className="text-sm">{formatDate(item.date)}</Text>
-        </DataTable.Cell>
-      </DataTable.Row>
-    </DataTable>
-  </ScrollView>
-);
+import { ScrollView, Text, View } from 'react-native';
+import { Button, Snackbar } from 'react-native-paper';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import api from '../../api/api';
+import { Colors } from '../../constant';
+import OrderList from './current-order/OrderList';
+import { useSelector } from 'react-redux';
+import { persistSliceSelector } from '../../redux/slice/persistSlice';
 
 export default function Order() {
-  const [page, setPage] = useState(0);
-  const [numberOfItemsPerPageList] = useState([2, 3, 4]);
-  const maxItemsPerPage = 10;
-  const totalPages = Math.ceil(orders.length / maxItemsPerPage);
-  const from = page * maxItemsPerPage;
-  const to = Math.min((page + 1) * maxItemsPerPage, orders.length);
+  const [isActiveTab, setIsActiveTab] = useState(1);
+  const [orders, setOrders] = useState([]);
+  const { isRefreshOrder } = useSelector(persistSliceSelector);
+
+  // const [snackbarVisible, setSnackbarVisible] = useState(false);
+
+  // Effect to toggle Snackbar visibility when isRefreshOrder changes
+  // useEffect(() => {
+  //   if (isRefreshOrder !== null) {
+  //     setSnackbarVisible(true);
+  //   }
+  // }, [isRefreshOrder]);
+
+  const fetchOrders = async (status) => {
+    try {
+      const res = await api.get(`/api/v1/shop/order?status=${status}`);
+      if (res.data.isSuccess) {
+        setOrders(res.data?.value?.items);
+      }
+    } catch (err) {
+      console.error(err, `>>> error in fetchOrders with status ${status}`);
+    }
+  };
+
   useEffect(() => {
-    setPage(0);
-  }, []);
-  const handlePreviousPage = () => {
-    setPage((prevPage) => Math.max(0, prevPage - 1));
-  };
-  const handleNextPage = () => {
-    setPage((prevPage) => Math.min(totalPages - 1, prevPage + 1));
-  };
+    let isMounted = true;
+    if (isMounted) {
+      fetchOrders(isActiveTab);
+    }
+    return () => {
+      isMounted = false;
+    };
+  }, [isActiveTab, isRefreshOrder]);
 
   return (
-    <Provider>
+    <SafeAreaView className="mx-4">
       <ScrollView>
-        <DataTable className="p-1">
-          <DataTable.Header className="bg-gray-200">
-            <DataTable.Title>Tên khách hàng</DataTable.Title>
-            <DataTable.Title>Tổng tiền hóa đơn</DataTable.Title>
-            <DataTable.Title >Thời gian giao dịch</DataTable.Title>
-          </DataTable.Header>
-
-          {orders.slice(from, to).map((item) => (
-            <Item
-              item={item}
-              key={item.id}
-            />
+        <View className="flex-row justify-between w-full">
+          {[1, 2, 3].map((tab) => (
+            <View
+              key={tab}
+              className={`${isActiveTab === tab ? 'border-b-2 border-b-primary' : ''} ${tab === 2 ? 'w-[40%]' : 'w-[30%]'}`}
+            >
+              <Button
+                mode="text"
+                textColor={
+                  isActiveTab === tab ? Colors.primaryBackgroundColor : Colors.tertiaryTextColor
+                }
+                theme={{ roundness: 0 }}
+                contentStyle={{ paddingVertical: 8 }}
+                labelStyle={{ fontSize: 15, fontWeight: 'bold' }}
+                onPress={() => {
+                  if (isActiveTab !== tab) {
+                    setIsActiveTab(tab);
+                  }
+                }}
+              >
+                {tab === 1 ? 'Đơn mới' : tab === 2 ? 'Đang chuẩn bị' : 'Đang giao'}
+              </Button>
+            </View>
           ))}
-
-          <DataTable.Pagination
-            page={page}
-            numberOfPages={totalPages}
-            onPageChange={(page) => setPage(page)}
-            label={`${from + 1}-${to} of ${orders.length}`}
-            numberOfItemsPerPageList={numberOfItemsPerPageList}
-            numberOfItemsPerPage={maxItemsPerPage}
-            showFastPaginationControls
-            selectPageDropdownLabel={'Rows per page'}
-            onPreviousPage={handlePreviousPage}
-            onNextPage={handleNextPage}
-          />
-        </DataTable>
+        </View>
+        <View className="mb-20">
+          {orders.length === 0 ? (
+            <Text className="text-center text-xl text-red-500 mt-64">Không có đơn hàng nào</Text>
+          ) : (
+            orders?.map((item) => {
+              return <OrderList key={item.id} item={item} isActiveTab={isActiveTab} />;
+            })
+          )}
+        </View>
+        {/* <Snackbar
+          visible={snackbarVisible}
+          onDismiss={() => setSnackbarVisible(false)}
+          action={{
+            label: 'Ok',
+            onPress: () => {
+              setSnackbarVisible(false);
+            },
+            style: { color: 'red' },
+          }}
+          style={{ position: 'absolute', bottom: 0, left: 0, right: 0, backgroundColor: 'red' }}
+        >
+          <Text style={{ color: '#ffffff', textAlign: 'center' }}>
+            Cập nhật trạng thái đơn hàng thành công!
+          </Text>
+        </Snackbar> */}
       </ScrollView>
-    </Provider>
+    </SafeAreaView>
   );
 }
