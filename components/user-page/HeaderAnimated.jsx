@@ -4,9 +4,10 @@ import { SlidersHorizontal } from 'lucide-react-native';
 import * as React from 'react';
 import { Animated, StyleSheet, Text, TextInput, View } from 'react-native';
 import { Avatar, Button, IconButton, TouchableRipple } from 'react-native-paper';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Colors } from '../../constant';
 import colors from '../../constant/colors';
+import searchSlice, { searchSliceSelector } from '../../redux/slice/searchSlice';
 import { userInfoSliceSelector } from '../../redux/slice/userSlice';
 
 const Header_Max_Height = 90;
@@ -15,6 +16,10 @@ const Header_Min_Height = 20;
 export default function DynamicHeader({ animHeaderValue }) {
   const userData = useSelector(userInfoSliceSelector);
   const navigation = useNavigation();
+  const {
+   searchProductInHome: {filter} 
+  } = useSelector(searchSliceSelector)
+  const dispatch = useDispatch();
   const animateHeaderBackgroundColor = animHeaderValue.interpolate({
     inputRange: [0, Header_Max_Height - Header_Min_Height],
     outputRange: [1, 0],
@@ -111,11 +116,19 @@ export default function DynamicHeader({ animHeaderValue }) {
           <IconButton
             icon="magnify"
             iconColor={Colors.primaryBackgroundColor}
-            onPress={() => router.push('/home/search-list')}
+            onPress={() => {
+              router.push('/home/search-list')
+            }}
           />
           <TextInput
             onFocus={() => router.push('/home/search')}
             className="flex-1 font-hnow63book"
+            value={filter.searchText}
+            onChangeText={(value) => {
+              dispatch(searchSlice.actions.updateFilterInSearchProductInHome({
+                searchText: value,
+              }));
+            }}
             placeholder="Tìm kiếm món ăn hay shop house?"
           />
         </View>

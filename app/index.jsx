@@ -102,27 +102,6 @@ export default function StartPage() {
     } else {
       console.log('Permission denied');
     }
-    messaging()
-      .getInitialNotification()
-      .then((notification) => {
-        console.log(notification);
-      });
-    messaging().onNotificationOpenedApp((remoteMessage) => {
-      console.log(remoteMessage, 'on open');
-    });
-    messaging().setBackgroundMessageHandler(async (msg) => {
-      console.log(msg, 'in background');
-    });
-    const unsubscribe = messaging().onMessage(async (msg) => {
-      console.log(msg, 'in foreground');
-      console.log('----------------------------------');
-      showToastable({
-        message: 'React Native Heroes is awesome! 🚀',
-        status: 'success',
-        renderContent: () => <NotifyFisebaseForegroundItem {...msg.notification} />,
-      });
-    });
-    return unsubscribe;
   }, [info]);
   return (
     <View style={styles.container}>

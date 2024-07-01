@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import qs from 'qs';
 import api from '../../api/api';
-
 const initialState = {
   listOrderHistory: [],
   listOrderTracking: [],
@@ -56,7 +56,10 @@ export const getListOrderTracking = createAsyncThunk(
           accountId: accountId,
           pageIndex: pageIndex,
           pageSize: pageSize,
-          status: 1,
+          status: [1, 2, 3],
+        },
+        paramsSerializer: (params) => {
+          return qs.stringify(params, { arrayFormat: 'repeat' });
         },
       });
       const data = await res.data;

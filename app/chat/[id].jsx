@@ -34,14 +34,14 @@ const ChatChannel = () => {
       // Create a query to find a chatroom with both emails
       const chatroomQuery = db
         .collection('chatrooms')
-        .where('emails', 'array-contains', currentUser.email);
+        .where('emails', 'array-contains-any', [currentUser.email, otherUserEmail]);
 
       const querySnapshot = await chatroomQuery.get();
 
       // Check if a chatroom already exists
       if (querySnapshot.size > 0) {
         // Existing chatroom found
-        
+
         const existingChatroom = querySnapshot.docs[0];
         console.log('Joined existing chatroom:', existingChatroom.id, otherUserEmail);
         setChatRoomId(existingChatroom.id);
@@ -80,11 +80,12 @@ const ChatChannel = () => {
         (querySnapshot) => {
           const messages = querySnapshot.docs.map((doc) => ({
             _id: doc.data()._id, // Assuming you have an _id field for each message
-            createdAt: doc
-              .data()
-              .createdAt.toDate(),
+            createdAt: doc.data().createdAt.toDate(),
             text: doc.data().text,
             user: doc.data().user,
+
+            avatar:
+              'https://repository-images.githubusercontent.com/366884555/c2d2e700-b396-11eb-871e-2faafc8e4d07',
           }));
 
           // Handle the retrieved chat messages (replace with your implementation)
@@ -136,11 +137,11 @@ const ChatChannel = () => {
           <View className="flex-row items-center ">
             {
               <Avatar.Image
-              source={{
-                uri: user2.logoUrl,
-              }}
-              size={50}
-            />
+                source={{
+                  uri: user2.logoUrl,
+                }}
+                size={50}
+              />
             }
             <Text className="text-white font-semibold text-lg ml-4">{params.id}</Text>
           </View>
@@ -184,6 +185,8 @@ const ChatChannel = () => {
           user={{
             _id: auth()?.currentUser?.email,
             name: auth()?.currentUser?.displayName,
+            avatar:
+              'https://repository-images.githubusercontent.com/366884555/c2d2e700-b396-11eb-871e-2faafc8e4d07',
           }}
         />
       </SafeAreaView>

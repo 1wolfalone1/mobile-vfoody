@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
 });
 const CategoryItemInHome = ({ item, idCategorySelected, setCategorySelected }) => {
   const { width, height } = Dimensions.get('window');
-  const widthCategory = parseInt((width * 15) / 100);
+  const widthCategory = parseInt((width * 13) / 100);
   return item == null ? (
     <SkeletonItem />
   ) : (
@@ -38,10 +38,13 @@ const CategoryItemInHome = ({ item, idCategorySelected, setCategorySelected }) =
     >
       <View
         style={{
-          ...(idCategorySelected == item.id ? styles.shadowSelected : styles.shadow),
+          ...(idCategorySelected == item.id
+            ? { backgroundColor: Colors.primaryBackgroundColor }
+            : { backgroundColor: 'white' }),
+          ...styles.shadow,
         }}
-        className={`flex justify-start items-center rounded-full 
-                   ${'bg-white'} w-[60] h-full`}
+        className={`flex justify-start items-center rounded-full p-1
+                   ${'bg-white'}  h-full`}
       >
         <View className="">
           <Image
@@ -60,12 +63,16 @@ const CategoryItemInHome = ({ item, idCategorySelected, setCategorySelected }) =
         </View>
         <View className="w-[40] pb-2 mt-2 justify-center items-center">
           <Text
+            numberOfLines={3}
             // className="font-hnow64regular flex flex-wrap over"
-            className={`${'text-black'} font-hnow63book justify-center items-center text-center`}
+            className={`${'text-black'}  justify-center items-center text-center font-pregular`}
             style={{
-              fontSize: 8,
+              fontSize: 10,
               lineHeight: 15,
               flexWrap: 'wrap',
+              ...(idCategorySelected == item.id
+                ? { color: 'white' }
+                : { color: 'black' }),
             }}
           >
             {item.name}

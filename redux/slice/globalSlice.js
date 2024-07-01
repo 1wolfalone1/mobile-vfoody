@@ -34,13 +34,18 @@ const initialState = {
   },
   loading: {
     isLoaded: false,
-    msg: "Chờ tí nhé..."
+    msg: 'Chờ tí nhé...',
   },
+
+  orderStatusChange: false,
 };
 const globalSlice = createSlice({
   name: 'globalSlice',
   initialState: initialState,
   reducers: {
+    notifyOrderStatusChange: (state, actions) => {
+      state.orderStatusChange = !state.orderStatusChange
+    },
     changePositionTabBar: (state, actions) => {
       state.tabBar.translateY = actions.payload;
     },

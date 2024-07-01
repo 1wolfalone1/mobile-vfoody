@@ -76,7 +76,7 @@ const TempCartPage = () => {
         }}
       >
         {items[info?.id] && items[info?.id].length > 0 ? (
-          items[info?.id].map((item) => (
+          items[info?.id]?.map((item) => (
             <ItemInCart key={item ? item.productId : null} itemsInfo={item} shopId={info.id} />
           ))
         ) : (

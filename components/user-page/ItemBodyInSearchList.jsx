@@ -16,7 +16,6 @@ const styles = StyleSheet.create({
 
 const ItemBodyInSearchList = ({ item }) => {
   const { width, height } = Dimensions.get('window');
-  console.log(item);
   const widthItem = parseInt((width * 23) / 100);
   return item == null ? (
     <SkeletonItem />
@@ -45,7 +44,7 @@ const ItemBodyInSearchList = ({ item }) => {
       </View>
       <View>
         <Text className="text-lg text-primary">{formatNumberVND(item.price)}</Text>
-        <Text className="text-black text-xs font-hnow63book">{item.name}asfasfd</Text>
+        <Text className="text-black text-xs font-hnow63book">{item.name}</Text>
       </View>
     </View>
   );

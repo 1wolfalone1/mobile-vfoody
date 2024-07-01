@@ -1,8 +1,6 @@
 import SkeletonLoading from 'expo-skeleton-loading';
 import React from 'react';
 import { Dimensions, Image, StyleSheet, Text, View } from 'react-native';
-import { Chip } from 'react-native-paper';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Colors } from '../../constant';
 
 const styles = StyleSheet.create({
@@ -27,7 +25,6 @@ const styles = StyleSheet.create({
 
 const ItemHeaderInSearchList = ({ item }) => {
   const { width, height } = Dimensions.get('window');
-  console.log(item);
   const widthItem = parseInt((width * 26) / 100);
   return item == null ? (
     <SkeletonItem />
@@ -59,27 +56,11 @@ const ItemHeaderInSearchList = ({ item }) => {
           <Text style={{ fontSize: 14 }} className=" font-hnow63book text-primary">
             {item.price}
           </Text>
+        </View>
+        <View>
           <Text style={{ fontSize: 12 }} className=" font-hnow64regular text-blue-600">
             {item.address}
           </Text>
-        </View>
-        <View>
-          <Chip
-            icon={() => <Icon name="ticket-percent-outline" color="white" size={14} />}
-            title="Promotion"
-            textStyle={{
-              fontSize: 10,
-              fontFamily: 'HeadingNow-63Book',
-              color: Colors.commonBtnText,
-              fontWeight: '600',
-            }}
-            style={{
-              backgroundColor: Colors.primaryBackgroundColor,
-            }}
-            size={12}
-          >
-            Promotion Shop{' '}
-          </Chip>
         </View>
       </View>
     </View>

@@ -1,21 +1,24 @@
 import React, { useState } from 'react';
 import { View } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
+import { useDispatch } from 'react-redux';
 import { Colors } from '../../constant';
+import searchSlice from '../../redux/slice/searchSlice';
 
 const FilterBarinSearchList = () => {
+  const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
   const [items, setItems] = useState([
-    { label: 'Bỏ trống', value: 'ss' },
-    { label: 'Giá', value: 'apple' },
-    { label: 'Sao', value: 'banana' },
+    { label: 'Bỏ trống', value: 0 },
+    { label: 'Giá', value: 1 },
+    { label: 'Sao', value: 2 },
   ]);
   const [openSort, setOpenSort] = useState(false);
-  const [valueSort, setValueSort] = useState('apple');
+  const [valueSort, setValueSort] = useState(0);
   const [itemsSort, setItemsSort] = useState([
-    { label: 'Tăng dần', value: 'apple' },
-    { label: 'Giảm dần', value: 'banana' },
+    { label: 'Tăng dần', value: 1 },
+    { label: 'Giảm dần', value: 0 },
   ]);
   return (
     <View
@@ -66,6 +69,13 @@ const FilterBarinSearchList = () => {
           value={value}
           items={items}
           setOpen={setOpen}
+          onChangeValue={(value) => {
+            dispatch(
+              searchSlice.actions.updateSortInSearchProductInHome({
+                orderType: value,
+              }),
+            );
+          }}
           setValue={setValue}
           setItems={setItems}
           placeholder={'Sắp xếp theo'}
@@ -99,6 +109,13 @@ const FilterBarinSearchList = () => {
           value={valueSort}
           items={itemsSort}
           setOpen={setOpenSort}
+          onChangeValue={(value) => {
+            dispatch(
+              searchSlice.actions.updateSortInSearchProductInHome({
+                orderMode: value,
+              }),
+            );
+          }}
           setValue={setValueSort}
           setItems={setItemsSort}
           placeholder={''}

@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import { Dimensions, FlatList, Image, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import api from '../../../api/api';
-import CategoryItemInHome from '../../../components/user-page/CategoryItemInHome';
 import ItemBestSellerInHome from '../../../components/user-page/ItemBestSellerInHome';
 import ItemShopRegulerInHome from '../../../components/user-page/ItemShopRegulerInHome';
 import { Colors } from '../../../constant';
@@ -19,6 +18,7 @@ const Index = () => {
     try {
       console.log('token  FB authenticated', tokenFB)
       const authState = await auth().signInWithCustomToken(tokenFB);
+
       const test = authState;
       console.log(test, 'test =- custom token -----------------');
     } catch (e) {
@@ -79,19 +79,8 @@ const Index = () => {
 
   const [dataTopShop, setDataTopShop] = useState(null);
 
-  const [idCategorySelected, setCategorySelected] = useState(1);
   const [dataTopProduct, setDataTopProduct] = useState(null);
-  const [categories, setCategories] = useState(null);
-  const handleGetCategories = async () => {
-    try {
-      const res = await api.get('/api/v1/category');
-      const data = await res.data;
-      setCategories(data.value);
-      console.log(data.value, ' category');
-    } catch (err) {
-      console.log(err, ' error in DynamicHeader');
-    }
-  };
+ 
 
   const handleGetDataTopProduct = async () => {
     try {
@@ -117,7 +106,6 @@ const Index = () => {
   useEffect(() => {
     handleGetDataTopShop();
     handleGetDataTopProduct();
-    handleGetCategories();
   }, []);
   useEffect(() => {
     console.log(userData, ' teset');
@@ -125,23 +113,7 @@ const Index = () => {
   const blankData = [null, null, null, null, null];
   return (
     <>
-      <View className="flex-1">
-        <View className="flex-row mt-2">
-          <FlatList
-            contentContainerStyle={{ paddingLeft: 28, paddingVertical: 8 }}
-            horizontal
-            data={categories ? categories : blankData}
-            showsHorizontalScrollIndicator={false}
-            renderItem={({ item }) => (
-              <CategoryItemInHome
-                item={item}
-                idCategorySelected={idCategorySelected}
-                setCategorySelected={setCategorySelected}
-              />
-            )}
-          />
-        </View>
-      </View>
+   
       <View className="pl-7">
         <Text className="font-hnow65medium text-xl text-primary">Bán chạy nhất</Text>
       </View>

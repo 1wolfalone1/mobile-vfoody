@@ -24,6 +24,7 @@ import { useSelector } from 'react-redux';
 import api from '../../../../api/api';
 import { Colors } from '../../../../constant';
 import images from '../../../../constant/images';
+import { globalSelector } from '../../../../redux/slice/globalSlice';
 import { userInfoSliceSelector } from '../../../../redux/slice/userSlice';
 import { formatNumberVND } from '../../../../utils/MyUtils';
 
@@ -42,6 +43,7 @@ const OrderTracking = () => {
   const bottomSheetRef = useRef(null);
   const info = useSelector(userInfoSliceSelector);
   const isFocus = useIsFocused();
+  const { orderStatusChange } = useSelector(globalSelector);
   const apiKey = process.env.EXPO_PUBLIC_SERVICE_API;
   const [origin, setOrigin] = useState([
     {
@@ -54,7 +56,7 @@ const OrderTracking = () => {
   // callbacks
   useEffect(() => {
     handleGetOrderData();
-  }, [isFocus]);
+  }, [isFocus, orderStatusChange]);
   const handleGetOrderData = async () => {
     try {
       const res = await api.get(`/api/v1/customer/order/${params.orderId}`);
@@ -298,15 +300,20 @@ const OrderTracking = () => {
                   }}
                 />
                 <View className="flex-1 justify-between">
-                  <Text numberOfLines={2} className="font-bold text-sm">
+                  <Text numberOfLines={2} className="font-bold text-lg">
                     {product.productName}
                   </Text>
+                  <View className="flex-1">
+                    <Text>
+                      {product.topping.map((option) => option.totalDescription).join(' & ')}
+                    </Text>
+                  </View>
                   <View className="flex-row items-center gap-2">
                     <Text className="text-primary text-base">
                       {formatNumberVND(product.totalProductPrice)}
                     </Text>
                     <Text className="text-gray-600 text-base  font-bold">
-                     / {product.productQuantity}  món
+                      / {product.productQuantity} món
                     </Text>
                   </View>
                 </View>
@@ -333,7 +340,7 @@ const OrderTracking = () => {
                 }}
                 onPress={() => {}}
               >
-               Hủy đơn hàng
+                Hủy đơn hàng
               </Button>
             </View>
           </ScrollView>

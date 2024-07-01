@@ -142,6 +142,7 @@ const ProductDetail = () => {
                 >
                   Đánh giá
                 </Button>
+                
               </View>
 
               <View className="flex-row justify-between">

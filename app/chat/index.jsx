@@ -66,57 +66,6 @@ const listShop = [
     text: 'This is test chate',
     logoUrl:
       'https://repository-images.githubusercontent.com/366884555/c2d2e700-b396-11eb-871e-2faafc8e4d07',
-    channelId: 'phuothuynhfptk16@gmail.com',
-  },
-  {
-    id: 1232,
-    shopName: 'Shop',
-    text: 'This is test chate',
-    logoUrl:
-      'https://repository-images.githubusercontent.com/366884555/c2d2e700-b396-11eb-871e-2faafc8e4d07',
-      
     channelId: 'thiencnse160231@fpt.edu.vn',
-  },
-  {
-    id: 1,
-    shopName: 'Shop',
-    text: 'This is test chate',
-    logoUrl:
-      'https://repository-images.githubusercontent.com/366884555/c2d2e700-b396-11eb-871e-2faafc8e4d07',
-  },
-  {
-    id: 12213,
-    shopName: 'Shop',
-    text: 'This is test chate',
-    logoUrl:
-      'https://repository-images.githubusercontent.com/366884555/c2d2e700-b396-11eb-871e-2faafc8e4d07',
-  },
-  {
-    id: 132,
-    shopName: 'Shop',
-    text: 'This is test chate',
-    logoUrl:
-      'https://repository-images.githubusercontent.com/366884555/c2d2e700-b396-11eb-871e-2faafc8e4d07',
-  },
-  {
-    id: 233,
-    shopName: 'Shop',
-    text: 'This is test chate',
-    logoUrl:
-      'https://repository-images.githubusercontent.com/366884555/c2d2e700-b396-11eb-871e-2faafc8e4d07',
-  },
-  {
-    id: 1223,
-    shopName: 'Shop',
-    text: 'This is test chate',
-    logoUrl:
-      'https://repository-images.githubusercontent.com/366884555/c2d2e700-b396-11eb-871e-2faafc8e4d07',
-  },
-  {
-    id: 23,
-    shopName: 'Shop',
-    text: 'This is test chate',
-    logoUrl:
-      'https://repository-images.githubusercontent.com/366884555/c2d2e700-b396-11eb-871e-2faafc8e4d07',
   },
 ];

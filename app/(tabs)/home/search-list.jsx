@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { FlatList, SectionList, StyleSheet, View } from 'react-native';
-import api from '../../../api/api';
+import { useDispatch, useSelector } from 'react-redux';
 import FilterBarinSearchList from '../../../components/user-page/FilterBarinSearchList';
 import ItemBodyInSearchList from '../../../components/user-page/ItemBodyInSearchList';
 import ItemHeaderInSearchList from '../../../components/user-page/ItemHeaderInSearchList';
+import searchSlice, { getListSearchProductInHome, searchSliceSelector } from '../../../redux/slice/searchSlice';
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -29,19 +30,20 @@ const blankList = [
   },
 ];
 const SearchList = () => {
-  const [dataSearchRender, setDataSearchRender] = useState(null);
+  const {
+    searchProductInHome: { data, paging, filter, sort },
+  } = useSelector(searchSliceSelector);
+  const [dataSearchRender, setDataSearchRender] = React.useState(null);
+  const dispatch = useDispatch();
   const handleGetDataSearch = async () => {
     try {
-      const res = await api.get('/api/v1/customer/shop/search');
-      const data = await res.data;
-      console.log(data, ' data in search list');
-      const newData = handleDataSearch(data.value.items);
+      const newData = handleDataSearch();
       setDataSearchRender(newData);
     } catch (e) {
       console.error(e);
     }
   };
-  const handleDataSearch = (data) => {
+  const handleDataSearch = () => {
     const newData = data.map((item) => {
       return {
         title: {
@@ -59,8 +61,20 @@ const SearchList = () => {
     return newData;
   };
   useEffect(() => {
-    handleGetDataSearch();
-  }, []);
+    console.log('is search data chagen');
+
+    dispatch(getListSearchProductInHome());
+  }, [paging, sort, filter]);
+  useEffect(() => {
+    if (data && Array.isArray(data)) {
+      handleGetDataSearch();
+    }
+  }, [data]);
+  useEffect(() => {
+   return () => {
+    dispatch(searchSlice.actions.resetSearchProductInProduct())
+   }
+  }, [])
   return (
     <View className="flex-1 mt-3">
       <FilterBarinSearchList />
